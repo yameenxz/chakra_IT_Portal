@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  IT
+  DIRECTOR
+}
+
+enum EmployeeStatus {
+  PENDING_IT_REVIEW
+  AWAITING_APPROVAL
+  DELETE_APPROVED
+  HOLD
+  PENDING
+  COMPLETED
+}
+
+enum Decision {
+  DELETE
+  HOLD
+  PENDING
+}
+
+model User {
+  id         String     @id @default(uuid())
+  name       String
+  email      String     @unique
+  role       Role
+  isActive   Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+
+  approvals  Approval[]
+}
+
+model Employee {
+  id              String           @id @default(uuid())
+  employeeName    String
+  employeeEmail   String
+  department      String
+  employeeId      String           @unique
+  lastWorkingDay  DateTime
+  status          EmployeeStatus   @default(PENDING_IT_REVIEW)
+
+  createdAt       DateTime         @default(now())
+
+  approvals       Approval[]
+}
+
+model Approval {
+  id          String      @id @default(uuid())
+
+  employeeId  String
+  directorId  String
+
+  decision    Decision?
+  comments    String?
+  approvedAt  DateTime?
+
+  employee    Employee @relation(fields: [employeeId], references: [id])
+  director    User     @relation(fields: [directorId], references: [id])
+}
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  action      String
+  details     String?
+
+  performedBy String
+
+  timestamp   DateTime @default(now())
+}
