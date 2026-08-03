@@ -1,82 +1,65 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
   ADMIN
   IT
   DIRECTOR
+  PARTNER
 }
 
-enum EmployeeStatus {
-  PENDING_IT_REVIEW
-  AWAITING_APPROVAL
-  DELETE_APPROVED
+enum GuruDecision {
+  DELETE
+  RETAIN
   HOLD
+}
+
+enum ITStatus {
   PENDING
+  STARTED_DOWNLOAD
+  DELETED
+  HOLD
   COMPLETED
 }
 
-enum Decision {
-  DELETE
-  HOLD
-  PENDING
-}
-
 model User {
-  id         String     @id @default(uuid())
+  id         String   @id @default(uuid())
   name       String
-  email      String     @unique
+  email      String   @unique
   role       Role
-  isActive   Boolean    @default(true)
-  createdAt  DateTime   @default(now())
-
-  approvals  Approval[]
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
 }
 
 model Employee {
-  id              String           @id @default(uuid())
-  employeeName    String
-  employeeEmail   String
-  department      String
-  employeeId      String           @unique
-  lastWorkingDay  DateTime
-  status          EmployeeStatus   @default(PENDING_IT_REVIEW)
+  id                     String       @id @default(uuid())
+  slNo                   Int
+  name                   String
+  emailId                String
+  team                   String?
 
-  createdAt       DateTime         @default(now())
+  guruCommentEmail       GuruDecision?
+  guruCommentOneDrive    GuruDecision?
 
-  approvals       Approval[]
-}
+  partnerCommentEmail    String?
+  partnerCommentOneDrive String?
 
-model Approval {
-  id          String      @id @default(uuid())
+  statusByIT             ITStatus     @default(PENDING)
 
-  employeeId  String
-  directorId  String
-
-  decision    Decision?
-  comments    String?
-  approvedAt  DateTime?
-
-  employee    Employee @relation(fields: [employeeId], references: [id])
-  director    User     @relation(fields: [directorId], references: [id])
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
 }
 
 model AuditLog {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   action      String
   details     String?
-
   performedBy String
-
   timestamp   DateTime @default(now())
 }
