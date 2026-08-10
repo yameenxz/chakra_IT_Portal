@@ -14,6 +14,14 @@ enum Role {
   PARTNER
 }
 
+enum WorkflowStage {
+  UPLOADED
+  PENDING_DIRECTOR
+  PENDING_PARTNERS
+  READY_FOR_IT
+  COMPLETED
+}
+
 enum GuruDecision {
   DELETE
   RETAIN
@@ -28,38 +36,89 @@ enum ITStatus {
   COMPLETED
 }
 
+enum PartnerReviewStatus {
+  PENDING
+  APPROVED
+}
+
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  email      String   @unique
-  role       Role
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  role      Role
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
 }
 
 model Employee {
-  id                     String       @id @default(uuid())
-  slNo                   Int
-  name                   String
-  emailId                String
-  team                   String?
+  id      String @id @default(uuid())
 
-  guruCommentEmail       GuruDecision?
-  guruCommentOneDrive    GuruDecision?
+  slNo    Int
+  name    String
+  emailId String
+  team    String?
 
-  partnerCommentEmail    String?
-  partnerCommentOneDrive String?
+  workflowStage WorkflowStage @default(UPLOADED)
 
-  statusByIT             ITStatus     @default(PENDING)
+  guruCommentEmail    GuruDecision?
+  guruCommentOneDrive GuruDecision?
 
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
+  statusByIT ITStatus @default(PENDING)
+
+  directorApprovedAt DateTime?
+
+  partnerAssignedAt DateTime?
+
+  partnerReminderSent Boolean @default(false)
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auditLogs AuditLog[]
+
+  partnerApprovals PartnerApproval[]
+}
+
+model PartnerApproval {
+  id String @id @default(uuid())
+
+  employeeId String
+
+  employee Employee @relation(fields: [employeeId], references: [id])
+
+  partnerEmail String
+
+  status PartnerReviewStatus @default(PENDING)
+
+  emailDecision GuruDecision?
+
+  oneDriveDecision GuruDecision?
+
+  comment String?
+
+  assignedAt DateTime @default(now())
+
+  approvedAt DateTime?
+
+  reminderSent Boolean @default(false)
+
+  createdAt DateTime @default(now())
 }
 
 model AuditLog {
-  id          String   @id @default(uuid())
-  action      String
-  details     String?
+  id String @id @default(uuid())
+
+  employeeId String
+
+  action String
+
+  details String?
+
   performedBy String
-  timestamp   DateTime @default(now())
+
+  timestamp DateTime @default(now())
+
+  employee Employee @relation(fields: [employeeId], references: [id])
 }

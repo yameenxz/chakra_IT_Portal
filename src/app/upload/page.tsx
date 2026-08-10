@@ -56,13 +56,10 @@ export default function UploadPage() {
         row["Name "] ?? row["Name"] ?? ""
       ).trim(),
 
-      emailId: String(
-        row["Email ID"] ?? ""
-      ).trim(),
+      emailId: String(row["Email ID"] ?? "").trim(),
 
-      team: String(
-        row["Team"] ?? ""
-      ).trim() || null,
+      team:
+        String(row["Team"] ?? "").trim() || null,
     }));
 
     const response = await fetch(
@@ -79,7 +76,7 @@ export default function UploadPage() {
 
     if (response.ok) {
       setMessage(
-        "Employees saved successfully!"
+        "Employees saved successfully."
       );
     } else {
       setMessage(
@@ -89,41 +86,51 @@ export default function UploadPage() {
   };
 
   return (
-    <main className="min-h-screen p-10">
-      <h1 className="text-4xl font-bold mb-6">
-        Upload Employee Excel File
-      </h1>
+    <main className="min-h-screen bg-slate-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-10">
+          <h1 className="text-3xl font-semibold text-slate-800">
+            Upload Employees
+          </h1>
 
-      <div className="rounded border p-6 max-w-xl">
-        <input
-          type="file"
-          accept=".xlsx,.xls"
-          onChange={handleFileUpload}
-          className="mb-4 block"
-        />
-      </div>
+          <p className="text-slate-500 mt-2">
+            Import employee records from an Excel
+            file.
+          </p>
+        </div>
 
-      {rows.length > 0 && (
-        <>
-          <div className="mt-8">
-            <h2 className="text-2xl font-semibold mb-4">
-              Imported Employees
-            </h2>
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+          <label className="block text-sm font-medium text-slate-700 mb-4">
+            Select Excel File
+          </label>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse border">
+          <input
+            type="file"
+            accept=".xlsx,.xls"
+            onChange={handleFileUpload}
+            className="block w-full rounded-xl border border-slate-200 bg-slate-50 p-4"
+          />
+        </div>
+
+        {rows.length > 0 && (
+          <>
+            <div className="mt-10 rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+              <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="border p-2">
+                  <tr className="bg-violet-100">
+                    <th className="px-6 py-5 text-left font-semibold text-slate-700">
                       Sl No
                     </th>
-                    <th className="border p-2">
+
+                    <th className="px-6 py-5 text-left font-semibold text-slate-700">
                       Name
                     </th>
-                    <th className="border p-2">
-                      Email ID
+
+                    <th className="px-6 py-5 text-left font-semibold text-slate-700">
+                      Email
                     </th>
-                    <th className="border p-2">
+
+                    <th className="px-6 py-5 text-left font-semibold text-slate-700">
                       Team
                     </th>
                   </tr>
@@ -131,41 +138,46 @@ export default function UploadPage() {
 
                 <tbody>
                   {rows.map((row, index) => (
-                    <tr key={index}>
-                      <td className="border p-2">
+                    <tr
+                      key={index}
+                      className={
+                        index % 2 === 0
+                          ? "bg-white hover:bg-violet-50"
+                          : "bg-slate-50 hover:bg-violet-50"
+                      }
+                    >
+                      <td className="px-6 py-5">
                         {String(
                           row["Slno"] ?? ""
                         )}
                       </td>
 
-                      <td className="border p-2">
+                      <td className="px-6 py-5">
                         <input
                           defaultValue={String(
                             row["Name "] ??
                               row["Name"] ??
                               ""
                           ).trim()}
-                          className="w-full border rounded px-2 py-1"
+                          className="w-full rounded-xl border border-slate-200 px-4 py-3"
                         />
                       </td>
 
-                      <td className="border p-2">
+                      <td className="px-6 py-5">
                         <input
                           defaultValue={String(
-                            row["Email ID"] ??
-                              ""
+                            row["Email ID"] ?? ""
                           ).trim()}
-                          className="w-full border rounded px-2 py-1"
+                          className="w-full rounded-xl border border-slate-200 px-4 py-3"
                         />
                       </td>
 
-                      <td className="border p-2">
+                      <td className="px-6 py-5">
                         <select
                           defaultValue={String(
-                            row["Team"] ??
-                              ""
+                            row["Team"] ?? ""
                           ).trim()}
-                          className="w-full border rounded px-2 py-1"
+                          className="w-full rounded-xl border border-slate-200 px-4 py-3"
                         >
                           <option value="">
                             Select Team
@@ -186,22 +198,22 @@ export default function UploadPage() {
                 </tbody>
               </table>
             </div>
-          </div>
 
-          <button
-            onClick={saveEmployees}
-            className="mt-6 rounded bg-blue-600 px-4 py-2 text-white"
-          >
-            Save Employees
-          </button>
+            <button
+              onClick={saveEmployees}
+              className="mt-6 rounded-2xl bg-violet-500 px-8 py-3 text-white shadow-sm hover:bg-violet-600 transition"
+            >
+              Save Employees
+            </button>
 
-          {message && (
-            <p className="mt-4 font-semibold">
-              {message}
-            </p>
-          )}
-        </>
-      )}
+            {message && (
+              <p className="mt-4 font-medium text-slate-700">
+                {message}
+              </p>
+            )}
+          </>
+        )}
+      </div>
     </main>
   );
 }
