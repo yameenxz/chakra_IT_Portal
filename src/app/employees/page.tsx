@@ -8,6 +8,33 @@ export default async function EmployeesPage() {
     },
   });
 
+  const getWorkflowLabel = (
+    workflowStage: string
+  ) => {
+    switch (workflowStage) {
+      case "UPLOADED":
+        return "Uploaded";
+
+      case "PENDING_DIRECTOR":
+        return "Pending Guru Review";
+
+      case "PENDING_PARTNERS":
+        return "Pending Director & Partner Review";
+
+      case "PENDING_FINAL_DIRECTOR":
+        return "Pending Final Guru Review";
+
+      case "READY_FOR_IT":
+        return "Ready For IT";
+
+      case "COMPLETED":
+        return "Completed";
+
+      default:
+        return workflowStage;
+    }
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
       <div className="mx-auto max-w-7xl">
@@ -34,7 +61,8 @@ export default async function EmployeesPage() {
 
           {employees.some(
             (employee) =>
-              employee.workflowStage === "UPLOADED"
+              employee.workflowStage ===
+              "UPLOADED"
           ) && <EmployeeActions />}
         </div>
 
@@ -69,70 +97,80 @@ export default async function EmployeesPage() {
             </thead>
 
             <tbody>
-              {employees.map((employee, index) => (
-                <tr
-                  key={employee.id}
-                  className={
-                    index % 2 === 0
-                      ? "bg-white transition hover:bg-slate-50"
-                      : "bg-slate-50 transition hover:bg-slate-100"
-                  }
-                >
-                  <td className="px-6 py-5 text-slate-700">
-                    {employee.slNo}
-                  </td>
+              {employees.map(
+                (employee, index) => (
+                  <tr
+                    key={employee.id}
+                    className={
+                      index % 2 === 0
+                        ? "bg-white transition hover:bg-slate-50"
+                        : "bg-slate-50 transition hover:bg-slate-100"
+                    }
+                  >
+                    <td className="px-6 py-5 text-slate-700">
+                      {employee.slNo}
+                    </td>
 
-                  <td className="px-6 py-5 font-medium text-slate-800">
-                    {employee.name}
-                  </td>
+                    <td className="px-6 py-5 font-medium text-slate-800">
+                      {employee.name}
+                    </td>
 
-                  <td className="px-6 py-5 text-slate-600">
-                    {employee.emailId}
-                  </td>
+                    <td className="px-6 py-5 text-slate-600">
+                      {employee.emailId}
+                    </td>
 
-                  <td className="px-6 py-5 text-slate-600">
-                    {employee.team ?? "Not Assigned"}
-                  </td>
+                    <td className="px-6 py-5 text-slate-600">
+                      {employee.team ??
+                        "Not Assigned"}
+                    </td>
 
-                  <td className="px-6 py-5">
-                    <span
-                      className={`rounded-full px-3 py-1 text-sm font-medium ${
-                        employee.workflowStage === "UPLOADED"
-                          ? "bg-violet-100 text-violet-700"
-                          : employee.workflowStage ===
-                            "PENDING_DIRECTOR"
-                          ? "bg-orange-100 text-orange-700"
-                          : employee.workflowStage ===
-                            "PENDING_PARTNERS"
-                          ? "bg-blue-100 text-blue-700"
-                          : employee.workflowStage ===
-                            "READY_FOR_IT"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-slate-200 text-slate-700"
-                      }`}
-                    >
-                      {employee.workflowStage}
-                    </span>
-                  </td>
+                    <td className="px-6 py-5">
+                      <span
+                        className={`rounded-full px-3 py-1 text-sm font-medium ${
+                          employee.workflowStage ===
+                          "UPLOADED"
+                            ? "bg-violet-100 text-violet-700"
+                            : employee.workflowStage ===
+                              "PENDING_DIRECTOR"
+                            ? "bg-orange-100 text-orange-700"
+                            : employee.workflowStage ===
+                              "PENDING_PARTNERS"
+                            ? "bg-blue-100 text-blue-700"
+                            : employee.workflowStage ===
+                                "READY_FOR_IT" ||
+                              employee.workflowStage ===
+                                "PENDING_FINAL_DIRECTOR"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-slate-200 text-slate-700"
+                        }`}
+                      >
+                        {getWorkflowLabel(
+                          employee.workflowStage
+                        )}
+                      </span>
+                    </td>
 
-                  <td className="px-6 py-5">
-                    <span
-                      className={`rounded-full px-3 py-1 text-sm font-medium ${
-                        employee.statusByIT === "COMPLETED"
-                          ? "bg-green-100 text-green-700"
-                          : employee.statusByIT === "PENDING"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : employee.statusByIT ===
-                            "STARTED_DOWNLOAD"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-pink-100 text-pink-700"
-                      }`}
-                    >
-                      {employee.statusByIT}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                    <td className="px-6 py-5">
+                      <span
+                        className={`rounded-full px-3 py-1 text-sm font-medium ${
+                          employee.statusByIT ===
+                          "COMPLETED"
+                            ? "bg-green-100 text-green-700"
+                            : employee.statusByIT ===
+                              "PENDING"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : employee.statusByIT ===
+                              "STARTED_DOWNLOAD"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-pink-100 text-pink-700"
+                        }`}
+                      >
+                        {employee.statusByIT}
+                      </span>
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </div>

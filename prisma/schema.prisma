@@ -8,6 +8,7 @@ datasource db {
 }
 
 enum Role {
+  EMPLOYEE
   ADMIN
   IT
   GURU
@@ -44,27 +45,31 @@ enum PartnerReviewStatus {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  role      Role
-  team      String?
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String?
+  role         Role     @default(EMPLOYEE)
+  team         String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
 }
 
 model Employee {
   id String @id @default(uuid())
 
-  slNo    Int
-  name    String
+  slNo Int
+
+  name String
+
   emailId String
 
   team String
 
   workflowStage WorkflowStage @default(UPLOADED)
 
-  guruCommentEmail    GuruDecision?
+  guruCommentEmail GuruDecision?
+
   guruCommentOneDrive GuruDecision?
 
   statusByIT ITStatus @default(PENDING)
@@ -80,6 +85,7 @@ model Employee {
   finalGuruComment String?
 
   createdAt DateTime @default(now())
+
   updatedAt DateTime @updatedAt
 
   auditLogs AuditLog[]
