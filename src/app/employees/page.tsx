@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import SendForApprovalButton from "./SendForApprovalButton";
+import EmployeeActions from "./EmployeeActions";
 
 export default async function EmployeesPage() {
   const employees = await prisma.employee.findMany({
@@ -9,36 +9,39 @@ export default async function EmployeesPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-10">
-          <h1 className="text-3xl font-semibold text-slate-800">
+    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold tracking-tight text-white">
             Employees
           </h1>
 
-          <p className="text-slate-500 mt-2">
+          <p className="mt-2 text-slate-300">
             View employee records and workflow status.
           </p>
         </div>
 
         <div className="mb-6 flex items-center gap-4">
-          <div className="bg-white rounded-2xl border border-slate-200 px-6 py-4 shadow-sm">
-            <p className="text-sm text-slate-500">
+          <div className="rounded-2xl border border-white/10 bg-white/10 px-6 py-4 backdrop-blur-md">
+            <p className="text-sm text-slate-300">
               Total Employees
             </p>
 
-            <p className="text-2xl font-semibold text-slate-800">
+            <p className="text-3xl font-bold text-white">
               {employees.length}
             </p>
           </div>
 
-          <SendForApprovalButton />
+          {employees.some(
+            (employee) =>
+              employee.workflowStage === "UPLOADED"
+          ) && <EmployeeActions />}
         </div>
 
-        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
           <table className="w-full">
             <thead>
-              <tr className="bg-violet-100">
+              <tr className="bg-slate-100">
                 <th className="px-6 py-5 text-left font-semibold text-slate-700">
                   Sl No
                 </th>
@@ -71,8 +74,8 @@ export default async function EmployeesPage() {
                   key={employee.id}
                   className={
                     index % 2 === 0
-                      ? "bg-white hover:bg-violet-50"
-                      : "bg-slate-50 hover:bg-violet-50"
+                      ? "bg-white transition hover:bg-slate-50"
+                      : "bg-slate-50 transition hover:bg-slate-100"
                   }
                 >
                   <td className="px-6 py-5 text-slate-700">
@@ -95,7 +98,7 @@ export default async function EmployeesPage() {
                     <span
                       className={`rounded-full px-3 py-1 text-sm font-medium ${
                         employee.workflowStage === "UPLOADED"
-                          ? "bg-purple-100 text-purple-700"
+                          ? "bg-violet-100 text-violet-700"
                           : employee.workflowStage ===
                             "PENDING_DIRECTOR"
                           ? "bg-orange-100 text-orange-700"

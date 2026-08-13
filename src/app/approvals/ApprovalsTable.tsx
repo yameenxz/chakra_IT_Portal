@@ -5,6 +5,8 @@ import { useState } from "react";
 type Employee = {
   id: string;
   name: string;
+  emailId: string;
+  team: string;
   workflowStage: string;
   guruCommentEmail?: string | null;
   guruCommentOneDrive?: string | null;
@@ -25,7 +27,7 @@ export default function ApprovalsTable({
     try {
       const rows =
         document.querySelectorAll(
-          "tbody tr"
+          "tbody tr[data-id]"
         );
 
       const requests =
@@ -91,10 +93,7 @@ export default function ApprovalsTable({
           await response.json();
 
         if (!result.success) {
-          alert(
-            result.error
-          );
-
+          alert(result.error);
           return;
         }
 
@@ -121,16 +120,24 @@ export default function ApprovalsTable({
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full">
           <thead>
-            <tr className="bg-violet-100">
-              <th className="px-6 py-5 text-left">
+            <tr className="bg-slate-100">
+              <th className="px-6 py-5 text-left font-semibold">
                 Employee
               </th>
 
-              <th className="px-6 py-5 text-left">
+              <th className="px-6 py-5 text-left font-semibold">
+                Email ID
+              </th>
+
+              <th className="px-6 py-5 text-left font-semibold">
+                Team
+              </th>
+
+              <th className="px-6 py-5 text-left font-semibold">
                 Email Decision
               </th>
 
-              <th className="px-6 py-5 text-left">
+              <th className="px-6 py-5 text-left font-semibold">
                 OneDrive Decision
               </th>
             </tr>
@@ -143,22 +150,24 @@ export default function ApprovalsTable({
                 index
               ) => (
                 <tr
-                  key={
-                    employee.id
-                  }
-                  data-id={
-                    employee.id
-                  }
+                  key={employee.id}
+                  data-id={employee.id}
                   className={
                     index % 2 === 0
-                      ? "bg-white hover:bg-violet-50"
-                      : "bg-slate-50 hover:bg-violet-50"
+                      ? "bg-white hover:bg-slate-50"
+                      : "bg-slate-50 hover:bg-slate-100"
                   }
                 >
                   <td className="px-6 py-5 font-medium">
-                    {
-                      employee.name
-                    }
+                    {employee.name}
+                  </td>
+
+                  <td className="px-6 py-5">
+                    {employee.emailId}
+                  </td>
+
+                  <td className="px-6 py-5">
+                    {employee.team}
                   </td>
 
                   <td className="px-6 py-5">
@@ -173,12 +182,12 @@ export default function ApprovalsTable({
                         Select
                       </option>
 
-                      <option value="DELETE">
-                        Delete
+                      <option value="BACKUP_AND_DELETE">
+                        Backup & Delete
                       </option>
 
-                      <option value="RETAIN">
-                        Retain
+                      <option value="DELETE">
+                        Delete
                       </option>
 
                       <option value="HOLD">
@@ -199,12 +208,12 @@ export default function ApprovalsTable({
                         Select
                       </option>
 
-                      <option value="DELETE">
-                        Delete
+                      <option value="BACKUP_AND_DELETE">
+                        Backup & Delete
                       </option>
 
-                      <option value="RETAIN">
-                        Retain
+                      <option value="DELETE">
+                        Delete
                       </option>
 
                       <option value="HOLD">
@@ -216,14 +225,14 @@ export default function ApprovalsTable({
               )
             )}
 
-            {employees.length ===
-              0 && (
+            {employees.length === 0 && (
               <tr>
                 <td
-                  colSpan={3}
-                  className="px-6 py-8 text-center text-slate-500"
+                  colSpan={5}
+                  className="px-6 py-12 text-center text-slate-500"
                 >
-                  No employees awaiting director approval.
+                  No employees awaiting director
+                  approval.
                 </td>
               </tr>
             )}
@@ -231,41 +240,33 @@ export default function ApprovalsTable({
         </table>
       </div>
 
-      <div className="mt-6 flex gap-4">
-        <button
-          onClick={
-            handleSaveAll
-          }
-          className="rounded-2xl bg-violet-500 px-8 py-3 text-white shadow-sm hover:bg-violet-600"
-        >
-          Save Director Decisions
-        </button>
-
-        {allCompleted && (
+      {employees.length > 0 && (
+        <div className="mt-4 flex gap-4">
           <button
-            onClick={
-              handleSubmitBatch
-            }
-            disabled={
-              submitting
-            }
-            className="rounded-2xl bg-green-600 px-8 py-3 text-white shadow-sm hover:bg-green-700 disabled:opacity-50"
+            onClick={handleSaveAll}
+            className="rounded-2xl bg-violet-600 px-8 py-3 text-white shadow-sm transition hover:bg-violet-700"
           >
-            {submitting
-              ? "Submitting..."
-              : "Submit Batch To Partners"}
+            Save Director Decisions
           </button>
-        )}
-      </div>
 
-      {!allCompleted && (
-        <p className="mt-4 text-amber-600">
-          Complete all director decisions and save them before submitting the batch.
-        </p>
+          {allCompleted && (
+            <button
+              onClick={
+                handleSubmitBatch
+              }
+              disabled={submitting}
+              className="rounded-2xl bg-green-600 px-8 py-3 text-white shadow-sm transition hover:bg-green-700 disabled:opacity-50"
+            >
+              {submitting
+                ? "Submitting..."
+                : "Submit Batch To Partners"}
+            </button>
+          )}
+        </div>
       )}
 
       {message && (
-        <p className="mt-4">
+        <p className="mt-4 text-slate-600">
           {message}
         </p>
       )}

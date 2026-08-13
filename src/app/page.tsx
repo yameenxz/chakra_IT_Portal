@@ -1,269 +1,68 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { BriefcaseBusiness, ArrowRight } from "lucide-react";
 
 export default function HomePage() {
   const router = useRouter();
 
-  const [role, setRole] = useState("IT");
-
-  useEffect(() => {
-    const savedRole =
-      localStorage.getItem("role");
-
-    if (savedRole) {
-      setRole(savedRole);
-    }
-  }, []);
-
   return (
-    <main className="min-h-screen bg-slate-50">
-      <div className="max-w-7xl mx-auto px-8 py-12">
-        <div className="mb-10">
-          <h1 className="text-4xl font-semibold text-slate-800">
-            {role === "DIRECTOR"
-              ? "Director Portal"
-              : role === "PARTNER"
-              ? "Partner Portal"
-              : role === "ADMIN"
-              ? "Admin Portal"
-              : "IT Service Portal"}
+    <main className="min-h-screen bg-slate-800">
+      <div className="mx-auto max-w-7xl px-8 py-8">
+        <div className="mb-12">
+          <h1 className="text-5xl font-bold tracking-tight text-white">
+            IT Service Portal
           </h1>
 
-          <p className="text-slate-500 mt-2">
-            Role-based access portal.
+          <p className="mt-3 text-lg text-slate-300">
+            Centralized platform for IT operations, automation and service
+            management.
           </p>
         </div>
 
-        {role === "IT" && (
-          <>
-            <h2 className="text-xl font-semibold text-slate-800 mb-6">
-              IT Quick Actions
-            </h2>
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold text-white">
+            Available Services
+          </h2>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              <button
-                onClick={() =>
-                  router.push("/employees")
-                }
-                className="bg-blue-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  Employees
-                </h3>
+          <p className="mt-2 text-slate-400">
+            Select a service to continue.
+          </p>
+        </div>
 
-                <p className="mt-2">
-                  Manage employee records.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/dashboard")
-                }
-                className="bg-green-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  Dashboard
-                </h3>
-
-                <p className="mt-2">
-                  Process IT requests.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/upload")
-                }
-                className="bg-pink-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  Upload
-                </h3>
-
-                <p className="mt-2">
-                  Import employee files.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/reports")
-                }
-                className="bg-cyan-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  Reports
-                </h3>
-
-                <p className="mt-2">
-                  View reporting data.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/history")
-                }
-                className="bg-amber-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  History
-                </h3>
-
-                <p className="mt-2">
-                  Audit trail and logs.
-                </p>
-              </button>
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <button
+            onClick={() => router.push("/offboarding")}
+            className="group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-violet-300 hover:shadow-xl"
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50">
+              <BriefcaseBusiness
+                size={24}
+                className="text-violet-600"
+              />
             </div>
-          </>
-        )}
 
-        {role === "DIRECTOR" && (
-          <>
-            <h2 className="text-xl font-semibold text-slate-800 mb-6">
-              Director Workspace
-            </h2>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">
+                Employee Offboarding
+              </h3>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <button
-                onClick={() =>
-                  router.push("/director")
-                }
-                className="bg-green-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  Director Queue
-                </h3>
-
-                <p className="mt-2">
-                  Review pending approvals.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/history")
-                }
-                className="bg-amber-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  Approval History
-                </h3>
-
-                <p className="mt-2">
-                  Review previous actions.
-                </p>
-              </button>
+              <ArrowRight
+                size={18}
+                className="text-slate-400"
+              />
             </div>
-          </>
-        )}
 
-        {role === "PARTNER" && (
-          <>
-            <h2 className="text-xl font-semibold text-slate-800 mb-6">
-              Partner Workspace
-            </h2>
+            <p className="mt-2 text-sm text-slate-500">
+              Manage employee exits, Guru approvals, partner reviews,
+              IT execution, audit history and reporting.
+            </p>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <button
-                onClick={() =>
-                  router.push("/partner")
-                }
-                className="bg-purple-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  Partner Queue
-                </h3>
-
-                <p className="mt-2">
-                  Review partner approvals.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/history")
-                }
-                className="bg-amber-100 rounded-2xl p-8 text-left"
-              >
-                <h3 className="text-xl font-semibold">
-                  History
-                </h3>
-
-                <p className="mt-2">
-                  Review previous actions.
-                </p>
-              </button>
+            <div className="mt-4 inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+              Active Service
             </div>
-          </>
-        )}
-
-        {role === "ADMIN" && (
-          <>
-            <h2 className="text-xl font-semibold text-slate-800 mb-6">
-              Admin Workspace
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <button
-                onClick={() =>
-                  router.push("/employees")
-                }
-                className="bg-blue-100 rounded-2xl p-8 text-left"
-              >
-                Employees
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/dashboard")
-                }
-                className="bg-green-100 rounded-2xl p-8 text-left"
-              >
-                Dashboard
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/upload")
-                }
-                className="bg-pink-100 rounded-2xl p-8 text-left"
-              >
-                Upload
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/director")
-                }
-                className="bg-purple-100 rounded-2xl p-8 text-left"
-              >
-                Director Queue
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/partner")
-                }
-                className="bg-indigo-100 rounded-2xl p-8 text-left"
-              >
-                Partner Queue
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/reports")
-                }
-                className="bg-cyan-100 rounded-2xl p-8 text-left"
-              >
-                Reports
-              </button>
-            </div>
-          </>
-        )}
+          </button>
+        </div>
       </div>
     </main>
   );

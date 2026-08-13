@@ -10,6 +10,7 @@ datasource db {
 enum Role {
   ADMIN
   IT
+  GURU
   DIRECTOR
   PARTNER
 }
@@ -18,13 +19,14 @@ enum WorkflowStage {
   UPLOADED
   PENDING_DIRECTOR
   PENDING_PARTNERS
+  PENDING_FINAL_DIRECTOR
   READY_FOR_IT
   COMPLETED
 }
 
 enum GuruDecision {
+  BACKUP_AND_DELETE
   DELETE
-  RETAIN
   HOLD
 }
 
@@ -46,17 +48,19 @@ model User {
   name      String
   email     String   @unique
   role      Role
+  team      String?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
 }
 
 model Employee {
-  id      String @id @default(uuid())
+  id String @id @default(uuid())
 
   slNo    Int
   name    String
   emailId String
-  team    String?
+
+  team String
 
   workflowStage WorkflowStage @default(UPLOADED)
 
@@ -72,6 +76,8 @@ model Employee {
   partnerReminderSent Boolean @default(false)
 
   completedAt DateTime?
+
+  finalGuruComment String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -89,6 +95,8 @@ model PartnerApproval {
   employee Employee @relation(fields: [employeeId], references: [id])
 
   partnerEmail String
+
+  reviewerRole Role
 
   status PartnerReviewStatus @default(PENDING)
 

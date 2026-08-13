@@ -62,15 +62,15 @@ export default async function ReportsPage() {
   ).length;
 
   return (
-    <main className="min-h-screen bg-slate-100 p-8">
+    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10 flex items-center justify-between">
+        <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-5xl font-bold text-slate-900">
+            <h1 className="text-4xl font-bold tracking-tight text-white">
               Reports
             </h1>
 
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-slate-300">
               Offboarding workflow summary and statistics.
             </p>
           </div>
@@ -78,124 +78,130 @@ export default async function ReportsPage() {
           <DownloadReportButton />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-7">
-          <div className="rounded-xl bg-white p-6 shadow-lg">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-7">
+          <div className="rounded-2xl border border-white/10 bg-white p-6 shadow-xl">
             <p className="text-sm text-slate-500">
               Total
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold">
+            <h2 className="mt-3 text-4xl font-bold text-slate-900">
               {totalEmployees}
             </h2>
           </div>
 
-          <div className="rounded-xl bg-slate-500 p-6 text-white shadow-lg">
-            <p className="text-sm">
+          <div className="rounded-2xl border border-violet-200 bg-violet-50 p-6 shadow-xl">
+            <p className="text-sm text-violet-700">
               Uploaded
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold">
+            <h2 className="mt-3 text-4xl font-bold text-violet-900">
               {uploaded}
             </h2>
           </div>
 
-          <div className="rounded-xl bg-yellow-500 p-6 text-white shadow-lg">
-            <p className="text-sm">
+          <div className="rounded-2xl border border-orange-200 bg-orange-50 p-6 shadow-xl">
+            <p className="text-sm text-orange-700">
               Director Queue
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold">
+            <h2 className="mt-3 text-4xl font-bold text-orange-900">
               {pendingDirector}
             </h2>
           </div>
 
-          <div className="rounded-xl bg-purple-500 p-6 text-white shadow-lg">
-            <p className="text-sm">
+          <div className="rounded-2xl border border-purple-200 bg-purple-50 p-6 shadow-xl">
+            <p className="text-sm text-purple-700">
               Partner Queue
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold">
+            <h2 className="mt-3 text-4xl font-bold text-purple-900">
               {pendingPartner}
             </h2>
           </div>
 
-          <div className="rounded-xl bg-red-500 p-6 text-white shadow-lg">
-            <p className="text-sm">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 shadow-xl">
+            <p className="text-sm text-red-700">
               Overdue Reviews
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold">
+            <h2 className="mt-3 text-4xl font-bold text-red-900">
               {overdueReviews}
             </h2>
           </div>
 
-          <div className="rounded-xl bg-blue-500 p-6 text-white shadow-lg">
-            <p className="text-sm">
+          <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-xl">
+            <p className="text-sm text-blue-700">
               Ready For IT
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold">
+            <h2 className="mt-3 text-4xl font-bold text-blue-900">
               {readyForIT}
             </h2>
           </div>
 
-          <div className="rounded-xl bg-green-500 p-6 text-white shadow-lg">
-            <p className="text-sm">
+          <div className="rounded-2xl border border-green-200 bg-green-50 p-6 shadow-xl">
+            <p className="text-sm text-green-700">
               Completed
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold">
+            <h2 className="mt-3 text-4xl font-bold text-green-900">
               {completed}
             </h2>
           </div>
         </div>
 
-        <div className="mt-10 rounded-xl bg-white p-6 shadow-lg">
-          <h2 className="mb-6 text-2xl font-bold">
-            Employee Workflow Summary
-          </h2>
+        <div className="mt-8 overflow-hidden rounded-3xl bg-white shadow-2xl">
+          <div className="border-b border-slate-200 px-6 py-5">
+            <h2 className="text-2xl font-bold text-slate-900">
+              Employee Workflow Summary
+            </h2>
+          </div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-slate-100">
                 <tr>
-                  <th className="px-4 py-3 text-left">
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700">
                     Employee
                   </th>
 
-                  <th className="px-4 py-3 text-left">
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700">
                     Email
                   </th>
 
-                  <th className="px-4 py-3 text-left">
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700">
                     Workflow Stage
                   </th>
 
-                  <th className="px-4 py-3 text-left">
+                  <th className="px-6 py-4 text-left font-semibold text-slate-700">
                     IT Status
                   </th>
                 </tr>
               </thead>
 
               <tbody>
-                {employees.map((employee) => (
+                {employees.map((employee, index) => (
                   <tr
                     key={employee.id}
-                    className="border-b hover:bg-slate-50"
+                    className={
+                      index % 2 === 0
+                        ? "bg-white hover:bg-slate-50"
+                        : "bg-slate-50 hover:bg-slate-100"
+                    }
                   >
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       {employee.name}
                     </td>
 
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       {employee.emailId}
                     </td>
 
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       {employee.workflowStage}
                     </td>
 
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       {employee.statusByIT}
                     </td>
                   </tr>

@@ -8,22 +8,22 @@ export default async function HistoryPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-10">
-          <h1 className="text-3xl font-semibold text-slate-800">
+    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold tracking-tight text-white">
             Activity History
           </h1>
 
-          <p className="text-slate-500 mt-2">
+          <p className="mt-2 text-slate-300">
             Review workflow approvals and system activity.
           </p>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="overflow-hidden rounded-3xl bg-white shadow-2xl">
           <table className="w-full">
             <thead>
-              <tr className="bg-violet-100">
+              <tr className="bg-slate-100">
                 <th className="px-6 py-5 text-left font-semibold text-slate-700">
                   Action
                 </th>
@@ -49,8 +49,8 @@ export default async function HistoryPage() {
                     key={log.id}
                     className={
                       index % 2 === 0
-                        ? "bg-white hover:bg-violet-50"
-                        : "bg-slate-50 hover:bg-violet-50"
+                        ? "bg-white hover:bg-slate-50"
+                        : "bg-slate-50 hover:bg-slate-100"
                     }
                   >
                     <td className="px-6 py-5 font-medium text-slate-800">
@@ -75,7 +75,7 @@ export default async function HistoryPage() {
                 <tr>
                   <td
                     colSpan={4}
-                    className="px-6 py-8 text-center text-slate-500"
+                    className="px-6 py-10 text-center text-slate-500"
                   >
                     No activity history found.
                   </td>
@@ -85,17 +85,17 @@ export default async function HistoryPage() {
           </table>
         </div>
 
-        <div className="mt-8 rounded-3xl border border-slate-200 bg-white shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-slate-800 mb-4">
+        <div className="mt-8 rounded-3xl bg-white p-6 shadow-2xl">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900">
             Activity Types Currently Tracked
           </h2>
 
-          <ul className="list-disc pl-6 text-slate-600 space-y-2">
-            <li>Director Approval Completed</li>
-            <li>IT Download Started</li>
-            <li>IT Processing On Hold</li>
-            <li>Offboarding Completed</li>
-            <li>Employee Updated</li>
+          <ul className="space-y-3 text-slate-600">
+            <li>• Director Approval Completed</li>
+            <li>• IT Download Started</li>
+            <li>• IT Processing On Hold</li>
+            <li>• Offboarding Completed</li>
+            <li>• Employee Updated</li>
           </ul>
         </div>
       </div>

@@ -6,19 +6,49 @@ type Approval = {
   id: string;
   employeeId: string;
   partnerEmail: string;
+
   employeeName: string;
+  employeeEmail: string;
+  team: string;
+
+  directorEmailDecision: string;
+  directorOneDriveDecision: string;
+
   waitingDays: number;
   overdue: boolean;
   status: string;
+
   emailDecision?: string | null;
   oneDriveDecision?: string | null;
   comment?: string | null;
 };
 
+function formatDecision(
+  value: string | null | undefined
+) {
+  if (!value) return "-";
+
+  switch (value) {
+    case "BACKUP_AND_DELETE":
+      return "Backup & Delete";
+
+    case "DELETE":
+      return "Delete";
+
+    case "HOLD":
+      return "Hold";
+
+    default:
+      return value;
+  }
+}
+
 export default function PartnerApprovalTable({
   employees,
+  partnerName,
 }: {
   employees: Approval[];
+  partnerName: string;
 }) {
   const [message, setMessage] =
     useState("");
@@ -108,27 +138,39 @@ export default function PartnerApprovalTable({
 
   return (
     <>
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full">
           <thead>
             <tr className="bg-violet-100">
-              <th className="px-6 py-5 text-left">
+              <th className="px-4 py-4 text-left">
                 Employee
               </th>
 
-              <th className="px-6 py-5 text-left">
-                Partner
+              <th className="px-4 py-4 text-left">
+                Email ID
               </th>
 
-              <th className="px-6 py-5 text-left">
-                Email Decision
+              <th className="px-4 py-4 text-left">
+                Team
               </th>
 
-              <th className="px-6 py-5 text-left">
-                OneDrive Decision
+              <th className="px-4 py-4 text-left">
+                Guru Email Decision
               </th>
 
-              <th className="px-6 py-5 text-left">
+              <th className="px-4 py-4 text-left">
+                Guru OneDrive Decision
+              </th>
+
+              <th className="px-4 py-4 text-left">
+                {partnerName} Email Decision
+              </th>
+
+              <th className="px-4 py-4 text-left">
+                {partnerName} OneDrive Decision
+              </th>
+
+              <th className="px-4 py-4 text-left">
                 Comment
               </th>
             </tr>
@@ -141,12 +183,8 @@ export default function PartnerApprovalTable({
                 index
               ) => (
                 <tr
-                  key={
-                    approval.id
-                  }
-                  data-id={
-                    approval.id
-                  }
+                  key={approval.id}
+                  data-id={approval.id}
                   data-employee={
                     approval.employeeId
                   }
@@ -159,19 +197,35 @@ export default function PartnerApprovalTable({
                       : "bg-slate-50"
                   }
                 >
-                  <td className="px-6 py-5 font-medium">
+                  <td className="px-4 py-4 font-medium">
                     {
                       approval.employeeName
                     }
                   </td>
 
-                  <td className="px-6 py-5">
+                  <td className="px-4 py-4">
                     {
-                      approval.partnerEmail
+                      approval.employeeEmail
                     }
                   </td>
 
-                  <td className="px-6 py-5">
+                  <td className="px-4 py-4">
+                    {approval.team}
+                  </td>
+
+                  <td className="px-4 py-4">
+                    {formatDecision(
+                      approval.directorEmailDecision
+                    )}
+                  </td>
+
+                  <td className="px-4 py-4">
+                    {formatDecision(
+                      approval.directorOneDriveDecision
+                    )}
+                  </td>
+
+                  <td className="px-4 py-4">
                     <select
                       defaultValue={
                         approval.emailDecision ??
@@ -183,12 +237,12 @@ export default function PartnerApprovalTable({
                         Select
                       </option>
 
-                      <option value="DELETE">
-                        Delete
+                      <option value="BACKUP_AND_DELETE">
+                        Backup & Delete
                       </option>
 
-                      <option value="RETAIN">
-                        Retain
+                      <option value="DELETE">
+                        Delete
                       </option>
 
                       <option value="HOLD">
@@ -197,7 +251,7 @@ export default function PartnerApprovalTable({
                     </select>
                   </td>
 
-                  <td className="px-6 py-5">
+                  <td className="px-4 py-4">
                     <select
                       defaultValue={
                         approval.oneDriveDecision ??
@@ -209,12 +263,12 @@ export default function PartnerApprovalTable({
                         Select
                       </option>
 
-                      <option value="DELETE">
-                        Delete
+                      <option value="BACKUP_AND_DELETE">
+                        Backup & Delete
                       </option>
 
-                      <option value="RETAIN">
-                        Retain
+                      <option value="DELETE">
+                        Delete
                       </option>
 
                       <option value="HOLD">
@@ -223,7 +277,7 @@ export default function PartnerApprovalTable({
                     </select>
                   </td>
 
-                  <td className="px-6 py-5">
+                  <td className="px-4 py-4">
                     <textarea
                       defaultValue={
                         approval.comment ??
@@ -242,7 +296,7 @@ export default function PartnerApprovalTable({
               0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={8}
                   className="px-6 py-8 text-center text-slate-500"
                 >
                   No pending partner approvals.
@@ -255,9 +309,7 @@ export default function PartnerApprovalTable({
 
       <div className="mt-6">
         <button
-          onClick={
-            handleSaveAll
-          }
+          onClick={handleSaveAll}
           className="rounded-2xl bg-violet-500 px-8 py-3 text-white shadow-sm hover:bg-violet-600"
         >
           Save Partner Decisions
