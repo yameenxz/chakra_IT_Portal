@@ -16,7 +16,9 @@ export async function GET() {
       },
     });
 
-  return NextResponse.json(employees);
+  return NextResponse.json(
+    employees
+  );
 }
 
 export async function POST(
@@ -26,45 +28,26 @@ export async function POST(
     const employees: EmployeeUpload[] =
       await request.json();
 
-    const existingEmployees =
-      await prisma.employee.findMany({
-        select: {
-          emailId: true,
-        },
-      });
-
-    const existingEmails = new Set(
-      existingEmployees.map((employee) =>
-        employee.emailId.toLowerCase()
-      )
-    );
-
-    const newEmployees =
-      employees.filter(
-        (employee) =>
-          !existingEmails.has(
-            employee.emailId.toLowerCase()
-          )
-      );
-
-    if (newEmployees.length > 0) {
-      await prisma.employee.createMany({
-        data: newEmployees.map(
-          (employee) => ({
-            ...employee,
-            workflowStage:
-              "UPLOADED",
-          })
-        ),
-      });
-    }
+    await prisma.employee.createMany({
+      data: employees.map(
+        (employee) => ({
+          slNo: employee.slNo,
+          name: employee.name,
+          emailId:
+            employee.emailId,
+          team:
+            employee.team ?? "",
+          workflowStage:
+            "UPLOADED",
+        })
+      ),
+    });
 
     return NextResponse.json({
       success: true,
-      imported: newEmployees.length,
-      skipped:
-        employees.length -
-        newEmployees.length,
+      imported:
+        employees.length,
+      skipped: 0,
     });
   } catch (error) {
     console.error(error);

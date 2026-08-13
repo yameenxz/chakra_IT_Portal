@@ -86,6 +86,17 @@ export default function UploadPage() {
     setRows(updatedRows);
   };
 
+  const deleteRow = (
+    index: number
+  ) => {
+    setRows(
+      rows.filter(
+        (_, rowIndex) =>
+          rowIndex !== index
+      )
+    );
+  };
+
   const saveEmployees =
     async () => {
       const employees =
@@ -242,6 +253,10 @@ export default function UploadPage() {
                     <th className="px-6 py-5 text-left font-semibold text-slate-700">
                       Team
                     </th>
+
+                    <th className="px-6 py-5 text-left font-semibold text-slate-700">
+                      Action
+                    </th>
                   </tr>
                 </thead>
 
@@ -343,8 +358,7 @@ export default function UploadPage() {
                             className="w-full rounded-xl border border-slate-200 px-4 py-3"
                           >
                             <option value="">
-                              Select
-                              Team
+                              Select Team
                             </option>
 
                             {teams.map(
@@ -366,6 +380,19 @@ export default function UploadPage() {
                               )
                             )}
                           </select>
+                        </td>
+
+                        <td className="px-6 py-5">
+                          <button
+                            onClick={() =>
+                              deleteRow(
+                                index
+                              )
+                            }
+                            className="rounded-xl bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     )
