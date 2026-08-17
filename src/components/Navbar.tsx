@@ -1,66 +1,33 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-
-type User = {
-  email: string;
-  role: string;
-  name: string;
-};
+import { usePathname, useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [users, setUsers] = useState<User[]>([]);
-  const [currentEmail, setCurrentEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
 
-  useEffect(() => {
-    const email = localStorage.getItem("email") || "";
-    const savedRole = localStorage.getItem("role") || "";
-
-    setCurrentEmail(email);
-    setRole(savedRole);
-
-    fetch("/api/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-      })
-      .catch(console.error)
-      .finally(() => {
-        setMounted(true);
-      });
-  }, []);
-
-  const switchUser = (email: string) => {
-    const selectedUser = users.find(
-      (user) => user.email === email
-    );
-
-    if (!selectedUser) return;
-
-    localStorage.setItem(
-      "email",
-      selectedUser.email
-    );
-
-    localStorage.setItem(
-      "role",
-      selectedUser.role
-    );
-
-    window.location.href = "/";
-  };
-
-  if (!mounted) {
+  if (
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password"
+  ) {
     return null;
   }
 
-  const isPortalHome = pathname === "/";
+  const role =
+    (session?.user as {
+      role?: string;
+    })?.role || "";
+
+  const name =
+    session?.user?.name || "User";
+
+  const isPortalHome =
+    pathname === "/" ||
+    pathname === "/home";
 
   return (
     <header className="sticky top-0 z-50 border-b border-violet-900/40 bg-gradient-to-r from-slate-900 via-violet-950 to-slate-900 shadow-xl">
@@ -75,38 +42,23 @@ export default function Navbar() {
           </p>
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="flex flex-col">
-            <label className="mb-1 text-xs text-slate-400">
-              Logged In User
-            </label>
+        <div className="flex items-center gap-8">
+          <div className="text-right">
+            <div className="text-sm text-white">
+              {name}
+            </div>
 
-            <select
-              value={currentEmail}
-              onChange={(e) =>
-                switchUser(e.target.value)
-              }
-              className="rounded-xl border border-violet-800/30 bg-slate-800/80 px-4 py-2 text-white shadow-sm outline-none backdrop-blur-sm"
-            >
-              <option value="">
-                Select User
-              </option>
-
-              {users.map((user) => (
-                <option
-                  key={user.email}
-                  value={user.email}
-                >
-                  {user.name} ({user.role})
-                </option>
-              ))}
-            </select>
+            <div className="text-xs text-slate-400">
+              {role}
+            </div>
           </div>
 
           <nav className="flex gap-8 text-sm font-medium text-slate-300">
             <button
-              onClick={() => router.push("/")}
-              className="text-violet-300 transition hover:text-violet-200"
+              onClick={() =>
+                router.push("/home")
+              }
+              className="transition hover:text-violet-300"
             >
               Home
             </button>
@@ -209,6 +161,17 @@ export default function Navbar() {
                 </button>
               </>
             )}
+
+            <button
+              onClick={() =>
+                signOut({
+                  callbackUrl: "/login",
+                })
+              }
+              className="text-red-300 transition hover:text-red-200"
+            >
+              Logout
+            </button>
           </nav>
         </div>
       </div>

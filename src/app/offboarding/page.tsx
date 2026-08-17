@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import {
   Users,
@@ -16,15 +16,11 @@ import {
 export default function HomePage() {
   const router = useRouter();
 
-  const [role, setRole] = useState("IT");
+  const { data: session } = useSession();
 
-  useEffect(() => {
-    const savedRole = localStorage.getItem("role");
-
-    if (savedRole) {
-      setRole(savedRole);
-    }
-  }, []);
+  const role =
+    ((session?.user as { role?: string })
+      ?.role ?? "EMPLOYEE");
 
   const cardClass =
     "group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-violet-200";
@@ -52,17 +48,22 @@ export default function HomePage() {
 
         {(role === "IT" || role === "ADMIN") && (
           <>
-            <h2 className="mb-4 text-lg font-semibold text-slate-700">
+            <h2 className="mb-4 text-lg font-semibold text-slate-300">
               Quick Actions
             </h2>
 
             <div className="grid gap-5 md:grid-cols-3 xl:grid-cols-5">
               <button
-                onClick={() => router.push("/employees")}
+                onClick={() =>
+                  router.push("/employees")
+                }
                 className={cardClass}
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50">
-                  <Users size={24} className="text-violet-600" />
+                  <Users
+                    size={24}
+                    className="text-violet-600"
+                  />
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -82,7 +83,9 @@ export default function HomePage() {
               </button>
 
               <button
-                onClick={() => router.push("/dashboard")}
+                onClick={() =>
+                  router.push("/dashboard")
+                }
                 className={cardClass}
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50">
@@ -109,11 +112,16 @@ export default function HomePage() {
               </button>
 
               <button
-                onClick={() => router.push("/upload")}
+                onClick={() =>
+                  router.push("/upload")
+                }
                 className={cardClass}
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-pink-50">
-                  <Upload size={24} className="text-pink-600" />
+                  <Upload
+                    size={24}
+                    className="text-pink-600"
+                  />
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -133,7 +141,9 @@ export default function HomePage() {
               </button>
 
               <button
-                onClick={() => router.push("/reports")}
+                onClick={() =>
+                  router.push("/reports")
+                }
                 className={cardClass}
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-50">
@@ -160,7 +170,9 @@ export default function HomePage() {
               </button>
 
               <button
-                onClick={() => router.push("/history")}
+                onClick={() =>
+                  router.push("/history")
+                }
                 className={cardClass}
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50">
@@ -189,10 +201,13 @@ export default function HomePage() {
           </>
         )}
 
-        {(role === "GURU" || role === "ADMIN") && (
-          <div className="grid gap-5 md:grid-cols-4">
+        {(role === "GURU" ||
+          role === "ADMIN") && (
+          <div className="mt-6 grid gap-5 md:grid-cols-4">
             <button
-              onClick={() => router.push("/director")}
+              onClick={() =>
+                router.push("/director")
+              }
               className={cardClass}
             >
               <CheckCircle2 className="mb-4 text-green-600" />
@@ -205,7 +220,9 @@ export default function HomePage() {
             </button>
 
             <button
-              onClick={() => router.push("/employees")}
+              onClick={() =>
+                router.push("/employees")
+              }
               className={cardClass}
             >
               <Users className="mb-4 text-violet-600" />
@@ -218,7 +235,9 @@ export default function HomePage() {
             </button>
 
             <button
-              onClick={() => router.push("/reports")}
+              onClick={() =>
+                router.push("/reports")
+              }
               className={cardClass}
             >
               <FileSpreadsheet className="mb-4 text-cyan-600" />
@@ -231,7 +250,9 @@ export default function HomePage() {
             </button>
 
             <button
-              onClick={() => router.push("/history")}
+              onClick={() =>
+                router.push("/history")
+              }
               className={cardClass}
             >
               <History className="mb-4 text-amber-600" />
@@ -247,9 +268,11 @@ export default function HomePage() {
 
         {(role === "DIRECTOR" ||
           role === "PARTNER") && (
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="mt-6 grid gap-5 md:grid-cols-2">
             <button
-              onClick={() => router.push("/partner")}
+              onClick={() =>
+                router.push("/partner")
+              }
               className={cardClass}
             >
               <CheckCircle2 className="mb-4 text-purple-600" />
@@ -262,7 +285,9 @@ export default function HomePage() {
             </button>
 
             <button
-              onClick={() => router.push("/history")}
+              onClick={() =>
+                router.push("/history")
+              }
               className={cardClass}
             >
               <History className="mb-4 text-amber-600" />

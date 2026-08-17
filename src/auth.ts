@@ -1,40 +1,82 @@
-import NextAuth from "next-auth";
-import AzureADProvider from "next-auth/providers/azure-ad";
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+
 import { prisma } from "@/lib/prisma";
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
+
   providers: [
-    AzureADProvider({
-      clientId:
-        process.env.AZURE_AD_CLIENT_ID!,
-      clientSecret:
-        process.env.AZURE_AD_CLIENT_SECRET!,
-      tenantId:
-        process.env.AZURE_AD_TENANT_ID!,
+    CredentialsProvider({
+      name: "Credentials",
+
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+        },
+
+        password: {
+          label: "Password",
+          type: "password",
+        },
+      },
+
+      async authorize(credentials) {
+        if (
+          !credentials?.email ||
+          !credentials?.password
+        ) {
+          return null;
+        }
+
+        const user =
+          await prisma.user.findUnique({
+            where: {
+              email: credentials.email,
+            },
+          });
+
+        if (
+          !user ||
+          !user.passwordHash
+        ) {
+          return null;
+        }
+
+        const passwordValid =
+          await bcrypt.compare(
+            credentials.password,
+            user.passwordHash
+          );
+
+        if (!passwordValid) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        };
+      },
     }),
   ],
 
   callbacks: {
     async jwt({
       token,
-      profile,
+      user,
     }) {
-      const email =
-        (profile as { email?: string })
-          ?.email ?? token.email;
-
-      if (email) {
-        const user =
-          await prisma.user.findUnique({
-            where: {
-              email,
-            },
-          });
-
-        if (user) {
-          token.role = user.role;
-          token.userId = user.id;
-        }
+      if (user) {
+        token.role = Reflect.get(
+          user,
+          "role"
+        );
       }
 
       return token;
@@ -42,8 +84,24 @@ export default NextAuth({
 
     async session({
       session,
+      token,
     }) {
+      if (session.user) {
+        Reflect.set(
+          session.user,
+          "role",
+          token.role
+        );
+      }
+
       return session;
     },
   },
-});
+
+  pages: {
+    signIn: "/login",
+  },
+
+  secret:
+    process.env.NEXTAUTH_SECRET,
+};

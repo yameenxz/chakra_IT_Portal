@@ -1,7 +1,29 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
+
 import DashboardTable from "./DashboardTable";
 
 export default async function DashboardPage() {
+  const session = await getServerSession(
+    authOptions
+  );
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "IT" &&
+    role !== "ADMIN"
+  ) {
+    redirect("/home");
+  }
+
   const employees =
     await prisma.employee.findMany({
       where: {
