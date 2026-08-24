@@ -136,3 +136,55 @@ model AuditLog {
 
   employee Employee @relation(fields: [employeeId], references: [id])
 }
+
+model License {
+  id String @id @default(uuid())
+
+  productName String
+
+  assignedLicenses String
+
+  availableLicenses String
+
+  purchasedQuantity Int?
+
+  purchaseDate DateTime?
+
+  nextInvoiceDate DateTime?
+
+  renewalDate DateTime?
+
+  subscriptionStatus String
+
+  notes String?
+
+  updatedBy String?
+
+  lastUpdatedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  renewalHistory LicenseRenewalHistory[]
+}
+
+model LicenseRenewalHistory {
+  id String @id @default(uuid())
+
+  licenseId String
+
+  license License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+
+  oldRenewalDate DateTime?
+
+  newRenewalDate DateTime
+
+  notes String?
+
+  updatedBy String?
+
+  updatedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+}

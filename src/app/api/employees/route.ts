@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
 
 type EmployeeUpload = {
   slNo: number;
@@ -9,6 +12,30 @@ type EmployeeUpload = {
 };
 
 export async function GET() {
+  const session =
+    await getServerSession(authOptions);
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "IT" &&
+    role !== "ADMIN" &&
+    role !== "GURU"
+  ) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   const employees =
     await prisma.employee.findMany({
       orderBy: {
@@ -24,6 +51,29 @@ export async function GET() {
 export async function POST(
   request: Request
 ) {
+  const session =
+    await getServerSession(authOptions);
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "IT" &&
+    role !== "ADMIN"
+  ) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   try {
     const employees: EmployeeUpload[] =
       await request.json();

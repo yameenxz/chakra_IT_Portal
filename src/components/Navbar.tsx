@@ -7,7 +7,8 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { data: session } = useSession();
+  const { data: session } =
+    useSession();
 
   if (
     pathname === "/login" ||
@@ -23,152 +24,242 @@ export default function Navbar() {
     })?.role || "";
 
   const name =
-    session?.user?.name || "User";
+    session?.user?.name ||
+    "User";
 
   const isPortalHome =
     pathname === "/" ||
     pathname === "/home";
 
+  const isLicenseModule =
+    pathname.startsWith(
+      "/licenses"
+    );
+
   return (
-    <header className="sticky top-0 z-50 border-b border-violet-900/40 bg-gradient-to-r from-slate-900 via-violet-950 to-slate-900 shadow-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
         <div>
-          <h1 className="text-xl font-bold text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-white">
             IT Service Portal
           </h1>
 
-          <p className="text-xs text-slate-400">
-            Internal Operations Platform
+          <p className="mt-1 text-sm text-slate-400">
+            Enterprise Operations
+            Platform
           </p>
         </div>
 
         <div className="flex items-center gap-8">
-          <div className="text-right">
-            <div className="text-sm text-white">
+          <div className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-right">
+            <div className="text-sm font-medium text-white">
               {name}
             </div>
 
-            <div className="text-xs text-slate-400">
+            <div className="text-xs uppercase tracking-wide text-violet-400">
               {role}
             </div>
           </div>
 
-          <nav className="flex gap-8 text-sm font-medium text-slate-300">
+          <nav className="flex items-center gap-6 text-sm font-medium text-slate-300">
             <button
               onClick={() =>
                 router.push("/home")
               }
-              className="transition hover:text-violet-300"
+              className="transition hover:text-white"
             >
               Home
             </button>
 
-            {!isPortalHome && (
-              <>
-                {(role === "IT" ||
-                  role === "ADMIN") && (
-                  <>
-                    <button
-                      onClick={() =>
-                        router.push("/dashboard")
-                      }
-                      className="transition hover:text-violet-300"
-                    >
-                      Dashboard
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        router.push("/employees")
-                      }
-                      className="transition hover:text-violet-300"
-                    >
-                      Employees
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        router.push("/upload")
-                      }
-                      className="transition hover:text-violet-300"
-                    >
-                      Upload
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        router.push("/reports")
-                      }
-                      className="transition hover:text-violet-300"
-                    >
-                      Reports
-                    </button>
-                  </>
-                )}
-
-                {(role === "GURU" ||
-                  role === "ADMIN") && (
-                  <>
-                    <button
-                      onClick={() =>
-                        router.push("/employees")
-                      }
-                      className="transition hover:text-violet-300"
-                    >
-                      Employees
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        router.push("/director")
-                      }
-                      className="transition hover:text-violet-300"
-                    >
-                      Guru Queue
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        router.push("/reports")
-                      }
-                      className="transition hover:text-violet-300"
-                    >
-                      Reports
-                    </button>
-                  </>
-                )}
-
-                {(role === "DIRECTOR" ||
-                  role === "PARTNER" ||
-                  role === "ADMIN") && (
+            {!isPortalHome &&
+              isLicenseModule && (
+                <>
                   <button
                     onClick={() =>
-                      router.push("/partner")
+                      router.push(
+                        "/licenses"
+                      )
                     }
-                    className="transition hover:text-violet-300"
+                    className="transition hover:text-white"
                   >
-                    Review Queue
+                    License Dashboard
                   </button>
-                )}
 
-                <button
-                  onClick={() =>
-                    router.push("/history")
-                  }
-                  className="transition hover:text-violet-300"
-                >
-                  History
-                </button>
-              </>
-            )}
+                  {(role ===
+                    "IT" ||
+                    role ===
+                      "ADMIN") && (
+                    <>
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/licenses/add"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Add License
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/licenses/upload"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Import Licenses
+                      </button>
+                    </>
+                  )}
+
+                  <button
+                    onClick={() =>
+                      router.push(
+                        "/licenses/expiring"
+                      )
+                    }
+                    className="transition hover:text-white"
+                  >
+                    Expiring Licenses
+                  </button>
+                </>
+              )}
+
+            {!isPortalHome &&
+              !isLicenseModule && (
+                <>
+                  {(role ===
+                    "IT" ||
+                    role ===
+                      "ADMIN") && (
+                    <>
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/dashboard"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Dashboard
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/employees"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Employees
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/upload"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Upload
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/reports"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Reports
+                      </button>
+                    </>
+                  )}
+
+                  {(role ===
+                    "GURU" ||
+                    role ===
+                      "ADMIN") && (
+                    <>
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/employees"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Employees
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/director"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Guru Queue
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          router.push(
+                            "/reports"
+                          )
+                        }
+                        className="transition hover:text-white"
+                      >
+                        Reports
+                      </button>
+                    </>
+                  )}
+
+                  {(role ===
+                    "DIRECTOR" ||
+                    role ===
+                      "PARTNER" ||
+                    role ===
+                      "ADMIN") && (
+                    <button
+                      onClick={() =>
+                        router.push(
+                          "/partner"
+                        )
+                      }
+                      className="transition hover:text-white"
+                    >
+                      Review Queue
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() =>
+                      router.push(
+                        "/history"
+                      )
+                    }
+                    className="transition hover:text-white"
+                  >
+                    History
+                  </button>
+                </>
+              )}
 
             <button
               onClick={() =>
                 signOut({
-                  callbackUrl: "/login",
+                  callbackUrl:
+                    "/login",
                 })
               }
-              className="text-red-300 transition hover:text-red-200"
+              className="rounded-lg bg-red-500 px-4 py-2 text-white transition hover:bg-red-600"
             >
               Logout
             </button>

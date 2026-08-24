@@ -1,7 +1,34 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
 
 export async function POST() {
+  const session =
+    await getServerSession(authOptions);
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "PARTNER" &&
+    role !== "DIRECTOR" &&
+    role !== "ADMIN"
+  ) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   try {
     const employees =
       await prisma.employee.findMany({
@@ -70,11 +97,15 @@ export async function POST() {
         data: {
           employeeId:
             employee.id,
+
           action:
             "Partner Batch Approval Completed",
+
           details:
             `${employee.name} moved to READY_FOR_IT`,
+
           performedBy:
+            session?.user?.email ??
             "System",
         },
       });

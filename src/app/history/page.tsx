@@ -1,11 +1,69 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
 
 export default async function HistoryPage() {
+  const session = await getServerSession(
+    authOptions
+  );
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "IT" &&
+    role !== "ADMIN" &&
+    role !== "GURU" &&
+    role !== "DIRECTOR" &&
+    role !== "PARTNER"
+  ) {
+    redirect("/home");
+  }
+
   const logs = await prisma.auditLog.findMany({
     orderBy: {
       timestamp: "desc",
     },
   });
+
+  const formatDetails = (
+    details: string | null
+  ) => {
+    if (!details) {
+      return "No details available";
+    }
+
+    return details
+      .replaceAll(
+        "PENDING_DIRECTOR",
+        "Pending Guru Review"
+      )
+      .replaceAll(
+        "PENDING_PARTNERS",
+        "Pending Director & Partner Review"
+      )
+      .replaceAll(
+        "PENDING_FINAL_DIRECTOR",
+        "Pending Final Guru Review"
+      )
+      .replaceAll(
+        "READY_FOR_IT",
+        "Ready For IT"
+      )
+      .replaceAll(
+        "COMPLETED",
+        "Completed"
+      )
+      .replaceAll(
+        "UPLOADED",
+        "Uploaded"
+      );
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
@@ -58,8 +116,9 @@ export default async function HistoryPage() {
                     </td>
 
                     <td className="px-6 py-5 text-slate-600">
-                      {log.details ||
-                        "No details available"}
+                      {formatDetails(
+                        log.details
+                      )}
                     </td>
 
                     <td className="px-6 py-5 text-slate-600">
@@ -91,7 +150,7 @@ export default async function HistoryPage() {
           </h2>
 
           <ul className="space-y-3 text-slate-600">
-            <li>• Director Approval Completed</li>
+            <li>• Guru Approval Completed</li>
             <li>• IT Download Started</li>
             <li>• IT Processing On Hold</li>
             <li>• Offboarding Completed</li>

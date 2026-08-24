@@ -1,7 +1,30 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
+
 import DownloadReportButton from "@/components/DownloadReportButton";
 
 export default async function ReportsPage() {
+  const session = await getServerSession(
+    authOptions
+  );
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "IT" &&
+    role !== "ADMIN" &&
+    role !== "GURU"
+  ) {
+    redirect("/home");
+  }
+
   const employees = await prisma.employee.findMany({
     orderBy: {
       slNo: "asc",
@@ -61,6 +84,33 @@ export default async function ReportsPage() {
     }
   ).length;
 
+  const getWorkflowLabel = (
+    workflowStage: string
+  ) => {
+    switch (workflowStage) {
+      case "UPLOADED":
+        return "Uploaded";
+
+      case "PENDING_DIRECTOR":
+        return "Pending Guru Review";
+
+      case "PENDING_PARTNERS":
+        return "Pending Director & Partner Review";
+
+      case "PENDING_FINAL_DIRECTOR":
+        return "Pending Final Guru Review";
+
+      case "READY_FOR_IT":
+        return "Ready For IT";
+
+      case "COMPLETED":
+        return "Completed";
+
+      default:
+        return workflowStage;
+    }
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
       <div className="mx-auto max-w-7xl">
@@ -101,7 +151,7 @@ export default async function ReportsPage() {
 
           <div className="rounded-2xl border border-orange-200 bg-orange-50 p-6 shadow-xl">
             <p className="text-sm text-orange-700">
-              Director Queue
+              Guru Queue
             </p>
 
             <h2 className="mt-3 text-4xl font-bold text-orange-900">
@@ -198,7 +248,9 @@ export default async function ReportsPage() {
                     </td>
 
                     <td className="px-6 py-4">
-                      {employee.workflowStage}
+                      {getWorkflowLabel(
+                        employee.workflowStage
+                      )}
                     </td>
 
                     <td className="px-6 py-4">

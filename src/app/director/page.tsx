@@ -1,8 +1,30 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
+
 import ApprovalsTable from "../approvals/ApprovalsTable";
 import FinalDirectorTable from "./FinalDirectorTable";
 
 export default async function DirectorPage() {
+  const session = await getServerSession(
+    authOptions
+  );
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "GURU" &&
+    role !== "ADMIN"
+  ) {
+    redirect("/home");
+  }
+
   const directorEmployees =
     await prisma.employee.findMany({
       where: {

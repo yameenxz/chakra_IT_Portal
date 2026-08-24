@@ -4,7 +4,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { BriefcaseBusiness, ArrowRight } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  ArrowRight,
+  KeyRound,
+} from "lucide-react";
 
 export default function HomePage() {
   const router = useRouter();
@@ -43,8 +47,9 @@ export default function HomePage() {
           </h1>
 
           <p className="mt-3 text-lg text-slate-300">
-            Centralized platform for IT operations,
-            automation and service management.
+            Centralized platform for IT
+            operations, automation and
+            service management.
           </p>
         </div>
 
@@ -96,6 +101,46 @@ export default function HomePage() {
 
             <div className="mt-4 inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
               Active Service
+            </div>
+          </button>
+
+          <button
+            onClick={() =>
+              router.push(
+                "/licenses"
+              )
+            }
+            className="group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50">
+              <KeyRound
+                size={24}
+                className="text-blue-600"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">
+                License Renewal
+                Tracking
+              </h3>
+
+              <ArrowRight
+                size={18}
+                className="text-slate-400"
+              />
+            </div>
+
+            <p className="mt-2 text-sm text-slate-500">
+              Track Microsoft
+              licenses, renewal dates,
+              subscription status,
+              utilization and future
+              renewals.
+            </p>
+
+            <div className="mt-4 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+              New Service
             </div>
           </button>
         </div>

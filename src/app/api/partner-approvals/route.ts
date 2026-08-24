@@ -1,7 +1,34 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
 
 export async function GET() {
+  const session =
+    await getServerSession(authOptions);
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "PARTNER" &&
+    role !== "DIRECTOR" &&
+    role !== "ADMIN"
+  ) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   try {
     const approvals =
       await prisma.partnerApproval.findMany({
@@ -29,10 +56,15 @@ export async function GET() {
 
         return {
           id: approval.id,
-          employeeId: approval.employeeId,
+
+          employeeId:
+            approval.employeeId,
 
           partnerEmail:
             approval.partnerEmail,
+
+          reviewerRole:
+            approval.reviewerRole,
 
           status: approval.status,
 
@@ -68,7 +100,7 @@ export async function GET() {
           waitingDays,
 
           overdue:
-            waitingDays >= 4,
+            waitingDays >= 2,
         };
       }
     );
@@ -92,6 +124,30 @@ export async function GET() {
 export async function POST(
   request: Request
 ) {
+  const session =
+    await getServerSession(authOptions);
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "PARTNER" &&
+    role !== "DIRECTOR" &&
+    role !== "ADMIN"
+  ) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   try {
     const body =
       await request.json();
@@ -147,11 +203,15 @@ export async function POST(
           data: {
             employeeId:
               employee.id,
+
             action:
               "Partner Approvals Completed",
+
             details:
               `${employee.name} moved to PENDING_FINAL_DIRECTOR`,
+
             performedBy:
+              session?.user?.email ??
               "System",
           },
         });

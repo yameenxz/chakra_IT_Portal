@@ -1,7 +1,30 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
+
 import EmployeeActions from "./EmployeeActions";
 
 export default async function EmployeesPage() {
+  const session = await getServerSession(
+    authOptions
+  );
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "IT" &&
+    role !== "ADMIN" &&
+    role !== "GURU"
+  ) {
+    redirect("/home");
+  }
+
   const employees = await prisma.employee.findMany({
     orderBy: {
       slNo: "asc",

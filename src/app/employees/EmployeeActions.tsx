@@ -1,23 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import SendForApprovalButton from "./SendForApprovalButton";
 
 export default function EmployeeActions() {
-  const [role, setRole] =
-    useState<string | null>(null);
+  const { data: session } = useSession();
 
-  useEffect(() => {
-    setRole(
-      localStorage.getItem("role")
-    );
-  }, []);
+  const role =
+    (session?.user as {
+      role?: string;
+    })?.role;
 
-  if (role === null) {
+  if (!role) {
     return null;
   }
 
-  if (role !== "IT") {
+  if (role !== "IT" && role !== "ADMIN") {
     return null;
   }
 

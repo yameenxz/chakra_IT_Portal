@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
 
 const teams = [
@@ -15,6 +17,25 @@ const teams = [
 ];
 
 export default function UploadPage() {
+  const router = useRouter();
+  const { data: session, status } =
+    useSession();
+
+  const role =
+    (session?.user as {
+      role?: string;
+    })?.role;
+
+  useEffect(() => {
+    if (
+      status !== "loading" &&
+      role !== "IT" &&
+      role !== "ADMIN"
+    ) {
+      router.push("/home");
+    }
+  }, [role, status, router]);
+
   const [rows, setRows] = useState<
     Record<string, unknown>[]
   >([]);
@@ -201,6 +222,10 @@ export default function UploadPage() {
         );
       }
     };
+
+  if (status === "loading") {
+    return null;
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">

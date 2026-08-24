@@ -1,9 +1,35 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
 
 export async function POST(
   request: Request
 ) {
+  const session =
+    await getServerSession(authOptions);
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "GURU" &&
+    role !== "ADMIN"
+  ) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   try {
     const body = await request.json();
 
@@ -42,14 +68,16 @@ export async function POST(
         employeeId: employee.id,
 
         action:
-          "Final Director Approval",
+          "Final Guru Approval",
 
         details:
           body.finalGuruComment
             ? `${employee.name} approved for IT processing. Comment: ${body.finalGuruComment}`
             : `${employee.name} approved for IT processing`,
 
-        performedBy: "Director",
+        performedBy:
+          session?.user?.email ??
+          "Guru",
       },
     });
 

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+
 import ExcelJS from "exceljs";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
 
 function formatDecision(
   value: string | null
@@ -23,6 +27,30 @@ function formatDecision(
 }
 
 export async function GET() {
+  const session =
+    await getServerSession(authOptions);
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "ADMIN" &&
+    role !== "IT" &&
+    role !== "GURU"
+  ) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   try {
     const employees =
       await prisma.employee.findMany({

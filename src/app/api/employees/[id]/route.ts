@@ -1,10 +1,37 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/auth";
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const session =
+    await getServerSession(authOptions);
+
+  const role = (
+    session?.user as {
+      role?: string;
+    }
+  )?.role;
+
+  if (
+    role !== "ADMIN" &&
+    role !== "IT" &&
+    role !== "GURU"
+  ) {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
+
   try {
     const { id } = await params;
 
@@ -71,10 +98,10 @@ export async function PATCH(
 
     if (shouldSaveDirectorDecision) {
       action =
-        "Director Decision Saved";
+        "Guru Decision Saved";
 
       details =
-        `${employee.name} director review saved`;
+        `${employee.name} guru review saved`;
     }
 
     if (
@@ -120,6 +147,7 @@ export async function PATCH(
         details,
 
         performedBy:
+          session?.user?.email ??
           "System",
       },
     });

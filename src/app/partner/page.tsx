@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import PartnerApprovalTable from "./PartnerApprovalTable";
 
 type Approval = {
@@ -25,7 +28,35 @@ type Approval = {
   overdue: boolean;
 };
 
+type User = {
+  name: string;
+  email: string;
+};
+
 export default function PartnerPage() {
+  const router = useRouter();
+
+  const {
+    data: session,
+    status,
+  } = useSession();
+
+  const role =
+    (session?.user as {
+      role?: string;
+    })?.role;
+
+  useEffect(() => {
+    if (
+      status !== "loading" &&
+      role !== "PARTNER" &&
+      role !== "DIRECTOR" &&
+      role !== "ADMIN"
+    ) {
+      router.push("/home");
+    }
+  }, [role, status, router]);
+
   const [approvals, setApprovals] =
     useState<Approval[]>([]);
 
@@ -37,7 +68,12 @@ export default function PartnerPage() {
 
   useEffect(() => {
     const currentEmail =
-      localStorage.getItem("email");
+      session?.user?.email;
+
+    if (!currentEmail) {
+      setLoading(false);
+      return;
+    }
 
     Promise.all([
       fetch("/api/partner-approvals").then(
@@ -59,7 +95,7 @@ export default function PartnerPage() {
 
         const currentUser =
           users.find(
-            (user: any) =>
+            (user: User) =>
               user.email === currentEmail
           );
 
@@ -73,14 +109,17 @@ export default function PartnerPage() {
       .finally(() =>
         setLoading(false)
       );
-  }, []);
+  }, [session]);
 
   const overdueCount =
     approvals.filter(
       (approval) => approval.overdue
     ).length;
 
-  if (loading) {
+  if (
+    loading ||
+    status === "loading"
+  ) {
     return (
       <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
         <div className="text-white">
@@ -136,7 +175,7 @@ export default function PartnerPage() {
           </div>
         </div>
 
-        <div className="mb-8 rounded-3xl bg-white p-8 shadow-2xl overflow-x-auto">
+        <div className="mb-8 overflow-x-auto rounded-3xl bg-white p-8 shadow-2xl">
           <PartnerApprovalTable
             employees={approvals}
             partnerName={

@@ -7,21 +7,31 @@ import { signIn } from "next-auth/react";
 export default function LoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [error, setError] =
+    useState("");
 
   const handleLogin = async () => {
     setError("");
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    const result = await signIn(
+      "credentials",
+      {
+        email,
+        password,
+        redirect: false,
+      }
+    );
 
     if (result?.error) {
-      setError("Invalid email or password");
+      setError(
+        "Invalid email or password"
+      );
       return;
     }
 
@@ -43,7 +53,11 @@ export default function LoginPage() {
           type="email"
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) =>
+            setEmail(
+              e.target.value
+            )
+          }
           className="mb-4 w-full rounded-xl border border-slate-300 p-3"
         />
 
@@ -51,9 +65,25 @@ export default function LoginPage() {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mb-4 w-full rounded-xl border border-slate-300 p-3"
+          onChange={(e) =>
+            setPassword(
+              e.target.value
+            )
+          }
+          className="mb-2 w-full rounded-xl border border-slate-300 p-3"
         />
+
+        <button
+          type="button"
+          onClick={() =>
+            router.push(
+              "/forgot-password"
+            )
+          }
+          className="mb-4 text-sm text-violet-600 hover:text-violet-800"
+        >
+          Forgot Password?
+        </button>
 
         <button
           onClick={handleLogin}
@@ -64,7 +94,9 @@ export default function LoginPage() {
 
         <button
           type="button"
-          onClick={() => router.push("/signup")}
+          onClick={() =>
+            router.push("/signup")
+          }
           className="mt-4 w-full text-violet-600 hover:text-violet-800"
         >
           Create an Account

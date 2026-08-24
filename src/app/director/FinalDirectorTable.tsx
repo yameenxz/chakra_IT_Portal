@@ -13,6 +13,7 @@ type Employee = {
 
   partnerApprovals: {
     partnerEmail: string;
+    reviewerRole?: string;
     emailDecision: string | null;
     oneDriveDecision: string | null;
     comment: string | null;
@@ -105,11 +106,11 @@ export default function FinalDirectorTable({
               Guru OneDrive Decision
             </th>
 
-            <th className="px-4 py-4 text-left min-w-[350px]">
+            <th className="px-4 py-4 text-left min-w-[400px]">
               Reviewer Decisions
             </th>
 
-            <th className="px-4 py-4 text-left min-w-[400px]">
+            <th className="px-4 py-4 text-left min-w-[450px]">
               Reviewer Comments
             </th>
 
@@ -164,13 +165,18 @@ export default function FinalDirectorTable({
                         key={index}
                         className="mb-4 rounded-xl border border-slate-200 p-4"
                       >
-                        <div className="font-semibold text-slate-900">
+                        <div className="mb-2 rounded-lg bg-violet-100 px-3 py-2 text-sm font-bold text-violet-800">
+                          {approval.reviewerRole ??
+                            "Reviewer"}
+                        </div>
+
+                        <div className="mb-3 text-sm text-slate-600">
                           {
                             approval.partnerEmail
                           }
                         </div>
 
-                        <div className="mt-3">
+                        <div>
                           <span className="font-medium">
                             Email Decision:
                           </span>{" "}
@@ -197,7 +203,8 @@ export default function FinalDirectorTable({
                     .filter(
                       (approval) =>
                         approval.comment &&
-                        approval.comment.trim() !== ""
+                        approval.comment.trim() !==
+                          ""
                     )
                     .map(
                       (
@@ -208,13 +215,19 @@ export default function FinalDirectorTable({
                           key={index}
                           className="mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4"
                         >
-                          <div className="font-semibold text-slate-900">
+                          <div className="mb-2 rounded-lg bg-violet-100 px-3 py-2 text-sm font-bold text-violet-800">
+                            {approval.reviewerRole ??
+                              "Reviewer"}{" "}
+                            Comment
+                          </div>
+
+                          <div className="mb-3 text-sm text-slate-600">
                             {
                               approval.partnerEmail
                             }
                           </div>
 
-                          <div className="mt-3 whitespace-pre-wrap break-words text-slate-700">
+                          <div className="whitespace-pre-wrap break-words text-slate-700">
                             {
                               approval.comment
                             }
@@ -226,7 +239,8 @@ export default function FinalDirectorTable({
                   {employee.partnerApprovals.filter(
                     (approval) =>
                       approval.comment &&
-                      approval.comment.trim() !== ""
+                      approval.comment.trim() !==
+                        ""
                   ).length === 0 && (
                     <div className="italic text-slate-400">
                       No reviewer comments.
@@ -276,8 +290,7 @@ export default function FinalDirectorTable({
             )
           )}
 
-          {employees.length ===
-            0 && (
+          {employees.length === 0 && (
             <tr>
               <td
                 colSpan={9}
