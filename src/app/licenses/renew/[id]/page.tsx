@@ -196,6 +196,7 @@ export default function ManageLicensePage() {
         router.replace(
           "/licenses/list"
         );
+        router.refresh();
       } catch (error) {
         console.error(error);
 

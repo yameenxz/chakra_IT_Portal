@@ -188,3 +188,43 @@ model LicenseRenewalHistory {
 
   createdAt DateTime @default(now())
 }
+
+model OnboardingEmployee {
+  id String @id @default(uuid())
+
+  employeeName String
+
+  type String @default("ONBOARDING")
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  tasks OnboardingTask[]
+}
+
+model OnboardingTask {
+  id String @id @default(uuid())
+
+  onboardingEmployeeId String
+
+  onboardingEmployee OnboardingEmployee @relation(fields: [onboardingEmployeeId], references: [id], onDelete: Cascade)
+
+  slNo Int
+
+  stage String
+
+  taskName String
+
+  assignedTo String?
+
+  status String @default("Not Started")
+
+  azureTeam String?
+
+  seqriteTeam String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}

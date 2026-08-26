@@ -212,7 +212,19 @@ export default function LicensesPage() {
             </h2>
           </div>
         </div>
-
+          <div className="mb-6 flex justify-end">
+  <button
+    onClick={() =>
+      window.open(
+        "/api/licenses/export",
+        "_blank"
+      )
+    }
+    className="rounded-lg bg-emerald-600 px-5 py-3 text-sm font-medium text-white hover:bg-emerald-700"
+  >
+    Export Licenses
+  </button>
+</div>
         <div className="overflow-x-auto rounded-2xl bg-white shadow-xl">
           <table className="min-w-[2400px]">
             <thead className="bg-slate-100">

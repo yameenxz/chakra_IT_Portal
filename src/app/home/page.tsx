@@ -8,6 +8,7 @@ import {
   BriefcaseBusiness,
   ArrowRight,
   KeyRound,
+  UserPlus,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -41,6 +42,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-800">
       <div className="mx-auto max-w-7xl px-8 py-8">
+
         <div className="mb-12">
           <h1 className="text-5xl font-bold tracking-tight text-white">
             IT Service Portal
@@ -64,6 +66,7 @@ export default function HomePage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
           <button
             onClick={() =>
               router.push(
@@ -140,10 +143,53 @@ export default function HomePage() {
             </p>
 
             <div className="mt-4 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+              Active Service
+            </div>
+          </button>
+
+          <button
+            onClick={() =>
+              router.push(
+                "/onboarding"
+              )
+            }
+            className="group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300 hover:shadow-xl"
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50">
+              <UserPlus
+                size={24}
+                className="text-emerald-600"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">
+                Employee Onboarding
+                Tracking
+              </h3>
+
+              <ArrowRight
+                size={18}
+                className="text-slate-400"
+              />
+            </div>
+
+            <p className="mt-2 text-sm text-slate-500">
+              Track onboarding
+              activities, task
+              completion, Azure policy
+              assignment, antivirus
+              installation and user
+              provisioning progress.
+            </p>
+
+            <div className="mt-4 inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
               New Service
             </div>
           </button>
+
         </div>
+
       </div>
     </main>
   );
