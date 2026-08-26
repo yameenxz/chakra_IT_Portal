@@ -90,6 +90,29 @@ export default function OnboardingCompactView({
         task.stage ===
         "Onboard"
     );
+    const progress = Math.round(
+  (employee.tasks.reduce(
+    (total, task) => {
+      if (task.status === "Complete") {
+        return total + 1;
+      }
+
+      if (task.status === "In Progress") {
+        return total + 0.5;
+      }
+
+      return total;
+    },
+    0
+  ) /
+    employee.tasks.length) *
+    100
+);
+const completedTasks =
+  employee.tasks.filter(
+    (task) =>
+      task.status === "Complete"
+  ).length;
 
     const [editingAzureTask, setEditingAzureTask] =
   useState<string | null>(null);
@@ -106,7 +129,7 @@ const [customSeqriteTeam, setCustomSeqriteTeam] =
   return (
     <div className="overflow-hidden rounded-2xl border bg-white">
 
-      <div className="flex items-center justify-between px-6 py-5">
+      <div className="flex items-center justify-between px-4 py-3">
 
         <div className="flex items-center gap-4">
 
@@ -115,14 +138,29 @@ const [customSeqriteTeam, setCustomSeqriteTeam] =
           </div>
 
           <div>
-            <h3 className="text-3xl font-bold">
-              {employee.employeeName}
-            </h3>
+  <h3 className="text-xl font-semibold">
+    {employee.employeeName}
+  </h3>
 
-            <p className="text-sm uppercase tracking-wider text-slate-500">
-              Onboarding
-            </p>
-          </div>
+ <div className="mt-2 h-2 w-72 overflow-hidden rounded-full bg-slate-200">
+  <div
+    className={`h-full ${
+  progress < 30
+    ? "bg-red-500"
+    : progress < 70
+    ? "bg-yellow-500"
+    : "bg-green-500"
+}`}
+    style={{
+      width: `${progress}%`,
+    }}
+  />
+</div>
+
+<p className="mt-1 text-xs text-slate-500">
+  {completedTasks}/{employee.tasks.length} Tasks Completed
+</p>
+</div>
 
         </div>
 

@@ -7,8 +7,7 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { data: session } =
-    useSession();
+  const { data: session } = useSession();
 
   if (
     pathname === "/login" ||
@@ -36,6 +35,11 @@ export default function Navbar() {
       "/licenses"
     );
 
+  const isOnboardingModule =
+    pathname.startsWith(
+      "/onboarding"
+    );
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
@@ -45,8 +49,7 @@ export default function Navbar() {
           </h1>
 
           <p className="mt-1 text-sm text-slate-400">
-            Enterprise Operations
-            Platform
+            Enterprise Operations Platform
           </p>
         </div>
 
@@ -70,6 +73,21 @@ export default function Navbar() {
             >
               Home
             </button>
+
+            {isOnboardingModule && (
+              <>
+                <button
+                  onClick={() =>
+                    router.push(
+                      "/onboarding"
+                    )
+                  }
+                  className="transition hover:text-white"
+                >
+                  Onboarding
+                </button>
+              </>
+            )}
 
             {!isPortalHome &&
               isLicenseModule && (
@@ -128,7 +146,8 @@ export default function Navbar() {
               )}
 
             {!isPortalHome &&
-              !isLicenseModule && (
+              !isLicenseModule &&
+              !isOnboardingModule && (
                 <>
                   {(role ===
                     "IT" ||

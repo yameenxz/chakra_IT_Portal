@@ -15,7 +15,7 @@ import {
 
 export default function HomePage() {
   const router = useRouter();
-
+  
   const { data: session } = useSession();
 
   const role =

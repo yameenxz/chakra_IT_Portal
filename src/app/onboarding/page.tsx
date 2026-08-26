@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import OnboardingCompactView from "@/components/OnboardingCompactView";
 
@@ -40,6 +42,15 @@ const AZURE_TEAMS = [
 ];
 
 export default function OnboardingPage() {
+    const router = useRouter();
+
+  const { data: session, status } =
+    useSession();
+
+  const role =
+    (session?.user as {
+      role?: string;
+    })?.role || "";
   const [employeeName, setEmployeeName] =
     useState("");
 
@@ -301,17 +312,35 @@ export default function OnboardingPage() {
     );
   }
 } 
+  useEffect(() => {
+  if (
+    status !== "loading" &&
+    role !== "IT" &&
+    role !== "ADMIN"
+  ) {
+    router.replace("/home");
+  }
+}, [role, status, router]);
+
+if (
+  status === "loading" ||
+  (role !== "IT" &&
+   role !== "ADMIN")
+) {
+  return null;
+}
+
     return (
     <main className="min-h-screen bg-slate-950 px-8 py-8">
       <div className="mx-auto max-w-7xl">
 
         <div className="mb-8">
 
-          <h1 className="text-5xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-white">
             Employee Onboarding Tracking
           </h1>
 
-          <p className="mt-2 text-slate-400">
+          <p className="mt-1 text-sm text-slate-400">
             Manage onboarding activities,
             owner assignments,
             Azure policy allocation
@@ -320,61 +349,11 @@ export default function OnboardingPage() {
 
         </div>
 
-        <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        
 
-          <div className="rounded-2xl bg-white p-6 shadow-xl">
+        <div className="mb-6 rounded-2xl bg-white p-4 shadow-xl">
 
-            <p className="text-sm text-slate-500">
-              Total Employees
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold">
-              {totalEmployees}
-            </h2>
-
-          </div>
-
-          <div className="rounded-2xl bg-white p-6 shadow-xl">
-
-            <p className="text-sm text-slate-500">
-              In Progress
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold text-yellow-600">
-              {inProgressEmployees}
-            </h2>
-
-          </div>
-
-          <div className="rounded-2xl bg-white p-6 shadow-xl">
-
-            <p className="text-sm text-slate-500">
-              Completed
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold text-green-600">
-              {completedEmployees}
-            </h2>
-
-          </div>
-
-          <div className="rounded-2xl bg-white p-6 shadow-xl">
-
-            <p className="text-sm text-slate-500">
-              Average Progress
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold text-blue-600">
-              {averageProgress}%
-            </h2>
-
-          </div>
-
-        </div>
-
-        <div className="mb-8 rounded-2xl bg-white p-6 shadow-xl">
-
-          <h2 className="mb-4 text-xl font-semibold">
+          <h2 className="text-lg font-semibold">
             Add Employee
           </h2>
 
@@ -388,13 +367,13 @@ export default function OnboardingPage() {
                 )
               }
               placeholder="Employee Name"
-              className="flex-1 rounded-lg border border-slate-300 p-3"
+              className="flex-1 rounded-lg border border-slate-300 px-3 py-2"
             />
 
             <button
               onClick={addEmployee}
               disabled={loading}
-              className="rounded-lg bg-green-600 px-6 py-3 text-white"
+              className="rounded-lg bg-green-600 px-5 py-2 text-white"
             >
               {loading
                 ? "Adding..."
