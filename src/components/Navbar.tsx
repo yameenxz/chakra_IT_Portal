@@ -42,15 +42,11 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white">
             IT Service Portal
           </h1>
-
-          <p className="mt-1 text-sm text-slate-400">
-            Enterprise Operations Platform
-          </p>
         </div>
 
         <div className="flex items-center gap-8">
@@ -85,6 +81,17 @@ export default function Navbar() {
                   className="transition hover:text-white"
                 >
                   Onboarding
+                </button>
+
+                <button
+                  onClick={() =>
+                    router.push(
+                      "/onboarding/history"
+                    )
+                  }
+                  className="transition hover:text-white"
+                >
+                  History
                 </button>
               </>
             )}

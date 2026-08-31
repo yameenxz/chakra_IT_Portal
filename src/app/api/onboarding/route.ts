@@ -91,18 +91,18 @@ export async function GET() {
 
   try {
     const employees =
-  await prisma.onboardingEmployee.findMany({
-    include: {
-      tasks: {
-        orderBy: {
-          slNo: "asc",
+      await prisma.onboardingEmployee.findMany({
+        include: {
+          tasks: {
+            orderBy: {
+              slNo: "asc",
+            },
+          },
         },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
 
     return NextResponse.json(
       employees
@@ -174,6 +174,21 @@ export async function POST(
           employeeName,
         },
       });
+
+    await prisma.onboardingAuditLog.create({
+      data: {
+        onboardingEmployeeId:
+          employee.id,
+        employeeName:
+          employee.employeeName,
+        action:
+          "Employee Created",
+        details: `Created onboarding employee record for ${employeeName}`,
+        performedBy:
+          session?.user?.name ||
+          "System",
+      },
+    });
 
     await prisma.onboardingTask.createMany({
       data: ONBOARDING_TASKS.map(

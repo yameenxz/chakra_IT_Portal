@@ -1,0 +1,156 @@
+import { NextResponse } from "next/server";
+import ExcelJS from "exceljs";
+
+import { prisma } from "@/lib/prisma";
+
+export async function GET(
+  request: Request,
+  context: {
+    params: Promise<{
+      id: string;
+    }>;
+  }
+) {
+  try {
+    const { id } =
+      await context.params;
+
+    const employee =
+      await prisma.onboardingEmployee.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          tasks: {
+            orderBy: {
+              slNo: "asc",
+            },
+          },
+        },
+      });
+
+    if (!employee) {
+      return NextResponse.json(
+        {
+          error: "Employee not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    const workbook =
+      new ExcelJS.Workbook();
+
+    const worksheet =
+      workbook.addWorksheet(
+        "Onboarding"
+      );
+
+    const completedTasks =
+      employee.tasks.filter(
+        (task) =>
+          task.status ===
+          "Complete"
+      ).length;
+
+    const progress = Math.round(
+      (employee.tasks.reduce(
+        (total, task) => {
+          if (
+            task.status ===
+            "Complete"
+          ) {
+            return total + 1;
+          }
+
+          if (
+            task.status ===
+            "In Progress"
+          ) {
+            return total + 0.5;
+          }
+
+          return total;
+        },
+        0
+      ) /
+        employee.tasks.length) *
+        100
+    );
+
+    worksheet.addRow([
+      "Employee Name",
+      employee.employeeName,
+    ]);
+
+    worksheet.addRow([
+      "Progress %",
+      `${progress}%`,
+    ]);
+
+    worksheet.addRow([
+      "Tasks Completed",
+      `${completedTasks}/${employee.tasks.length}`,
+    ]);
+
+    worksheet.addRow([]);
+
+    worksheet.addRow([
+      "Sl No",
+      "Stage",
+      "Task Name",
+      "Owner",
+      "Azure Team",
+      "Seqrite Team",
+      "Status",
+    ]);
+
+    employee.tasks.forEach(
+      (task) => {
+        worksheet.addRow([
+          task.slNo,
+          task.stage,
+          task.taskName,
+          task.assignedTo ?? "",
+          task.azureTeam ?? "",
+          task.seqriteTeam ?? "",
+          task.status,
+        ]);
+      }
+    );
+
+    worksheet.columns.forEach(
+      (column) => {
+        column.width = 25;
+      }
+    );
+
+    const buffer =
+      await workbook.xlsx.writeBuffer();
+
+    return new Response(buffer as BodyInit, {
+      headers: {
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": `attachment; filename="${employee.employeeName}_Onboarding.xlsx"`,
+      },
+    });
+  } catch (error) {
+    console.error(
+      "EXPORT ERROR:",
+      error
+    );
+
+    return NextResponse.json(
+      {
+        error:
+          "Failed to export employee",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}

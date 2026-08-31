@@ -2,47 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import OnboardingCompactView from "@/components/OnboardingCompactView";
-
-type Task = {
-  id: string;
-  slNo: number;
-  stage: string;
-  taskName: string;
-  status: string;
-  assignedTo?: string | null;
-  azureTeam?: string | null;
-};
-
-type Employee = {
-  id: string;
-  employeeName: string;
-  tasks: Task[];
-};
-
-const OWNERS = [
-  "Janaki Raman S",
-  "Arun R",
-  "Santhosh Kumar M",
-  "Jaganathan R",
-  "HR Coordinator",
-];
-
-const AZURE_TEAMS = [
-  "AUDIT",
-  "CLT",
-  "CAS",
-  "TAX",
-  "HR",
-  "OAS",
-  "DT",
-  "GMO",
-  "IDT",
-];
+import { useEffect } from "react";
 
 export default function OnboardingPage() {
-    const router = useRouter();
+  const router = useRouter();
 
   const { data: session, status } =
     useSession();
@@ -51,374 +14,105 @@ export default function OnboardingPage() {
     (session?.user as {
       role?: string;
     })?.role || "";
-  const [employeeNames, setEmployeeNames] =
-    useState("");
-
-  const [employees, setEmployees] =
-    useState<Employee[]>([]);
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [expandedEmployee, setExpandedEmployee] =
-    useState<string | null>(null);
-
-  const [savingTask, setSavingTask] =
-    useState<string | null>(null);
-
-  async function loadEmployees() {
-    try {
-      const response =
-        await fetch(
-          "/api/onboarding"
-        );
-
-      const data =
-        await response.json();
-
-      setEmployees(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   useEffect(() => {
-    loadEmployees();
-  }, []);
-
-  async function addEmployees() {
-    if (!employeeNames.trim()) {
-      return;
+    if (
+      status !== "loading" &&
+      role !== "IT" &&
+      role !== "ADMIN"
+    ) {
+      router.replace("/home");
     }
+  }, [role, status, router]);
 
-    setLoading(true);
-
-    try {
-      const names = employeeNames
-  .split("\n")
-  .map((name) => name.trim())
-  .filter(Boolean);
-
-for (const employeeName of names) {
-  await fetch(
-    "/api/onboarding",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type":
-          "application/json",
-      },
-      body: JSON.stringify({
-        employeeName,
-      }),
-    }
-  );
-}
-
-      setEmployeeNames("");
-
-      await loadEmployees();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function deleteEmployee(
-    id: string
-  ) {
-    const confirmed =
-      window.confirm(
-        "Delete employee?"
-      );
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      await fetch(
-        `/api/onboarding/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      await loadEmployees();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  function getCompletedTasks(
-    tasks: Task[]
-  ) {
-    return tasks.filter(
-      (task) =>
-        task.status ===
-        "Complete"
-    ).length;
-  }
-
-  function getProgress(
-  tasks: Task[]
-) {
-  const points =
-    tasks.reduce(
-      (total, task) => {
-        if (
-          task.status ===
-          "Complete"
-        ) {
-          return total + 1;
-        }
-
-        if (
-          task.status ===
-          "In Progress"
-        ) {
-          return total + 0.5;
-        }
-
-        return total;
-      },
-      0
-    );
-
-  return tasks.length
-    ? Math.round(
-        (points /
-          tasks.length) *
-          100
-      )
-    : 0;
-}
-
-  const totalEmployees =
-    employees.length;
-
-  const completedEmployees =
-    employees.filter(
-      (employee) =>
-        getProgress(
-          employee.tasks
-        ) === 100
-    ).length;
-
-  const inProgressEmployees =
-    employees.filter(
-      (employee) =>
-        getProgress(
-          employee.tasks
-        ) > 0 &&
-        getProgress(
-          employee.tasks
-        ) < 100
-    ).length;
-
-  const averageProgress =
-    employees.length === 0
-      ? 0
-      : Math.round(
-          employees.reduce(
-            (
-              total,
-              employee
-            ) =>
-              total +
-              getProgress(
-                employee.tasks
-              ),
-            0
-          ) /
-            employees.length
-        );
-
-  async function autoSaveEmployee(
-    employee: Employee
-  ) {
-    try {
-      await fetch(
-        `/api/onboarding/${employee.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            tasks:
-              employee.tasks,
-          }),
-        }
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function updateTaskField(
-  employeeId: string,
-  taskId: string,
-  field:
-    | "status"
-    | "assignedTo"
-    | "azureTeam",
-  value: string
-) {
-  const employee =
-    employees.find(
-      (employee) =>
-        employee.id ===
-        employeeId
-    );
-
-  if (!employee) {
-    return;
-  }
-
-  const updatedEmployee = {
-    ...employee,
-
-    tasks: employee.tasks.map(
-      (task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              [field]:value,
-            }
-          : task
-    ),
-  };
-
-  setEmployees(
-    (current) =>
-      current.map(
-        (employee) =>
-          employee.id ===
-          employeeId
-            ? updatedEmployee
-            : employee
-      )
-  );
-
-  try {
-    setSavingTask(
-      `${taskId}-${field}`
-    );
-
-    await autoSaveEmployee(
-      updatedEmployee
-    );
-
-    await loadEmployees();
-  } finally {
-    setSavingTask(
-      null
-    );
-  }
-} 
-  useEffect(() => {
   if (
-    status !== "loading" &&
-    role !== "IT" &&
-    role !== "ADMIN"
+    status === "loading" ||
+    (role !== "IT" &&
+      role !== "ADMIN")
   ) {
-    router.replace("/home");
+    return null;
   }
-}, [role, status, router]);
 
-if (
-  status === "loading" ||
-  (role !== "IT" &&
-   role !== "ADMIN")
-) {
-  return null;
-}
-
-    return (
-    <main className="min-h-screen bg-slate-950 px-8 py-8">
+  return (
+    <main className="min-h-screen bg-slate-800 px-8 py-8">
       <div className="mx-auto max-w-7xl">
-
         <div className="mb-8">
-
-          <h1 className="text-4xl font-bold text-white">
-            Employee Onboarding Tracking
+          <h1 className="text-4xl font-bold tracking-tight text-white">
+            Employee Onboarding Management System
           </h1>
 
-          <p className="mt-1 text-sm text-slate-400">
-            Manage onboarding activities,
-            owner assignments,
-            Azure policy allocation
-            and onboarding task tracking.
+          <p className="mt-2 text-slate-300">
+            Manage onboarding employees,
+            tasks and audit history.
           </p>
-
         </div>
 
-        
+        <h2 className="mb-6 text-2xl font-semibold text-slate-200">
+          Quick Actions
+        </h2>
 
-        <div className="mb-6 rounded-2xl bg-white p-4 shadow-xl">
-
-          <h2 className="text-lg font-semibold">
-            Add Employee
-          </h2>
-
-          <div className="flex items-center gap-4">
-
-  <textarea
-    value={employeeNames}
-    onChange={(e) =>
-      setEmployeeNames(
-        e.target.value
-      )
-    }
-    placeholder={
-      "Press Enter after each employee name"
-    }
-    rows={2}
-    className="flex-1 resize-none rounded-lg border border-slate-300 px-3 py-2"
-  />
-
+        <div className="max-w-3xl">
+          <div className="grid gap-5 md:grid-cols-2">
             <button
-              onClick={addEmployees}
-              disabled={loading}
-              className="rounded-lg bg-green-600 px-5 py-2 text-white"
+              onClick={() =>
+                router.push(
+                  "/onboarding/employees"
+                )
+              }
+              className="rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              {loading
-                ? "Adding..."
-                : "Add Employees"}
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100">
+                <span className="text-2xl">
+                  👥
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-slate-900">
+                  Employees
+                </h3>
+
+                <span className="text-3xl text-slate-400">
+                  →
+                </span>
+              </div>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Manage onboarding employee
+                records.
+              </p>
             </button>
 
+            <button
+              onClick={() =>
+                router.push(
+                  "/onboarding/history"
+                )
+              }
+              className="rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
+                <span className="text-2xl">
+                  🕒
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-slate-900">
+                  History
+                </h3>
+
+                <span className="text-3xl text-slate-400">
+                  →
+                </span>
+              </div>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Audit trail and logs.
+              </p>
+            </button>
           </div>
-
         </div>
-
-        <div className="space-y-4">
-  {employees.map((employee) => (
-    <OnboardingCompactView
-      key={employee.id}
-      employee={employee}
-      expanded={
-        expandedEmployee === employee.id
-      }
-      onToggle={() =>
-        setExpandedEmployee(
-          expandedEmployee === employee.id
-            ? null
-            : employee.id
-        )
-      }
-      onDelete={() =>
-        deleteEmployee(employee.id)
-      }
-      updateTaskField={
-        updateTaskField
-      }
-    />
-  ))}
-</div>
-
       </div>
     </main>
   );

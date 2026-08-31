@@ -166,23 +166,35 @@ const [customSeqriteTeam, setCustomSeqriteTeam] =
 
         <div className="flex items-center gap-3">
 
-          <button
-            onClick={onToggle}
-            className="rounded-lg border px-3 py-2"
-          >
-            {expanded
-              ? "Collapse"
-              : "Expand"}
-          </button>
+  <button
+    onClick={() =>
+      window.open(
+        `/api/onboarding/export/${employee.id}`,
+        "_blank"
+      )
+    }
+    className="rounded-lg bg-emerald-600 px-3 py-2 text-white"
+  >
+    Export Excel
+  </button>
 
-          <button
-            onClick={onDelete}
-            className="rounded-lg bg-red-600 px-3 py-2 text-white"
-          >
-            Delete
-          </button>
+  <button
+    onClick={onToggle}
+    className="rounded-lg border px-3 py-2"
+  >
+    {expanded
+      ? "Collapse"
+      : "Expand"}
+  </button>
 
-        </div>
+  <button
+    onClick={onDelete}
+    className="rounded-lg bg-red-600 px-3 py-2 text-white"
+  >
+    Delete
+  </button>
+
+</div>
 
       </div>
 

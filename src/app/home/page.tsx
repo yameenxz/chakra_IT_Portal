@@ -47,17 +47,6 @@ export default function HomePage() {
     <main className="min-h-screen bg-slate-800">
       <div className="mx-auto max-w-7xl px-8 py-8">
 
-        <div className="mb-12">
-          <h1 className="text-5xl font-bold tracking-tight text-white">
-            IT Service Portal
-          </h1>
-
-          <p className="mt-3 text-lg text-slate-300">
-            Centralized platform for IT
-            operations, automation and
-            service management.
-          </p>
-        </div>
 
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-white">
