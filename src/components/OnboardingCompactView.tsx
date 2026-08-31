@@ -358,7 +358,7 @@ const [customSeqriteTeam, setCustomSeqriteTeam] =
     {task.taskName}
   </span>
 
-  {task.taskName === "Azure Policy Apply" && (
+  {task.taskName === "Conditional Policy Apply" && (
   editingAzureTask === task.id ? (
     <input
       type="text"

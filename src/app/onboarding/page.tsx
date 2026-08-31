@@ -51,7 +51,7 @@ export default function OnboardingPage() {
     (session?.user as {
       role?: string;
     })?.role || "";
-  const [employeeName, setEmployeeName] =
+  const [employeeNames, setEmployeeNames] =
     useState("");
 
   const [employees, setEmployees] =
@@ -86,29 +86,36 @@ export default function OnboardingPage() {
     loadEmployees();
   }, []);
 
-  async function addEmployee() {
-    if (!employeeName.trim()) {
+  async function addEmployees() {
+    if (!employeeNames.trim()) {
       return;
     }
 
     setLoading(true);
 
     try {
-      await fetch(
-        "/api/onboarding",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            employeeName,
-          }),
-        }
-      );
+      const names = employeeNames
+  .split("\n")
+  .map((name) => name.trim())
+  .filter(Boolean);
 
-      setEmployeeName("");
+for (const employeeName of names) {
+  await fetch(
+    "/api/onboarding",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          "application/json",
+      },
+      body: JSON.stringify({
+        employeeName,
+      }),
+    }
+  );
+}
+
+      setEmployeeNames("");
 
       await loadEmployees();
     } catch (error) {
@@ -357,27 +364,30 @@ if (
             Add Employee
           </h2>
 
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4">
 
-            <input
-              value={employeeName}
-              onChange={(e) =>
-                setEmployeeName(
-                  e.target.value
-                )
-              }
-              placeholder="Employee Name"
-              className="flex-1 rounded-lg border border-slate-300 px-3 py-2"
-            />
+  <textarea
+    value={employeeNames}
+    onChange={(e) =>
+      setEmployeeNames(
+        e.target.value
+      )
+    }
+    placeholder={
+      "Press Enter after each employee name"
+    }
+    rows={2}
+    className="flex-1 resize-none rounded-lg border border-slate-300 px-3 py-2"
+  />
 
             <button
-              onClick={addEmployee}
+              onClick={addEmployees}
               disabled={loading}
               className="rounded-lg bg-green-600 px-5 py-2 text-white"
             >
               {loading
                 ? "Adding..."
-                : "Add Employee"}
+                : "Add Employees"}
             </button>
 
           </div>
