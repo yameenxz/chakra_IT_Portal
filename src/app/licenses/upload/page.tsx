@@ -176,18 +176,18 @@ export default function LicenseUploadPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 p-8">
+    <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-[1800px]">
-        <h1 className="mb-2 text-4xl font-bold text-white">
+        <h1 className="mb-2 text-4xl font-bold text-[#1B2A41]">
           Import Licenses
         </h1>
 
-        <p className="mb-8 text-slate-400">
+        <p className="mb-8 text-slate-600">
           Upload the Microsoft
           licensing export.
         </p>
 
-        <div className="rounded-3xl bg-white p-8 shadow-xl">
+        <div className="rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
           <input
             type="file"
             accept=".xlsx,.xls"
@@ -200,9 +200,9 @@ export default function LicenseUploadPage() {
 
         {rows.length > 0 && (
           <>
-            <div className="mt-8 overflow-x-auto rounded-3xl bg-white shadow-xl">
+            <div className="mt-8 overflow-x-auto rounded-3xl border border-[#DFDACB] bg-white shadow-md">
               <table className="min-w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-[#F6F2E8]">
                   <tr>
                     <th className="p-4 text-left">
                       Product Name
@@ -324,13 +324,13 @@ export default function LicenseUploadPage() {
               onClick={
                 saveLicenses
               }
-              className="mt-6 rounded-2xl bg-blue-600 px-8 py-3 text-white hover:bg-blue-700"
+              className="mt-6 rounded-2xl bg-[#1B2A41] px-8 py-3 text-white hover:opacity-90"
             >
               Import Licenses
             </button>
 
             {message && (
-              <p className="mt-4 text-white">
+              <p className="mt-4 text-[#1B2A41]">
                 {message}
               </p>
             )}

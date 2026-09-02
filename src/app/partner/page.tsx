@@ -121,8 +121,8 @@ export default function PartnerPage() {
     status === "loading"
   ) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
-        <div className="text-white">
+      <main className="min-h-screen bg-[#F4F2EC] p-8">
+        <div className="text-[#1B2A41]">
           Loading...
         </div>
       </main>
@@ -130,20 +130,20 @@ export default function PartnerPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
+    <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
             Partner Approval Queue
           </h1>
 
-          <p className="mt-2 text-slate-300">
+          <p className="mt-2 text-slate-600">
             Individual partner approval tasks.
           </p>
         </div>
 
         <div className="mb-8 grid gap-5 md:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 bg-white p-6 shadow-xl">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#E8EBF2] p-6 shadow-md">
             <p className="text-sm text-slate-500">
               Pending Tasks
             </p>
@@ -153,7 +153,7 @@ export default function PartnerPage() {
             </h2>
           </div>
 
-          <div className="rounded-2xl border border-green-200 bg-green-50 p-6 shadow-xl">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#DCEAE0] p-6 shadow-md">
             <p className="text-sm text-green-700">
               On Track
             </p>
@@ -164,7 +164,7 @@ export default function PartnerPage() {
             </h2>
           </div>
 
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 shadow-xl">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#FCE7F3] p-6 shadow-md">
             <p className="text-sm text-red-700">
               Overdue
             </p>
@@ -175,7 +175,7 @@ export default function PartnerPage() {
           </div>
         </div>
 
-        <div className="mb-8 overflow-x-auto rounded-3xl bg-white p-8 shadow-2xl">
+        <div className="mb-8 overflow-x-auto rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
           <PartnerApprovalTable
             employees={approvals}
             partnerName={
@@ -184,8 +184,8 @@ export default function PartnerPage() {
           />
         </div>
 
-        <div className="rounded-3xl bg-white p-6 shadow-2xl">
-          <h2 className="mb-4 text-2xl font-bold text-slate-900">
+        <div className="rounded-3xl border border-[#DFDACB] bg-white p-6 shadow-md">
+          <h2 className="mb-4 text-2xl font-bold text-[#1B2A41]">
             SLA Overview
           </h2>
 
@@ -199,7 +199,7 @@ export default function PartnerPage() {
                 (approval) => (
                   <div
                     key={approval.id}
-                    className="flex items-center justify-between border-b border-slate-200 pb-3"
+                    className="flex items-center justify-between border-b border-[#DFDACB] pb-3"
                   >
                     <div>
                       <p className="font-medium text-slate-900">
@@ -231,8 +231,8 @@ export default function PartnerPage() {
                     <span
                       className={`rounded-full px-3 py-1 text-sm ${
                         approval.overdue
-                          ? "bg-red-100 text-red-700"
-                          : "bg-green-100 text-green-700"
+                          ? "bg-[#FCE7F3] text-[#BE123C]"
+                          : "bg-[#DCEAE0] text-[#2D6A4F]"
                       }`}
                     >
                       {approval.overdue

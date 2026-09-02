@@ -228,21 +228,21 @@ export default function UploadPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
+    <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
             Upload Employees
           </h1>
 
-          <p className="mt-2 text-slate-300">
+          <p className="mt-2 text-slate-600">
             Import employee
             records from an
             Excel file.
           </p>
         </div>
 
-        <div className="rounded-3xl bg-white p-8 shadow-2xl">
+        <div className="rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
           <label className="mb-4 block text-sm font-medium text-slate-700">
             Select Excel File
           </label>
@@ -253,16 +253,16 @@ export default function UploadPage() {
             onChange={
               handleFileUpload
             }
-            className="block w-full rounded-xl border border-slate-200 bg-slate-50 p-4"
+            className="block w-full rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-4"
           />
         </div>
 
         {rows.length > 0 && (
           <>
-            <div className="mt-8 overflow-hidden rounded-3xl bg-white shadow-2xl">
+            <div className="mt-8 overflow-hidden rounded-3xl border border-[#DFDACB] bg-white shadow-md">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-slate-100">
+                  <tr className="bg-[#F6F2E8]">
                     <th className="px-6 py-5 text-left font-semibold text-slate-700">
                       Sl No
                     </th>
@@ -299,8 +299,8 @@ export default function UploadPage() {
                           index %
                             2 ===
                           0
-                            ? "bg-white hover:bg-slate-50"
-                            : "bg-slate-50 hover:bg-slate-100"
+                            ? "bg-white hover:bg-[#F8F5EE]"
+                            : "bg-slate-50 hover:bg-[#F8F5EE]"
                         }
                       >
                         <td className="px-6 py-5">
@@ -330,7 +330,7 @@ export default function UploadPage() {
                                 ""
                             ).trim()}
                             readOnly
-                            className="w-full rounded-xl border border-slate-200 px-4 py-3"
+                            className="w-full rounded-xl border border-[#DFDACB] px-4 py-3"
                           />
                         </td>
 
@@ -355,7 +355,7 @@ export default function UploadPage() {
                                 ""
                             ).trim()}
                             readOnly
-                            className="w-full rounded-xl border border-slate-200 px-4 py-3"
+                            className="w-full rounded-xl border border-[#DFDACB] px-4 py-3"
                           />
                         </td>
 
@@ -380,7 +380,7 @@ export default function UploadPage() {
                                   .value
                               )
                             }
-                            className="w-full rounded-xl border border-slate-200 px-4 py-3"
+                            className="w-full rounded-xl border border-[#DFDACB] px-4 py-3"
                           >
                             <option value="">
                               Select Team
@@ -430,13 +430,13 @@ export default function UploadPage() {
               onClick={
                 saveEmployees
               }
-              className="mt-6 rounded-2xl bg-violet-600 px-8 py-3 font-medium text-white shadow-lg transition hover:bg-violet-700"
+              className="mt-6 rounded-2xl bg-[#1B2A41] px-8 py-3 font-medium text-white shadow-md transition hover:opacity-90"
             >
               Save Employees
             </button>
 
             {message && (
-              <p className="mt-4 font-medium text-white">
+              <p className="mt-4 font-medium text-[#1B2A41]">
                 {message}
               </p>
             )}

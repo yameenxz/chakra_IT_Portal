@@ -39,13 +39,13 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-900">
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
-        <h1 className="mb-2 text-3xl font-bold text-slate-900">
+    <main className="flex min-h-screen items-center justify-center bg-[#F4F2EC]">
+      <div className="w-full max-w-md rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
+        <h1 className="mb-2 text-3xl font-bold text-[#1B2A41]">
           Login
         </h1>
 
-        <p className="mb-6 text-slate-500">
+        <p className="mb-6 text-slate-600">
           Sign in to continue
         </p>
 
@@ -58,7 +58,7 @@ export default function LoginPage() {
               e.target.value
             )
           }
-          className="mb-4 w-full rounded-xl border border-slate-300 p-3"
+          className="mb-4 w-full rounded-xl border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
         />
 
         <input
@@ -70,7 +70,7 @@ export default function LoginPage() {
               e.target.value
             )
           }
-          className="mb-2 w-full rounded-xl border border-slate-300 p-3"
+          className="mb-2 w-full rounded-xl border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
         />
 
         <button
@@ -80,14 +80,14 @@ export default function LoginPage() {
               "/forgot-password"
             )
           }
-          className="mb-4 text-sm text-violet-600 hover:text-violet-800"
+          className="mb-4 text-sm text-[#1B2A41] hover:opacity-80"
         >
           Forgot Password?
         </button>
 
         <button
           onClick={handleLogin}
-          className="w-full rounded-xl bg-violet-600 py-3 text-white hover:bg-violet-700"
+          className="w-full rounded-xl bg-[#1B2A41] py-3 text-white transition hover:opacity-90"
         >
           Login
         </button>
@@ -97,7 +97,7 @@ export default function LoginPage() {
           onClick={() =>
             router.push("/signup")
           }
-          className="mt-4 w-full text-violet-600 hover:text-violet-800"
+          className="mt-4 w-full text-[#1B2A41] hover:opacity-80"
         >
           Create an Account
         </button>

@@ -23,13 +23,13 @@ export default function HomePage() {
       ?.role ?? "EMPLOYEE");
 
   const cardClass =
-    "group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-violet-200";
+  "group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#C9A227]";
 
   return (
-    <main className="min-h-screen bg-slate-800">
+    <main className="min-h-screen bg-[#F4F2EC]">
       <div className="mx-auto max-w-7xl px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
             {role === "GURU"
               ? "Guru Portal"
               : role === "DIRECTOR"
@@ -41,14 +41,14 @@ export default function HomePage() {
               : "IT Service Portal"}
           </h1>
 
-          <p className="mt-2 text-slate-300">
-            Employee Offboarding Management System
+          <p className="mt-2 text-slate-600">
+            Employee Email ID Deletion Management System
           </p>
         </div>
 
         {(role === "IT" || role === "ADMIN") && (
           <>
-            <h2 className="mb-4 text-lg font-semibold text-slate-300">
+            <h2 className="mb-4 text-lg font-semibold text-[#1B2A41]">
               Quick Actions
             </h2>
 
@@ -59,7 +59,7 @@ export default function HomePage() {
                 }
                 className={cardClass}
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0E7FF]">
                   <Users
                     size={24}
                     className="text-violet-600"
@@ -88,7 +88,7 @@ export default function HomePage() {
                 }
                 className={cardClass}
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8EBF2]">
                   <LayoutDashboard
                     size={24}
                     className="text-blue-600"
@@ -117,7 +117,7 @@ export default function HomePage() {
                 }
                 className={cardClass}
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-pink-50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FCE7F3]">
                   <Upload
                     size={24}
                     className="text-pink-600"
@@ -146,7 +146,7 @@ export default function HomePage() {
                 }
                 className={cardClass}
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#DCEAE0]">
                   <FileSpreadsheet
                     size={24}
                     className="text-cyan-600"
@@ -175,7 +175,7 @@ export default function HomePage() {
                 }
                 className={cardClass}
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#F1E6BE]">
                   <History
                     size={24}
                     className="text-amber-600"

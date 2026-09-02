@@ -48,8 +48,8 @@ export default function AddLicensePage() {
     role !== "ADMIN"
   ) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950">
-        <div className="rounded-xl bg-white p-8 shadow-xl">
+      <main className="flex min-h-screen items-center justify-center bg-[#F4F2EC]">
+        <div className="rounded-xl border border-[#DFDACB] bg-white p-8 shadow-md">
           <h1 className="text-2xl font-bold text-red-600">
             Access Denied
           </h1>
@@ -128,18 +128,18 @@ export default function AddLicensePage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 px-8 py-8">
-      <div className="mx-auto max-w-4xl">
-        <h1 className="mb-2 text-5xl font-bold text-white">
+    <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
+      <div className="max-w-6xl">
+        <h1 className="mb-2 text-5xl font-bold text-[#1B2A41]">
           Add License
         </h1>
 
-        <p className="mb-8 text-lg text-slate-400">
+        <p className="mb-8 text-lg text-slate-600">
           Create a new software
           license record manually.
         </p>
 
-        <div className="rounded-2xl bg-white p-8 shadow-xl">
+        <div className="rounded-2xl border border-[#DFDACB] bg-white p-8 shadow-md">
           <form
             onSubmit={
               handleSubmit
@@ -162,7 +162,7 @@ export default function AddLicensePage() {
                     e.target.value
                   )
                 }
-                className="w-full rounded-lg border p-3"
+                className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
               />
             </div>
 
@@ -183,7 +183,7 @@ export default function AddLicensePage() {
                       e.target.value
                     )
                   }
-                  className="w-full rounded-lg border p-3"
+                  className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                 />
               </div>
 
@@ -203,7 +203,7 @@ export default function AddLicensePage() {
                       e.target.value
                     )
                   }
-                  className="w-full rounded-lg border p-3"
+                  className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                 />
               </div>
             </div>
@@ -224,7 +224,7 @@ export default function AddLicensePage() {
                       e.target.value
                     )
                   }
-                  className="w-full rounded-lg border p-3"
+                  className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                 />
               </div>
 
@@ -244,7 +244,7 @@ export default function AddLicensePage() {
                       e.target.value
                     )
                   }
-                  className="w-full rounded-lg border p-3"
+                  className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                 />
               </div>
             </div>
@@ -266,7 +266,7 @@ export default function AddLicensePage() {
                       e.target.value
                     )
                   }
-                  className="w-full rounded-lg border p-3"
+                  className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                 />
               </div>
 
@@ -286,7 +286,7 @@ export default function AddLicensePage() {
                       e.target.value
                     )
                   }
-                  className="w-full rounded-lg border p-3"
+                  className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                 />
               </div>
             </div>
@@ -304,7 +304,7 @@ export default function AddLicensePage() {
                     e.target.value
                   )
                 }
-                className="w-full rounded-lg border p-3"
+                className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
               />
             </div>
 
@@ -312,7 +312,7 @@ export default function AddLicensePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                className="rounded-lg bg-[#1B2A41] px-6 py-3 font-medium text-white hover:opacity-90 disabled:opacity-50"
               >
                 {saving
                   ? "Saving..."
@@ -326,7 +326,7 @@ export default function AddLicensePage() {
                     "/licenses"
                   )
                 }
-                className="rounded-lg bg-slate-200 px-6 py-3 font-medium text-slate-900 hover:bg-slate-300"
+                className="rounded-lg bg-[#F1E6BE] px-6 py-3 font-medium text-[#1B2A41] hover:bg-[#E8DCA8]"
               >
                 Cancel
               </button>

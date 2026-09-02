@@ -210,24 +210,24 @@ export default function ManageLicensePage() {
 
   if (!license) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
+      <main className="flex min-h-screen items-center justify-center bg-[#F4F2EC] text-[#1B2A41]">
         Loading...
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-8 py-8">
-      <div className="mx-auto max-w-4xl">
-        <h1 className="mb-8 text-4xl font-bold text-white">
+    <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
+      <div className="max-w-6xl">
+        <h1 className="mb-8 text-4xl font-bold text-[#1B2A41]">
           Manage License
         </h1>
 
-        <div className="rounded-2xl bg-white p-8 shadow-xl">
+        <div className="rounded-2xl border border-[#DFDACB] bg-white p-8 shadow-md">
           <div className="space-y-6">
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">
+              <label className="mb-2 block text-sm font-semibold text-[#1B2A41]">
                 Product Name
               </label>
 
@@ -239,7 +239,7 @@ export default function ManageLicensePage() {
                     e.target.value
                   )
                 }
-                className="w-full rounded-lg border p-3"
+                className="w-full rounded-lg border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
               />
             </div>
 
@@ -381,7 +381,7 @@ export default function ManageLicensePage() {
                     "/licenses"
                   )
                 }
-                className="rounded-lg border px-5 py-3"
+                className="rounded-lg bg-[#F1E6BE] px-5 py-3 text-[#1B2A41] hover:bg-[#E8DCA8]"
               >
                 Cancel
               </button>
@@ -391,7 +391,7 @@ export default function ManageLicensePage() {
                   handleSave
                 }
                 disabled={loading}
-                className="rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700 disabled:bg-slate-400"
+                className="rounded-lg bg-[#1B2A41] px-5 py-3 text-white hover:opacity-90 disabled:opacity-50"
               >
                 {loading
                   ? "Saving..."

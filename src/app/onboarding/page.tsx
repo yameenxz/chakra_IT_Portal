@@ -34,20 +34,20 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-800 px-8 py-8">
+    <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
             Employee Onboarding Management System
           </h1>
 
-          <p className="mt-2 text-slate-300">
+          <p className="mt-2 text-slate-600">
             Manage onboarding employees,
             tasks and audit history.
           </p>
         </div>
 
-        <h2 className="mb-6 text-2xl font-semibold text-slate-200">
+        <h2 className="mb-6 text-2xl font-semibold text-[#1B2A41]">
           Quick Actions
         </h2>
 
@@ -59,9 +59,9 @@ export default function OnboardingPage() {
                   "/onboarding/employees"
                 )
               }
-              className="rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0E7FF]">
                 <span className="text-2xl">
                   👥
                 </span>
@@ -89,9 +89,9 @@ export default function OnboardingPage() {
                   "/onboarding/history"
                 )
               }
-              className="rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#F1E6BE]">
                 <span className="text-2xl">
                   🕒
                 </span>

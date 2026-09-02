@@ -66,22 +66,22 @@ export default async function HistoryPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
+    <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
             Activity History
           </h1>
 
-          <p className="mt-2 text-slate-300">
+          <p className="mt-2 text-slate-600">
             Review workflow approvals and system activity.
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow-2xl">
+        <div className="overflow-hidden rounded-3xl border border-[#DFDACB] bg-white shadow-md">
           <table className="w-full">
             <thead>
-              <tr className="bg-slate-100">
+              <tr className="bg-[#F6F2E8]">
                 <th className="px-6 py-5 text-left font-semibold text-slate-700">
                   Action
                 </th>
@@ -100,15 +100,15 @@ export default async function HistoryPage() {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-[#DFDACB]">
               {logs.length > 0 ? (
                 logs.map((log, index) => (
                   <tr
                     key={log.id}
                     className={
                       index % 2 === 0
-                        ? "bg-white hover:bg-slate-50"
-                        : "bg-slate-50 hover:bg-slate-100"
+                        ? "bg-white hover:bg-[#F8F5EE]"
+                        : "bg-slate-50 hover:bg-[#F8F5EE]"
                     }
                   >
                     <td className="px-6 py-5 font-medium text-slate-800">
@@ -126,7 +126,13 @@ export default async function HistoryPage() {
                     </td>
 
                     <td className="px-6 py-5 text-slate-600">
-                      {log.timestamp.toLocaleString()}
+                      {log.timestamp.toLocaleString("en-GB", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+})}
                     </td>
                   </tr>
                 ))
@@ -144,12 +150,12 @@ export default async function HistoryPage() {
           </table>
         </div>
 
-        <div className="mt-8 rounded-3xl bg-white p-6 shadow-2xl">
-          <h2 className="mb-4 text-2xl font-bold text-slate-900">
+        <div className="mt-8 rounded-3xl border border-[#DFDACB] bg-white p-6 shadow-md">
+          <h2 className="mb-4 text-2xl font-bold text-[#1B2A41]">
             Activity Types Currently Tracked
           </h2>
 
-          <ul className="space-y-3 text-slate-600">
+          <ul className="space-y-3 text-slate-700">
             <li>• Guru Approval Completed</li>
             <li>• IT Download Started</li>
             <li>• IT Processing On Hold</li>

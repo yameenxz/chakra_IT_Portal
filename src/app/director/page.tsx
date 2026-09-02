@@ -51,19 +51,19 @@ export default async function DirectorPage() {
     });
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
+    <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
             Guru Approval Queue
           </h1>
 
-          <p className="mt-2 text-slate-300">
+          <p className="mt-2 text-slate-600">
             Employees waiting for Guru review.
           </p>
         </div>
 
-        <div className="mb-8 rounded-3xl bg-white p-8 shadow-2xl">
+        <div className="mb-8 rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
           <h2 className="mb-4 text-2xl font-bold">
             Initial Guru Review
           </h2>
@@ -75,8 +75,8 @@ export default async function DirectorPage() {
           />
         </div>
 
-        <div className="rounded-3xl bg-white p-8 shadow-2xl">
-          <h2 className="mb-4 text-2xl font-bold">
+        <div className="rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
+          <h2 className="mb-4 text-2xl font-bold text-[#1B2A41]">
             Final Guru Review
           </h2>
 

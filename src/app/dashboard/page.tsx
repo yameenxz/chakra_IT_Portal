@@ -69,32 +69,32 @@ export default async function DashboardPage() {
     ).length;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
+    <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
             Dashboard
           </h1>
 
-          <p className="mt-2 text-slate-300">
+          <p className="mt-2 text-slate-600">
             IT work queue for approved
             requests.
           </p>
         </div>
 
         <div className="mb-8 grid gap-5 md:grid-cols-4">
-          <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-xl">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#F1E6BE] p-6 shadow-md">
             <p className="text-sm text-blue-700">
               Pending
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold text-blue-900">
+            <h2 className="mt-3 text-4xl font-bold text-[#1B2A41]">
               {pending}
             </h2>
           </div>
 
-          <div className="rounded-2xl border border-violet-200 bg-violet-50 p-6 shadow-xl">
-            <p className="text-sm text-violet-700">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#F0E7FF] p-6 shadow-md">
+            <p className="text-sm text-[#1B2A41]">
               Started Download
             </p>
 
@@ -103,30 +103,30 @@ export default async function DashboardPage() {
             </h2>
           </div>
 
-          <div className="rounded-2xl border border-green-200 bg-green-50 p-6 shadow-xl">
-            <p className="text-sm text-green-700">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#DCEAE0] p-6 shadow-md">
+            <p className="text-sm text-[#2D6A4F]">
               Completed
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold text-green-900">
+            <h2 className="mt-3 text-4xl font-bold text-[#2D6A4F]">
               {completed}
             </h2>
           </div>
 
-          <div className="rounded-2xl border border-pink-200 bg-pink-50 p-6 shadow-xl">
-            <p className="text-sm text-pink-700">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#FCE7F3] p-6 shadow-md">
+            <p className="text-sm text-[#9D174D]">
               Hold
             </p>
 
-            <h2 className="mt-3 text-4xl font-bold text-pink-900">
+            <h2 className="mt-3 text-4xl font-bold text-[#9D174D]">
               {hold}
             </h2>
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-3xl bg-white shadow-2xl">
-          <div className="border-b border-slate-200 px-6 py-5">
-            <h2 className="text-2xl font-bold text-slate-900">
+        <div className="overflow-hidden rounded-3xl border border-[#DFDACB] bg-white shadow-md">
+          <div className="border-b border-[#DFDACB] px-6 py-5">
+            <h2 className="text-2xl font-bold text-[#1B2A41]">
               IT Work Queue
             </h2>
           </div>

@@ -9,6 +9,7 @@ import {
   ArrowRight,
   KeyRound,
   UserPlus,
+  UserMinus,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -18,10 +19,11 @@ export default function HomePage() {
     data: session,
     status,
   } = useSession();
+
   const role =
-  (session?.user as {
-    role?: string;
-  })?.role || "";
+    (session?.user as {
+      role?: string;
+    })?.role || "";
 
   useEffect(() => {
     if (
@@ -44,16 +46,15 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-800">
+    <main className="min-h-screen bg-[#F4F2EC]">
       <div className="mx-auto max-w-7xl px-8 py-8">
 
-
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-white">
+          <h2 className="text-2xl font-semibold text-[#1B2A41]">
             Available Services
           </h2>
 
-          <p className="mt-2 text-slate-400">
+          <p className="mt-2 text-slate-600">
             Select a service to continue.
           </p>
         </div>
@@ -66,9 +67,9 @@ export default function HomePage() {
                 "/offboarding"
               )
             }
-            className="group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-violet-300 hover:shadow-xl"
+            className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
           >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#F0E7FF]">
               <BriefcaseBusiness
                 size={24}
                 className="text-violet-600"
@@ -77,7 +78,7 @@ export default function HomePage() {
 
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-slate-900">
-                Employee Offboarding
+                Employee Email ID Deletion
               </h3>
 
               <ArrowRight
@@ -95,7 +96,7 @@ export default function HomePage() {
               reporting.
             </p>
 
-            <div className="mt-4 inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+            <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
               Active Service
             </div>
           </button>
@@ -106,9 +107,9 @@ export default function HomePage() {
                 "/licenses"
               )
             }
-            className="group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
+            className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
           >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8EBF2]">
               <KeyRound
                 size={24}
                 className="text-blue-600"
@@ -135,54 +136,98 @@ export default function HomePage() {
               renewals.
             </p>
 
-            <div className="mt-4 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+            <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-[#1B2A41]">
               Active Service
             </div>
           </button>
 
           {(role === "IT" ||
-  role === "ADMIN") && (
-  <button
-    onClick={() =>
-      router.push(
-        "/onboarding"
-      )
-    }
-    className="group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300 hover:shadow-xl"
-  >
-    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50">
-      <UserPlus
-        size={24}
-        className="text-emerald-600"
-      />
-    </div>
+            role === "ADMIN") && (
+            <button
+              onClick={() =>
+                router.push(
+                  "/onboarding"
+                )
+              }
+              className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#DCEAE0]">
+                <UserPlus
+                  size={24}
+                  className="text-emerald-600"
+                />
+              </div>
 
-    <div className="flex items-center justify-between">
-      <h3 className="font-semibold text-slate-900">
-        Employee Onboarding
-        Tracking
-      </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-slate-900">
+                  Employee Onboarding
+                  Tracking
+                </h3>
 
-      <ArrowRight
-        size={18}
-        className="text-slate-400"
-      />
-    </div>
+                <ArrowRight
+                  size={18}
+                  className="text-slate-400"
+                />
+              </div>
 
-    <p className="mt-2 text-sm text-slate-500">
-      Track onboarding
-      activities, task
-      completion, Azure policy
-      assignment, antivirus
-      installation and user
-      provisioning progress.
-    </p>
+              <p className="mt-2 text-sm text-slate-500">
+                Track onboarding
+                activities, task
+                completion, Azure policy
+                assignment, antivirus
+                installation and user
+                provisioning progress.
+              </p>
 
-    <div className="mt-4 inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
-      New Service
-    </div>
-  </button>
-)}
+              <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
+  Active Service
+</div>
+            </button>
+          )}
+
+          {(role === "IT" ||
+            role === "ADMIN") && (
+            <button
+              onClick={() =>
+                router.push(
+                  "/offboarding-tracking"
+                )
+              }
+              className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FDE8E8]">
+                <UserMinus
+                  size={24}
+                  className="text-red-600"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-slate-900">
+                  Employee Offboarding
+                  Tracking
+                </h3>
+
+                <ArrowRight
+                  size={18}
+                  className="text-slate-400"
+                />
+              </div>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Track offboarding
+                activities, account
+                deprovisioning, asset
+                recovery, ownership
+                assignments and audit
+                history.
+              </p>
+
+              <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
+  Active Service
+</div>
+            </button>
+          )}
 
         </div>
 

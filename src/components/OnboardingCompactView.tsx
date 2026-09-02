@@ -127,22 +127,22 @@ const [customSeqriteTeam, setCustomSeqriteTeam] =
   useState("");
 
   return (
-    <div className="overflow-hidden rounded-2xl border bg-white">
+    <div className="overflow-hidden rounded-2xl border border-[#DFDACB] bg-white shadow-sm">
 
       <div className="flex items-center justify-between px-4 py-3">
 
         <div className="flex items-center gap-4">
 
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-500 text-xl font-bold text-white">
-            {employee.employeeName.charAt(0)}
-          </div>
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F1E6BE] text-xl font-bold text-[#1B2A41]">
+  {employee.employeeName.charAt(0)}
+</div>
 
           <div>
   <h3 className="text-xl font-semibold">
     {employee.employeeName}
   </h3>
 
- <div className="mt-2 h-2 w-72 overflow-hidden rounded-full bg-slate-200">
+ <div className="mt-2 h-2 w-72 overflow-hidden rounded-full bg-[#E8E2D5]">
   <div
     className={`h-full ${
   progress < 30
@@ -173,14 +173,14 @@ const [customSeqriteTeam, setCustomSeqriteTeam] =
         "_blank"
       )
     }
-    className="rounded-lg bg-emerald-600 px-3 py-2 text-white"
+    className="rounded-lg bg-[#1B2A41] px-3 py-2 text-white"
   >
     Export Excel
   </button>
 
   <button
     onClick={onToggle}
-    className="rounded-lg border px-3 py-2"
+    className="rounded-lg bg-[#F1E6BE] px-3 py-2 text-[#1B2A41] transition hover:bg-[#E4D8A2]"
   >
     {expanded
       ? "Collapse"

@@ -338,16 +338,16 @@ if (
 }
 
     return (
-    <main className="min-h-screen bg-slate-950 px-8 py-8">
+    <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-7xl">
 
         <div className="mb-8">
 
-          <h1 className="text-4xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-[#1B2A41]">
             Employee Onboarding Tracking
           </h1>
 
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="mt-1 text-sm text-slate-600">
             Manage onboarding activities,
             owner assignments,
             Azure policy allocation
@@ -358,7 +358,7 @@ if (
 
         
 
-        <div className="mb-6 rounded-2xl bg-white p-4 shadow-xl">
+        <div className="mb-6 rounded-2xl border border-[#DFDACB] bg-white p-4 shadow-md">
 
           <h2 className="text-lg font-semibold">
             Add Employee
@@ -377,13 +377,13 @@ if (
       "Press Enter after each employee name"
     }
     rows={2}
-    className="flex-1 resize-none rounded-lg border border-slate-300 px-3 py-2"
+    className="flex-1 resize-none rounded-lg border border-[#DFDACB] px-3 py-2"
   />
 
             <button
               onClick={addEmployees}
               disabled={loading}
-              className="rounded-lg bg-green-600 px-5 py-2 text-white"
+              className="rounded-lg bg-[#1B2A41] px-5 py-2 text-white"
             >
               {loading
                 ? "Adding..."

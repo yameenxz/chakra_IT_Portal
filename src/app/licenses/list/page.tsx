@@ -124,6 +124,54 @@ export default function LicensesPage() {
         console.error(error);
       }
     };
+    const deleteLicense = async (
+  id: string,
+  productName: string
+) => {
+  const confirmed = window.confirm(
+    `Are you sure you want to delete "${productName}"?\n\nThis action cannot be undone.`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `/api/licenses/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    const data =
+      await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+          "Failed to delete license"
+      );
+    }
+
+    setLicenses((current) =>
+      current.filter(
+        (license) =>
+          license.id !== id
+      )
+    );
+
+    alert(
+      "License deleted successfully."
+    );
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "Failed to delete license."
+    );
+  }
+};
 
   useEffect(() => {
     loadLicenses();
@@ -158,13 +206,13 @@ export default function LicensesPage() {
     ).length;
 
   return (
-    <main className="min-h-screen bg-slate-950 px-8 py-8">
+    <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-[1900px]">
-        <h1 className="mb-2 text-5xl font-bold text-white">
+        <h1 className="mb-2 text-5xl font-bold text-[#1B2A41]">
           License Renewal Tracking
         </h1>
 
-        <p className="mb-8 text-lg text-slate-400">
+        <p className="mb-8 text-lg text-slate-600">
           Track software licenses,
           utilization, renewals,
           subscriptions and invoice
@@ -172,7 +220,7 @@ export default function LicensesPage() {
         </p>
 
         <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl bg-white p-6 shadow-xl">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#E8EBF2] p-6 shadow-md">
             <p className="text-sm text-slate-500">
               Total Licenses
             </p>
@@ -182,7 +230,7 @@ export default function LicensesPage() {
             </h2>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-xl">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#DCEAE0] p-6 shadow-md">
             <p className="text-sm text-slate-500">
               Active
             </p>
@@ -192,7 +240,7 @@ export default function LicensesPage() {
             </h2>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-xl">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#F1E6BE] p-6 shadow-md">
             <p className="text-sm text-slate-500">
               Expiring Soon
             </p>
@@ -202,7 +250,7 @@ export default function LicensesPage() {
             </h2>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-xl">
+          <div className="rounded-2xl border border-[#DFDACB] bg-[#FCE7F3] p-6 shadow-md">
             <p className="text-sm text-slate-500">
               Expired
             </p>
@@ -220,14 +268,14 @@ export default function LicensesPage() {
         "_blank"
       )
     }
-    className="rounded-lg bg-emerald-600 px-5 py-3 text-sm font-medium text-white hover:bg-emerald-700"
+    className="rounded-lg bg-[#1B2A41] px-5 py-3 text-sm font-medium text-white shadow-md hover:opacity-90"
   >
     Export Licenses
   </button>
 </div>
-        <div className="overflow-x-auto rounded-2xl bg-white shadow-xl">
-          <table className="min-w-[2400px]">
-            <thead className="bg-slate-100">
+        <div className="overflow-x-auto rounded-2xl border border-[#DFDACB] bg-white shadow-md">
+          <table className="min-w-[1600px]">
+            <thead className="bg-[#F6F2E8]">
               <tr>
                 <th className="whitespace-nowrap p-4 text-left">
                   Product Name
@@ -270,14 +318,14 @@ export default function LicensesPage() {
                 </th>
 
                 {canRenew && (
-                  <th className="whitespace-nowrap p-4 text-left">
-                    Actions
-                  </th>
-                )}
+  <th className="min-w-[260px] p-4 text-center">
+    Actions
+  </th>
+)}
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-[#DFDACB]">
               {licenses.map(
                 (license) => {
                   const daysLeft =
@@ -298,7 +346,7 @@ export default function LicensesPage() {
                   return (
                     <tr
                       key={license.id}
-                      className="border-t hover:bg-slate-50"
+                      className="hover:bg-[#F8F5EE]"
                     >
                       <td className="min-w-[450px] p-4 font-medium">
                         {license.productName}
@@ -384,29 +432,41 @@ export default function LicensesPage() {
 
                       {canRenew && (
                         <td className="p-4">
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() =>
-                                router.push(
-                                  `/licenses/renew/${license.id}`
-                                )
-                              }
-                              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                            >
-                              Manage
-                            </button>
+                          <div className="flex justify-center gap-2">
+  <button
+    onClick={() =>
+      router.push(
+        `/licenses/renew/${license.id}`
+      )
+    }
+    className="rounded-lg bg-[#1B2A41] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+  >
+    Manage
+  </button>
 
-                            <button
-                              onClick={() =>
-                                router.push(
-                                  `/licenses/history/${license.id}`
-                                )
-                              }
-                              className="rounded-lg bg-slate-600 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
-                            >
-                              History
-                            </button>
-                          </div>
+  <button
+    onClick={() =>
+      router.push(
+        `/licenses/history/${license.id}`
+      )
+    }
+    className="rounded-lg bg-[#F1E6BE] px-4 py-2 text-sm font-medium text-[#1B2A41] hover:bg-[#E8DCA8]"
+  >
+    History
+  </button>
+
+  <button
+    onClick={() =>
+      deleteLicense(
+        license.id,
+        license.productName
+      )
+    }
+    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+  >
+    Delete
+  </button>
+</div>
                         </td>
                       )}
                     </tr>

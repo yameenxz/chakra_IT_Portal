@@ -59,25 +59,25 @@ export default async function EmployeesPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 p-8">
+    <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
             Employees
           </h1>
 
-          <p className="mt-2 text-slate-300">
+          <p className="mt-2 text-slate-600">
             View employee records and workflow status.
           </p>
         </div>
 
         <div className="mb-6 flex items-center gap-4">
-          <div className="rounded-2xl border border-white/10 bg-white/10 px-6 py-4 backdrop-blur-md">
-            <p className="text-sm text-slate-300">
+          <div className="rounded-2xl border border-[#DFDACB] bg-white px-6 py-4 shadow-md">
+            <p className="text-sm text-slate-600">
               Total Employees
             </p>
 
-            <p className="text-3xl font-bold text-white">
+            <p className="text-3xl font-bold text-[#1B2A41]">
               {employees.length}
             </p>
           </div>
@@ -89,10 +89,10 @@ export default async function EmployeesPage() {
           ) && <EmployeeActions />}
         </div>
 
-        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div className="overflow-hidden rounded-3xl border border-[#DFDACB] bg-white shadow-md">
           <table className="w-full">
             <thead>
-              <tr className="bg-slate-100">
+              <tr className="bg-[#F6F2E8]">
                 <th className="px-6 py-5 text-left font-semibold text-slate-700">
                   Sl No
                 </th>
@@ -152,18 +152,18 @@ export default async function EmployeesPage() {
                         className={`rounded-full px-3 py-1 text-sm font-medium ${
                           employee.workflowStage ===
                           "UPLOADED"
-                            ? "bg-violet-100 text-violet-700"
+                            ? "bg-[#F0E7FF] text-[#5B21B6]"
                             : employee.workflowStage ===
                               "PENDING_DIRECTOR"
-                            ? "bg-orange-100 text-orange-700"
+                            ? "bg-[#FBE5D6] text-[#C2410C]"
                             : employee.workflowStage ===
                               "PENDING_PARTNERS"
-                            ? "bg-blue-100 text-blue-700"
+                            ? "bg-[#E8EBF2] text-[#1B2A41]"
                             : employee.workflowStage ===
                                 "READY_FOR_IT" ||
                               employee.workflowStage ===
                                 "PENDING_FINAL_DIRECTOR"
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-[#DCEAE0] text-[#2D6A4F]"
                             : "bg-slate-200 text-slate-700"
                         }`}
                       >
@@ -178,14 +178,14 @@ export default async function EmployeesPage() {
                         className={`rounded-full px-3 py-1 text-sm font-medium ${
                           employee.statusByIT ===
                           "COMPLETED"
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-[#DCEAE0] text-green-700"
                             : employee.statusByIT ===
                               "PENDING"
-                            ? "bg-yellow-100 text-yellow-700"
+                            ? "bg-[#F1E6BE] text-yellow-700"
                             : employee.statusByIT ===
                               "STARTED_DOWNLOAD"
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-pink-100 text-pink-700"
+                            ? "bg-[#E8EBF2] text-blue-700"
+                            : "bg-[#FCE7F3] text-pink-700"
                         }`}
                       >
                         {employee.statusByIT}

@@ -47,13 +47,13 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-900">
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
-        <h1 className="mb-2 text-3xl font-bold text-slate-900">
+    <main className="flex min-h-screen items-center justify-center bg-[#F4F2EC]">
+      <div className="w-full max-w-md rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
+        <h1 className="mb-2 text-3xl font-bold text-[#1B2A41]">
           Create Account
         </h1>
 
-        <p className="mb-6 text-slate-500">
+        <p className="mb-6 text-slate-600">
           Register using your Gurujana email.
         </p>
 
@@ -64,7 +64,7 @@ export default function SignupPage() {
           onChange={(e) =>
             setName(e.target.value)
           }
-          className="mb-4 w-full rounded-xl border border-slate-300 p-3"
+          className="mb-4 w-full rounded-xl border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
         />
 
         <input
@@ -74,7 +74,7 @@ export default function SignupPage() {
           onChange={(e) =>
             setEmail(e.target.value)
           }
-          className="mb-4 w-full rounded-xl border border-slate-300 p-3"
+          className="mb-4 w-full rounded-xl border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
         />
 
         <input
@@ -84,7 +84,7 @@ export default function SignupPage() {
           onChange={(e) =>
             setPassword(e.target.value)
           }
-          className="mb-4 w-full rounded-xl border border-slate-300 p-3"
+          className="mb-4 w-full rounded-xl border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
         />
 
         <input
@@ -96,12 +96,12 @@ export default function SignupPage() {
               e.target.value
             )
           }
-          className="mb-6 w-full rounded-xl border border-slate-300 p-3"
+          className="mb-6 w-full rounded-xl border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
         />
 
         <button
           onClick={handleSignup}
-          className="w-full rounded-xl bg-violet-600 py-3 text-white hover:bg-violet-700"
+          className="w-full rounded-xl bg-[#1B2A41] py-3 text-white transition hover:opacity-90"
         >
           Create Account
         </button>
@@ -111,7 +111,7 @@ export default function SignupPage() {
           onClick={() =>
             router.push("/login")
           }
-          className="mt-4 w-full text-violet-600 hover:text-violet-800"
+          className="mt-4 w-full text-[#1B2A41] hover:opacity-80"
         >
           Back to Login
         </button>

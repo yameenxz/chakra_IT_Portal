@@ -82,10 +82,10 @@ export default function FinalDirectorTable({
   };
 
   return (
-    <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-x-auto rounded-3xl border border-[#DFDACB] bg-white shadow-sm">
       <table className="min-w-full">
         <thead>
-          <tr className="bg-green-100">
+          <tr className="bg-[#F6F2E8]">
             <th className="px-4 py-4 text-left">
               Employee
             </th>
@@ -129,7 +129,7 @@ export default function FinalDirectorTable({
             (employee) => (
               <tr
                 key={employee.id}
-                className="border-b align-top"
+                className="border-b border-[#DFDACB] align-top"
               >
                 <td className="px-4 py-4">
                   {employee.name}
@@ -163,9 +163,9 @@ export default function FinalDirectorTable({
                     ) => (
                       <div
                         key={index}
-                        className="mb-4 rounded-xl border border-slate-200 p-4"
+                        className="mb-4 rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-4"
                       >
-                        <div className="mb-2 rounded-lg bg-violet-100 px-3 py-2 text-sm font-bold text-violet-800">
+                        <div className="mb-2 rounded-lg bg-[#F0E7FF] px-3 py-2 text-sm font-bold text-[#5B21B6]">
                           {approval.reviewerRole ??
                             "Reviewer"}
                         </div>
@@ -213,7 +213,7 @@ export default function FinalDirectorTable({
                       ) => (
                         <div
                           key={index}
-                          className="mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4"
+                          className="mb-4 rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-4"
                         >
                           <div className="mb-2 rounded-lg bg-violet-100 px-3 py-2 text-sm font-bold text-violet-800">
                             {approval.reviewerRole ??
@@ -263,7 +263,7 @@ export default function FinalDirectorTable({
                           e.target.value,
                       })
                     }
-                    className="h-40 w-[350px] rounded-xl border border-slate-300 p-3"
+                    className="h-40 w-[350px] rounded-xl border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                   />
                 </td>
 
@@ -278,7 +278,7 @@ export default function FinalDirectorTable({
                       loadingId ===
                       employee.id
                     }
-                    className="rounded-xl bg-green-600 px-5 py-3 text-white hover:bg-green-700 disabled:opacity-50"
+                    className="rounded-xl bg-[#1B2A41] px-5 py-3 text-white hover:opacity-90 disabled:opacity-50"
                   >
                     {loadingId ===
                     employee.id
@@ -294,10 +294,9 @@ export default function FinalDirectorTable({
             <tr>
               <td
                 colSpan={9}
-                className="p-8 text-center"
+                className="p-12 text-center text-slate-500"
               >
-                No employees waiting for
-                final Guru approval.
+                No employees waiting for final Guru approval.
               </td>
             </tr>
           )}

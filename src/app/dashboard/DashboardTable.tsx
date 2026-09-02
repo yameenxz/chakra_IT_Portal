@@ -99,10 +99,10 @@ export default function DashboardTable({
 
   return (
     <>
-      <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-x-auto rounded-3xl border border-[#DFDACB] bg-white shadow-sm">
         <table className="min-w-[2600px] w-full">
           <thead>
-            <tr className="bg-violet-100">
+            <tr className="bg-[#F6F2E8]">
               <th className="min-w-[180px] px-6 py-5 text-left font-semibold text-slate-700">
                 Employee
               </th>
@@ -184,8 +184,8 @@ export default function DashboardTable({
                     data-id={employee.id}
                     className={
                       index % 2 === 0
-                        ? "bg-white hover:bg-violet-50"
-                        : "bg-slate-50 hover:bg-violet-50"
+                        ? "bg-white hover:bg-[#F8F5EE]"
+                        : "bg-slate-50 hover:bg-[#F8F5EE]"
                     }
                   >
                     <td className="px-6 py-5 font-medium text-slate-800 align-top">
@@ -217,7 +217,7 @@ export default function DashboardTable({
                           ) => (
                             <div
                               key={idx}
-                              className="rounded-xl border border-slate-200 bg-white p-4"
+                              className="rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-4"
                             >
                               <div className="mb-2 font-semibold text-slate-900">
                                 {
@@ -264,7 +264,7 @@ export default function DashboardTable({
                           ) => (
                             <div
                               key={idx}
-                              className="rounded-xl border border-slate-200 bg-white p-4"
+                              className="rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-4"
                             >
                               <div className="font-semibold text-slate-900">
                                 {
@@ -384,7 +384,7 @@ export default function DashboardTable({
                         defaultValue={
                           employee.statusByIT
                         }
-                        className="min-w-[200px] rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-base font-medium shadow-sm"
+                        className="min-w-[200px] rounded-xl border border-[#DFDACB] bg-white px-4 py-3 text-base font-medium text-[#1B2A41] shadow-sm"
                       >
                         <option value="PENDING">
                           Pending
@@ -413,7 +413,7 @@ export default function DashboardTable({
 
       <button
         onClick={saveStatuses}
-        className="mt-6 rounded-2xl bg-violet-500 px-8 py-3 text-white shadow-sm hover:bg-violet-600"
+        className="mt-6 rounded-2xl bg-[#1B2A41] px-8 py-3 text-white shadow-sm hover:opacity-90"
       >
         Save Status Changes
       </button>

@@ -248,3 +248,59 @@ model OnboardingAuditLog {
 
   timestamp DateTime @default(now())
 }
+
+model OffboardingEmployee {
+  id String @id @default(uuid())
+
+  employeeName String
+
+  type String @default("OFFBOARDING")
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  tasks OffboardingTask[]
+
+  auditLogs OffboardingAuditLog[]
+}
+
+model OffboardingTask {
+  id String @id @default(uuid())
+
+  offboardingEmployeeId String
+
+  offboardingEmployee OffboardingEmployee @relation(fields: [offboardingEmployeeId], references: [id], onDelete: Cascade)
+
+  slNo Int
+
+  stage String
+
+  taskName String
+
+  assignedTo String?
+
+  status String @default("Not Started")
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model OffboardingAuditLog {
+  id String @id @default(uuid())
+
+  offboardingEmployeeId String?
+
+  offboardingEmployee OffboardingEmployee? @relation(fields: [offboardingEmployeeId], references: [id], onDelete: SetNull)
+
+  employeeName String
+
+  action String
+
+  details String?
+
+  performedBy String
+
+  timestamp DateTime @default(now())
+}

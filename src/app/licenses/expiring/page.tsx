@@ -112,21 +112,21 @@ export default function ExpiringLicensesPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-8 py-8">
+    <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-7xl">
-        <h1 className="mb-2 text-5xl font-bold text-white">
+        <h1 className="mb-2 text-5xl font-bold text-[#1B2A41]">
           Expiring Licenses
         </h1>
 
-        <p className="mb-8 text-slate-400">
+        <p className="mb-8 text-slate-600">
           Licenses requiring
           attention within the
           next 30 days.
         </p>
 
-        <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
+        <div className="overflow-hidden rounded-2xl border border-[#DFDACB] bg-white shadow-md">
           <table className="w-full">
-            <thead className="bg-slate-100">
+            <thead className="bg-[#F6F2E8]">
               <tr>
                 <th className="p-4 text-left">
                   Product Name
@@ -164,7 +164,7 @@ export default function ExpiringLicensesPage() {
                       key={
                         license.id
                       }
-                      className="border-t"
+                      className="border-t border-[#DFDACB]"
                     >
                       <td className="p-4">
                         {
@@ -193,8 +193,8 @@ export default function ExpiringLicensesPage() {
                           className={
                             status ===
                             "Expired"
-                              ? "rounded-full bg-slate-200 px-3 py-1 text-sm font-medium text-slate-700"
-                              : "rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700"
+                              ? "rounded-full bg-[#E8EBF2] px-3 py-1 text-sm font-medium text-[#1B2A41]"
+                              : "rounded-full bg-[#FCE7F3] px-3 py-1 text-sm font-medium text-[#BE123C]"
                           }
                         >
                           {status}

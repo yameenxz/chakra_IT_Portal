@@ -137,14 +137,14 @@ export default function OnboardingHistoryPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-8 py-8">
+    <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-[#1B2A41]">
             Onboarding Audit History
           </h1>
 
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="mt-1 text-sm text-slate-600">
             View onboarding activity,
             task updates, assignments,
             and employee lifecycle logs.
@@ -161,7 +161,7 @@ export default function OnboardingHistoryPage() {
               )
             }
             placeholder="Search employee, action, details or user..."
-            className="flex-1 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-violet-500"
+            className="flex-1 rounded-xl border border-[#DFDACB] bg-white px-4 py-3 text-[#1B2A41] outline-none placeholder:text-slate-500 focus:border-[#C9A227]"
           />
 
           <select
@@ -171,7 +171,7 @@ export default function OnboardingHistoryPage() {
                 e.target.value
               )
             }
-            className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-violet-500"
+            className="rounded-xl border border-[#DFDACB] bg-white px-4 py-3 text-[#1B2A41] outline-none focus:border-[#C9A227]"
           >
             {actions.map(
               (action) => (
@@ -186,7 +186,7 @@ export default function OnboardingHistoryPage() {
           </select>
         </div>
 
-        <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
+        <div className="overflow-hidden rounded-2xl border border-[#DFDACB] bg-white shadow-md">
           {loading ? (
             <div className="p-8 text-center">
               Loading history...
@@ -199,7 +199,7 @@ export default function OnboardingHistoryPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-[#F6F2E8]">
                   <tr>
                     <th className="px-4 py-3 text-left">
                       Employee
@@ -237,7 +237,7 @@ export default function OnboardingHistoryPage() {
                         </td>
 
                         <td className="px-4 py-4">
-                          <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
+                          <span className="rounded-full bg-[#E8EBF2] px-3 py-1 text-sm font-medium text-[#1B2A41]">
                             {log.action}
                           </span>
                         </td>
@@ -254,8 +254,14 @@ export default function OnboardingHistoryPage() {
 
                         <td className="px-4 py-4 text-slate-500">
                           {new Date(
-                            log.timestamp
-                          ).toLocaleString()}
+  log.timestamp
+).toLocaleString("en-GB", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+})}
                         </td>
                       </tr>
                     )

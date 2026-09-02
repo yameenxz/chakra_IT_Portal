@@ -138,10 +138,10 @@ export default function PartnerApprovalTable({
 
   return (
     <>
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-3xl border border-[#DFDACB] bg-white shadow-sm">
         <table className="w-full">
           <thead>
-            <tr className="bg-violet-100">
+            <tr className="bg-[#F0E7FF]">
               <th className="px-4 py-4 text-left">
                 Employee
               </th>
@@ -193,8 +193,8 @@ export default function PartnerApprovalTable({
                   }
                   className={
                     index % 2 === 0
-                      ? "bg-white"
-                      : "bg-slate-50"
+                      ? "bg-white hover:bg-[#F8F5EE]"
+                      : "bg-slate-50 hover:bg-[#F8F5EE]"
                   }
                 >
                   <td className="px-4 py-4 font-medium">
@@ -231,7 +231,7 @@ export default function PartnerApprovalTable({
                         approval.emailDecision ??
                         ""
                       }
-                      className="w-full rounded-xl border border-slate-200 px-3 py-2"
+                      className="w-full rounded-xl border border-[#DFDACB] px-3 py-2 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                     >
                       <option value="">
                         Select
@@ -257,7 +257,7 @@ export default function PartnerApprovalTable({
                         approval.oneDriveDecision ??
                         ""
                       }
-                      className="w-full rounded-xl border border-slate-200 px-3 py-2"
+                      className="w-full rounded-xl border border-[#DFDACB] px-3 py-2 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                     >
                       <option value="">
                         Select
@@ -285,7 +285,7 @@ export default function PartnerApprovalTable({
                       }
                       rows={2}
                       placeholder="Partner comments..."
-                      className="w-full rounded-xl border border-slate-200 px-3 py-2"
+                      className="w-full rounded-xl border border-[#DFDACB] px-3 py-2 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                     />
                   </td>
                 </tr>
@@ -310,14 +310,14 @@ export default function PartnerApprovalTable({
       <div className="mt-6">
         <button
           onClick={handleSaveAll}
-          className="rounded-2xl bg-violet-500 px-8 py-3 text-white shadow-sm hover:bg-violet-600"
+          className="rounded-2xl bg-[#1B2A41] px-8 py-3 text-white shadow-sm transition hover:opacity-90"
         >
           Save Partner Decisions
         </button>
       </div>
 
       {message && (
-        <p className="mt-4">
+        <p className="mt-4 text-slate-600">
           {message}
         </p>
       )}
