@@ -254,6 +254,8 @@ model OffboardingEmployee {
 
   employeeName String
 
+  team String?
+
   type String @default("OFFBOARDING")
 
   createdAt DateTime @default(now())

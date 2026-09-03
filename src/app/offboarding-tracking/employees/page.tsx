@@ -3,7 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+
 import OffboardingCompactView from "@/components/OffboardingCompactView";
+import EmployeeUpload from "@/components/EmployeeUpload";
 
 type Task = {
   id: string;
@@ -17,6 +19,7 @@ type Task = {
 type Employee = {
   id: string;
   employeeName: string;
+  team?: string | null;
   tasks: Task[];
 };
 
@@ -31,14 +34,8 @@ export default function OffboardingEmployeesPage() {
       role?: string;
     })?.role || "";
 
-  const [employeeNames, setEmployeeNames] =
-    useState("");
-
   const [employees, setEmployees] =
     useState<Employee[]>([]);
-
-  const [loading, setLoading] =
-    useState(false);
 
   const [expandedEmployee, setExpandedEmployee] =
     useState<string | null>(null);
@@ -72,57 +69,9 @@ export default function OffboardingEmployeesPage() {
     }
   }
 
-  async function addEmployees() {
-    if (!employeeNames.trim()) {
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const names = employeeNames
-        .split("\n")
-        .map((name) => name.trim())
-        .filter(Boolean);
-
-      for (const employeeName of names) {
-        await fetch(
-          "/api/offboarding-tracking",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-            body: JSON.stringify({
-              employeeName,
-            }),
-          }
-        );
-      }
-
-      setEmployeeNames("");
-
-      await loadEmployees();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   async function deleteEmployee(
     id: string
   ) {
-    const confirmed =
-      window.confirm(
-        "Delete employee?"
-      );
-
-    if (!confirmed) {
-      return;
-    }
-
     try {
       await fetch(
         `/api/offboarding-tracking/${id}`,
@@ -186,7 +135,7 @@ export default function OffboardingEmployeesPage() {
           task.id === taskId
             ? {
                 ...task,
-                [field]:value,
+                value,
               }
             : task
       ),
@@ -225,7 +174,6 @@ export default function OffboardingEmployeesPage() {
   return (
     <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-7xl">
-
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-[#1B2A41]">
             Employee Offboarding Tracking
@@ -239,40 +187,11 @@ export default function OffboardingEmployeesPage() {
           </p>
         </div>
 
-        <div className="mb-6 rounded-2xl border border-[#DFDACB] bg-white p-4 shadow-md">
-
-          <h2 className="text-lg font-semibold">
-            Add Employee
-          </h2>
-
-          <div className="flex items-center gap-4">
-
-            <textarea
-              value={employeeNames}
-              onChange={(e) =>
-                setEmployeeNames(
-                  e.target.value
-                )
-              }
-              placeholder="Press Enter after each employee name"
-              rows={2}
-              className="flex-1 resize-none rounded-lg border border-[#DFDACB] px-3 py-2"
-            />
-
-            <button
-              onClick={
-                addEmployees
-              }
-              disabled={loading}
-              className="rounded-lg bg-[#1B2A41] px-5 py-2 text-white"
-            >
-              {loading
-                ? "Adding..."
-                : "Add Employees"}
-            </button>
-
-          </div>
-        </div>
+        <EmployeeUpload
+  onUploadComplete={
+    loadEmployees
+  }
+/>
 
         <div className="space-y-4">
           {employees.map(
@@ -308,7 +227,6 @@ export default function OffboardingEmployeesPage() {
             )
           )}
         </div>
-
       </div>
     </main>
   );

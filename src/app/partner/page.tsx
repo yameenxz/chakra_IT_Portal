@@ -142,38 +142,7 @@ export default function PartnerPage() {
           </p>
         </div>
 
-        <div className="mb-8 grid gap-5 md:grid-cols-3">
-          <div className="rounded-2xl border border-[#DFDACB] bg-[#E8EBF2] p-6 shadow-md">
-            <p className="text-sm text-slate-500">
-              Pending Tasks
-            </p>
-
-            <h2 className="mt-3 text-4xl font-bold text-slate-900">
-              {approvals.length}
-            </h2>
-          </div>
-
-          <div className="rounded-2xl border border-[#DFDACB] bg-[#DCEAE0] p-6 shadow-md">
-            <p className="text-sm text-green-700">
-              On Track
-            </p>
-
-            <h2 className="mt-3 text-4xl font-bold text-green-800">
-              {approvals.length -
-                overdueCount}
-            </h2>
-          </div>
-
-          <div className="rounded-2xl border border-[#DFDACB] bg-[#FCE7F3] p-6 shadow-md">
-            <p className="text-sm text-red-700">
-              Overdue
-            </p>
-
-            <h2 className="mt-3 text-4xl font-bold text-red-800">
-              {overdueCount}
-            </h2>
-          </div>
-        </div>
+        
 
         <div className="mb-8 overflow-x-auto rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
           <PartnerApprovalTable

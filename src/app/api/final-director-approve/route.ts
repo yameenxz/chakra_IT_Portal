@@ -33,53 +33,52 @@ export async function POST(
   try {
     const body = await request.json();
 
-    const employee =
-      await prisma.employee.findUnique({
+    const employees =
+      body.employees ?? [];
+
+    for (const item of employees) {
+      await prisma.employee.update({
         where: {
-          id: body.employeeId,
+          id: item.id,
+        },
+        data: {
+          workflowStage:
+            "READY_FOR_IT",
+
+          finalGuruComment:
+            item.finalGuruComment ||
+            null,
         },
       });
 
-    if (!employee) {
-      return NextResponse.json(
-        {
-          error: "Employee not found",
-        },
-        {
-          status: 404,
-        }
-      );
+      const employee =
+        await prisma.employee.findUnique({
+          where: {
+            id: item.id,
+          },
+        });
+
+      if (employee) {
+        await prisma.auditLog.create({
+          data: {
+            employeeId:
+              employee.id,
+
+            action:
+              "Final Guru Approval",
+
+            details:
+              item.finalGuruComment
+                ? `${employee.name} approved for IT processing. Comment: ${item.finalGuruComment}`
+                : `${employee.name} approved for IT processing`,
+
+            performedBy:
+              session?.user?.email ??
+              "Guru",
+          },
+        });
+      }
     }
-
-    await prisma.employee.update({
-      where: {
-        id: employee.id,
-      },
-      data: {
-        workflowStage: "READY_FOR_IT",
-
-        finalGuruComment:
-          body.finalGuruComment || null,
-      },
-    });
-
-    await prisma.auditLog.create({
-      data: {
-        employeeId: employee.id,
-
-        action:
-          "Final Guru Approval",
-
-        details:
-          body.finalGuruComment
-            ? `${employee.name} approved for IT processing. Comment: ${body.finalGuruComment}`
-            : `${employee.name} approved for IT processing`,
-
-        performedBy:
-          session?.user?.email ??
-          "Guru",
-      },
-    });
 
     return NextResponse.json({
       success: true,
@@ -90,7 +89,7 @@ export async function POST(
     return NextResponse.json(
       {
         error:
-          "Failed to approve employee",
+          "Failed to submit batch",
       },
       {
         status: 500,

@@ -11,6 +11,17 @@ type EmployeeUpload = {
   team?: string | null;
 };
 
+const DEFAULT_OFFBOARDING_TASKS = [
+  "Check Separation Form",
+  "AD Account Block",
+  "BitLocker Remove",
+  "Data in Laptop",
+  "Laptop Damage Check",
+  "Azure Policy Remove",
+  "Remove from LIFE Group",
+  "Update in Asset",
+];
+
 export async function GET() {
   const session =
     await getServerSession(authOptions);
@@ -92,6 +103,36 @@ export async function POST(
         })
       ),
     });
+
+    for (const employee of employees) {
+      await prisma.offboardingEmployee.create({
+        data: {
+          employeeName:
+            employee.name,
+
+          team:
+            employee.team ?? "",
+
+          tasks: {
+            create:
+              DEFAULT_OFFBOARDING_TASKS.map(
+                (
+                  taskName,
+                  index
+                ) => ({
+                  slNo:
+                    index + 1,
+                  stage:
+                    "Offboarding",
+                  taskName,
+                  status:
+                    "Not Started",
+                })
+              ),
+          },
+        },
+      });
+    }
 
     return NextResponse.json({
       success: true,

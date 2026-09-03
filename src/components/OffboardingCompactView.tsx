@@ -12,6 +12,7 @@ type Task = {
 type Employee = {
   id: string;
   employeeName: string;
+  team?: string | null;
   tasks: Task[];
 };
 
@@ -77,11 +78,17 @@ export default function OffboardingCompactView({
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold">
-              {employee.employeeName}
-            </h3>
+  <h3 className="text-xl font-semibold">
+    {employee.employeeName}
+  </h3>
 
-            <div className="mt-2 h-2 w-72 overflow-hidden rounded-full bg-[#E8E2D5]">
+  {employee.team && (
+    <p className="text-sm font-medium text-slate-500">
+      Team: {employee.team}
+    </p>
+  )}
+
+  <div className="mt-2 h-2 w-72 overflow-hidden rounded-full bg-[#E8E2D5]">
               <div
                 className={`h-full ${
                   progress < 30

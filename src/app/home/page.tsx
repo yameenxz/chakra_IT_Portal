@@ -48,7 +48,6 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#F4F2EC]">
       <div className="mx-auto max-w-7xl px-8 py-8">
-
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-[#1B2A41]">
             Available Services
@@ -60,6 +59,50 @@ export default function HomePage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+          {(role === "IT" ||
+            role === "ADMIN") && (
+            <button
+              onClick={() =>
+                router.push(
+                  "/offboarding-tracking"
+                )
+              }
+              className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FDE8E8]">
+                <UserMinus
+                  size={24}
+                  className="text-red-600"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-slate-900">
+                  Employee Offboarding
+                  Tracking
+                </h3>
+
+                <ArrowRight
+                  size={18}
+                  className="text-slate-400"
+                />
+              </div>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Track offboarding
+                activities, account
+                deprovisioning, asset
+                recovery, ownership
+                assignments and audit
+                history.
+              </p>
+
+              <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
+                Active Service
+              </div>
+            </button>
+          )}
 
           <button
             onClick={() =>
@@ -97,46 +140,6 @@ export default function HomePage() {
             </p>
 
             <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
-              Active Service
-            </div>
-          </button>
-
-          <button
-            onClick={() =>
-              router.push(
-                "/licenses"
-              )
-            }
-            className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
-          >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8EBF2]">
-              <KeyRound
-                size={24}
-                className="text-blue-600"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900">
-                License Renewal
-                Tracking
-              </h3>
-
-              <ArrowRight
-                size={18}
-                className="text-slate-400"
-              />
-            </div>
-
-            <p className="mt-2 text-sm text-slate-500">
-              Track Microsoft
-              licenses, renewal dates,
-              subscription status,
-              utilization and future
-              renewals.
-            </p>
-
-            <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-[#1B2A41]">
               Active Service
             </div>
           </button>
@@ -180,57 +183,52 @@ export default function HomePage() {
               </p>
 
               <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
-  Active Service
-</div>
+                Active Service
+              </div>
             </button>
           )}
 
-          {(role === "IT" ||
-            role === "ADMIN") && (
-            <button
-              onClick={() =>
-                router.push(
-                  "/offboarding-tracking"
-                )
-              }
-              className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FDE8E8]">
-                <UserMinus
-                  size={24}
-                  className="text-red-600"
-                />
-              </div>
+          <button
+            onClick={() =>
+              router.push(
+                "/licenses"
+              )
+            }
+            className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8EBF2]">
+              <KeyRound
+                size={24}
+                className="text-blue-600"
+              />
+            </div>
 
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-slate-900">
-                  Employee Offboarding
-                  Tracking
-                </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-slate-900">
+                License Renewal
+                Tracking
+              </h3>
 
-                <ArrowRight
-                  size={18}
-                  className="text-slate-400"
-                />
-              </div>
+              <ArrowRight
+                size={18}
+                className="text-slate-400"
+              />
+            </div>
 
-              <p className="mt-2 text-sm text-slate-500">
-                Track offboarding
-                activities, account
-                deprovisioning, asset
-                recovery, ownership
-                assignments and audit
-                history.
-              </p>
+            <p className="mt-2 text-sm text-slate-500">
+              Track Microsoft
+              licenses, renewal dates,
+              subscription status,
+              utilization and future
+              renewals.
+            </p>
 
-              <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
-  Active Service
-</div>
-            </button>
-          )}
+            <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-[#1B2A41]">
+              Active Service
+            </div>
+          </button>
 
         </div>
-
       </div>
     </main>
   );

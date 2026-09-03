@@ -45,43 +45,50 @@ export default function FinalDirectorTable({
 }: {
   employees: Employee[];
 }) {
-  const [loadingId, setLoadingId] =
-    useState("");
+  const [loading, setLoading] =
+    useState(false);
 
   const [comments, setComments] =
     useState<Record<string, string>>(
       {}
     );
 
-  const approveForIT = async (
-    employeeId: string
-  ) => {
-    try {
-      setLoadingId(employeeId);
+  const submitBatchToIT =
+    async () => {
+      try {
+        setLoading(true);
 
-      await fetch(
-        "/api/final-director-approve",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            employeeId,
-            finalGuruComment:
-              comments[employeeId] ?? "",
-          }),
-        }
-      );
+        await fetch(
+          "/api/final-director-approve",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              employees:
+                employees.map(
+                  (employee) => ({
+                    id: employee.id,
+                    finalGuruComment:
+                      comments[
+                        employee.id
+                      ] ?? "",
+                  })
+                ),
+            }),
+          }
+        );
 
-      location.reload();
-    } finally {
-      setLoadingId("");
-    }
-  };
+        location.reload();
+      } finally {
+        setLoading(false);
+      }
+    };
 
   return (
+  <div>
     <div className="overflow-x-auto rounded-3xl border border-[#DFDACB] bg-white shadow-sm">
       <table className="min-w-full">
         <thead>
@@ -116,10 +123,6 @@ export default function FinalDirectorTable({
 
             <th className="px-4 py-4 text-left min-w-[350px]">
               Final Guru Comment
-            </th>
-
-            <th className="px-4 py-4 text-left">
-              Action
             </th>
           </tr>
         </thead>
@@ -165,7 +168,7 @@ export default function FinalDirectorTable({
                         key={index}
                         className="mb-4 rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-4"
                       >
-                        <div className="mb-2 rounded-lg bg-[#F0E7FF] px-3 py-2 text-sm font-bold text-[#5B21B6]">
+                        <div className="mb-2 rounded-lg bg-[#F1E6BE] px-3 py-2 text-sm font-bold text-[#1B2A41]">
                           {approval.reviewerRole ??
                             "Reviewer"}
                         </div>
@@ -215,7 +218,7 @@ export default function FinalDirectorTable({
                           key={index}
                           className="mb-4 rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-4"
                         >
-                          <div className="mb-2 rounded-lg bg-violet-100 px-3 py-2 text-sm font-bold text-violet-800">
+                          <div className="mb-2 rounded-lg bg-[#F1E6BE] px-3 py-2 text-sm font-bold text-[#1B2A41]">
                             {approval.reviewerRole ??
                               "Reviewer"}{" "}
                             Comment
@@ -266,26 +269,6 @@ export default function FinalDirectorTable({
                     className="h-40 w-[350px] rounded-xl border border-[#DFDACB] p-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                   />
                 </td>
-
-                <td className="px-4 py-4">
-                  <button
-                    onClick={() =>
-                      approveForIT(
-                        employee.id
-                      )
-                    }
-                    disabled={
-                      loadingId ===
-                      employee.id
-                    }
-                    className="rounded-xl bg-[#1B2A41] px-5 py-3 text-white hover:opacity-90 disabled:opacity-50"
-                  >
-                    {loadingId ===
-                    employee.id
-                      ? "Approving..."
-                      : "Approve For IT"}
-                  </button>
-                </td>
               </tr>
             )
           )}
@@ -293,7 +276,7 @@ export default function FinalDirectorTable({
           {employees.length === 0 && (
             <tr>
               <td
-                colSpan={9}
+                colSpan={8}
                 className="p-12 text-center text-slate-500"
               >
                 No employees waiting for final Guru approval.
@@ -301,7 +284,22 @@ export default function FinalDirectorTable({
             </tr>
           )}
         </tbody>
-      </table>
+            </table>
     </div>
-  );
+
+    {employees.length > 0 && (
+      <div className="mt-6 flex justify-end">
+        <button
+          onClick={submitBatchToIT}
+          disabled={loading}
+          className="rounded-xl bg-[#1B2A41] px-6 py-3 text-white hover:opacity-90 disabled:opacity-50"
+        >
+          {loading
+            ? "Submitting..."
+            : "Submit Batch To IT"}
+        </button>
+      </div>
+    )}
+  </div>
+);
 }

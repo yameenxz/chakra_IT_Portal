@@ -141,7 +141,7 @@ export default function PartnerApprovalTable({
       <div className="overflow-hidden rounded-3xl border border-[#DFDACB] bg-white shadow-sm">
         <table className="w-full">
           <thead>
-            <tr className="bg-[#F0E7FF]">
+            <tr className="bg-[#1B2A41] text-white">
               <th className="px-4 py-4 text-left">
                 Employee
               </th>

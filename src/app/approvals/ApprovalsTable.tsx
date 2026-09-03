@@ -120,7 +120,7 @@ export default function ApprovalsTable({
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full">
           <thead>
-            <tr className="bg-slate-100">
+            <tr className="bg-[#1B2A41] text-white">
               <th className="px-6 py-5 text-left font-semibold">
                 Employee
               </th>
@@ -176,7 +176,7 @@ export default function ApprovalsTable({
                         employee.guruCommentEmail ??
                         ""
                       }
-                      className="w-full rounded-xl border border-slate-200 px-4 py-3"
+                      className="w-full rounded-xl border border-[#DFDACB] px-4 py-3 outline-none focus:border-[#C9A227] focus:ring-2 focus:ring-[#F1E6BE]"
                     >
                       <option value="">
                         Select
@@ -244,7 +244,7 @@ export default function ApprovalsTable({
         <div className="mt-4 flex gap-4">
           <button
             onClick={handleSaveAll}
-            className="rounded-2xl bg-violet-600 px-8 py-3 text-white shadow-sm transition hover:bg-violet-700"
+            className="rounded-2xl bg-[#1B2A41] px-8 py-3 text-white shadow-sm transition hover:opacity-90"
           >
             Save Director Decisions
           </button>
@@ -255,7 +255,7 @@ export default function ApprovalsTable({
                 handleSubmitBatch
               }
               disabled={submitting}
-              className="rounded-2xl bg-green-600 px-8 py-3 text-white shadow-sm transition hover:bg-green-700 disabled:opacity-50"
+              className="rounded-2xl bg-[#C9A227] px-8 py-3 text-[#1B2A41] shadow-sm transition hover:opacity-90 disabled:opacity-50"
             >
               {submitting
                 ? "Submitting..."

@@ -263,17 +263,6 @@ export default function Navbar() {
                       <button
                         onClick={() =>
                           router.push(
-                            "/upload"
-                          )
-                        }
-                        className="transition hover:text-white"
-                      >
-                        Upload
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          router.push(
                             "/reports"
                           )
                         }

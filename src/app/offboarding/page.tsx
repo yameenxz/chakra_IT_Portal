@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import {
   Users,
   LayoutDashboard,
-  Upload,
   FileSpreadsheet,
   History,
   CheckCircle2,
@@ -15,7 +14,7 @@ import {
 
 export default function HomePage() {
   const router = useRouter();
-  
+
   const { data: session } = useSession();
 
   const role =
@@ -23,7 +22,7 @@ export default function HomePage() {
       ?.role ?? "EMPLOYEE");
 
   const cardClass =
-  "group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#C9A227]";
+    "group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#C9A227]";
 
   return (
     <main className="min-h-screen bg-[#F4F2EC]">
@@ -52,7 +51,7 @@ export default function HomePage() {
               Quick Actions
             </h2>
 
-            <div className="grid gap-5 md:grid-cols-3 xl:grid-cols-5">
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
               <button
                 onClick={() =>
                   router.push("/employees")
@@ -108,35 +107,6 @@ export default function HomePage() {
 
                 <p className="mt-2 text-sm text-slate-500">
                   Process IT actions.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  router.push("/upload")
-                }
-                className={cardClass}
-              >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FCE7F3]">
-                  <Upload
-                    size={24}
-                    className="text-pink-600"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-slate-900">
-                    Upload
-                  </h3>
-
-                  <ArrowRight
-                    size={18}
-                    className="text-slate-400"
-                  />
-                </div>
-
-                <p className="mt-2 text-sm text-slate-500">
-                  Import employee files.
                 </p>
               </button>
 
@@ -211,9 +181,11 @@ export default function HomePage() {
               className={cardClass}
             >
               <CheckCircle2 className="mb-4 text-green-600" />
+
               <h3 className="font-semibold">
                 Guru Queue
               </h3>
+
               <p className="mt-2 text-sm text-slate-500">
                 Review pending approvals.
               </p>
@@ -226,9 +198,11 @@ export default function HomePage() {
               className={cardClass}
             >
               <Users className="mb-4 text-violet-600" />
+
               <h3 className="font-semibold">
                 Employees
               </h3>
+
               <p className="mt-2 text-sm text-slate-500">
                 Track workflow progress.
               </p>
@@ -241,9 +215,11 @@ export default function HomePage() {
               className={cardClass}
             >
               <FileSpreadsheet className="mb-4 text-cyan-600" />
+
               <h3 className="font-semibold">
                 Reports
               </h3>
+
               <p className="mt-2 text-sm text-slate-500">
                 Export reports.
               </p>
@@ -256,9 +232,11 @@ export default function HomePage() {
               className={cardClass}
             >
               <History className="mb-4 text-amber-600" />
+
               <h3 className="font-semibold">
                 History
               </h3>
+
               <p className="mt-2 text-sm text-slate-500">
                 Review audit logs and activity.
               </p>
@@ -276,9 +254,11 @@ export default function HomePage() {
               className={cardClass}
             >
               <CheckCircle2 className="mb-4 text-purple-600" />
+
               <h3 className="font-semibold">
                 Review Queue
               </h3>
+
               <p className="mt-2 text-sm text-slate-500">
                 Review approvals.
               </p>
@@ -291,9 +271,11 @@ export default function HomePage() {
               className={cardClass}
             >
               <History className="mb-4 text-amber-600" />
+
               <h3 className="font-semibold">
                 History
               </h3>
+
               <p className="mt-2 text-sm text-slate-500">
                 Review previous actions.
               </p>
