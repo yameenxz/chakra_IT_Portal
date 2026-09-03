@@ -37,6 +37,9 @@ export default function OffboardingEmployeesPage() {
   const [employees, setEmployees] =
     useState<Employee[]>([]);
 
+  const [search, setSearch] =
+    useState("");
+
   const [expandedEmployee, setExpandedEmployee] =
     useState<string | null>(null);
 
@@ -135,7 +138,7 @@ export default function OffboardingEmployeesPage() {
           task.id === taskId
             ? {
                 ...task,
-                value,
+                [field]: value,
               }
             : task
       ),
@@ -163,6 +166,21 @@ export default function OffboardingEmployeesPage() {
     }
   }
 
+  const filteredEmployees =
+    employees.filter(
+      (employee) =>
+        employee.employeeName
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+        (employee.team ?? "")
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+    );
+
   if (
     status === "loading" ||
     (role !== "IT" &&
@@ -174,27 +192,40 @@ export default function OffboardingEmployeesPage() {
   return (
     <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-[#1B2A41]">
-            Employee Offboarding Tracking
-          </h1>
 
-          <p className="mt-1 text-sm text-slate-600">
-            Manage offboarding activities,
-            task ownership,
-            deprovisioning progress
-            and asset recovery tracking.
-          </p>
+        <div className="mb-8 flex items-start justify-between gap-6">
+          <div>
+            <h1 className="text-4xl font-bold text-[#1B2A41]">
+              Employee Offboarding Tracking
+            </h1>
+
+            <p className="mt-1 text-sm text-slate-600">
+              Manage offboarding activities,
+              task ownership,
+              deprovisioning progress
+              and asset recovery tracking.
+            </p>
+          </div>
+
+          <input
+            type="text"
+            placeholder="Search employee or team..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+            className="w-96 rounded-xl border border-[#DFDACB] bg-white px-4 py-3 shadow-sm outline-none focus:border-[#C9A227]"
+          />
         </div>
 
         <EmployeeUpload
-  onUploadComplete={
-    loadEmployees
-  }
-/>
+          onUploadComplete={
+            loadEmployees
+          }
+        />
 
         <div className="space-y-4">
-          {employees.map(
+          {filteredEmployees.map(
             (employee) => (
               <OffboardingCompactView
                 key={

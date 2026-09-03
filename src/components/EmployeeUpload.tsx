@@ -207,12 +207,12 @@ export default function EmployeeUpload({
     };
 
   return (
-    <div className="mb-8 rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
+    <div className="mb-6 rounded-2xl border border-[#DFDACB] bg-white p-5 shadow-md">
       <h2 className="mb-4 text-2xl font-bold text-[#1B2A41]">
         Upload Offboarding Employees
       </h2>
 
-      <p className="mb-6 text-slate-600">
+      <p className="mb-4 text-sm text-slate-600">
         Upload employee records,
         assign teams, and create
         both Offboarding and Email
@@ -225,7 +225,7 @@ export default function EmployeeUpload({
         onChange={
           handleFileUpload
         }
-        className="mb-6 block w-full rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-4"
+        className="block w-full rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-3"
       />
 
       {rows.length > 0 && (
