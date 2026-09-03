@@ -131,8 +131,8 @@ export default async function EmployeesPage() {
                     }
                   >
                     <td className="px-6 py-5 text-slate-700">
-                      {employee.slNo}
-                    </td>
+  {index + 1}
+</td>
 
                     <td className="px-6 py-5 font-medium text-slate-800">
                       {employee.name}
@@ -184,7 +184,7 @@ export default async function EmployeesPage() {
                             ? "bg-[#F1E6BE] text-yellow-700"
                             : employee.statusByIT ===
                               "STARTED_DOWNLOAD"
-                            ? "bg-[#E8EBF2] text-blue-700"
+                            ? "bg-[#E8EBF2] text-[#1B2A41]"
                             : "bg-[#FCE7F3] text-pink-700"
                         }`}
                       >

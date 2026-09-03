@@ -89,10 +89,23 @@ export async function POST(
     const employees: EmployeeUpload[] =
       await request.json();
 
+    const latestEmployee =
+      await prisma.employee.findFirst({
+        orderBy: {
+          slNo: "desc",
+        },
+      });
+
+    let nextSlNo =
+      (latestEmployee?.slNo ?? 0) + 1;
+
     await prisma.employee.createMany({
       data: employees.map(
         (employee) => ({
-          slNo: employee.slNo,
+          slNo:
+            employee.slNo > 0
+              ? employee.slNo
+              : nextSlNo++,
           name: employee.name,
           emailId:
             employee.emailId,

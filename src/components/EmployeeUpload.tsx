@@ -26,6 +26,15 @@ export default function EmployeeUpload({
   const [message, setMessage] =
     useState("");
 
+    const [manualName, setManualName] =
+  useState("");
+
+const [manualEmail, setManualEmail] =
+  useState("");
+
+const [manualTeam, setManualTeam] =
+  useState("");
+
   const handleFileUpload = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -206,6 +215,59 @@ export default function EmployeeUpload({
       }
     };
 
+    const addEmployeeManually =
+  async () => {
+    if (
+      !manualName.trim() ||
+      !manualEmail.trim() ||
+      !manualTeam
+    ) {
+      setMessage(
+        "Please complete all fields."
+      );
+
+      return;
+    }
+
+    const response =
+      await fetch(
+        "/api/employees",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify([
+            {
+              slNo: 0,
+              name:
+                manualName.trim(),
+              emailId:
+                manualEmail.trim(),
+              team: manualTeam,
+            },
+          ]),
+        }
+      );
+
+    if (response.ok) {
+      setManualName("");
+      setManualEmail("");
+      setManualTeam("");
+
+      setMessage(
+        "Employee added successfully."
+      );
+
+      onUploadComplete?.();
+    } else {
+      setMessage(
+        "Failed to add employee."
+      );
+    }
+  };
+
   return (
     <div className="mb-6 rounded-2xl border border-[#DFDACB] bg-white p-5 shadow-md">
       <h2 className="mb-4 text-2xl font-bold text-[#1B2A41]">
@@ -219,14 +281,72 @@ export default function EmployeeUpload({
         ID Deletion records.
       </p>
 
-      <input
-        type="file"
-        accept=".xlsx,.xls"
-        onChange={
-          handleFileUpload
-        }
-        className="block w-full rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-3"
-      />
+      <div className="flex items-center gap-4">
+  <input
+    type="file"
+    accept=".xlsx,.xls"
+    onChange={
+      handleFileUpload
+    }
+    className="w-1/3 rounded-xl border border-[#DFDACB] bg-[#FAF8F3] p-3"
+  />
+
+  <div className="flex flex-1 gap-3">
+    <input
+      type="text"
+      placeholder="Employee Name"
+      value={manualName}
+      onChange={(e) =>
+        setManualName(
+          e.target.value
+        )
+      }
+      className="flex-1 rounded-xl border border-[#DFDACB] px-3 py-3"
+    />
+
+    <input
+      type="email"
+      placeholder="Email ID"
+      value={manualEmail}
+      onChange={(e) =>
+        setManualEmail(
+          e.target.value
+        )
+      }
+      className="flex-1 rounded-xl border border-[#DFDACB] px-3 py-3"
+    />
+
+    <select
+      value={manualTeam}
+      onChange={(e) =>
+        setManualTeam(
+          e.target.value
+        )
+      }
+      className="w-32 rounded-xl border border-[#DFDACB] px-3 py-3"
+    >
+      <option value="">
+        Team
+      </option>
+
+      {teams.map((team) => (
+        <option
+          key={team}
+          value={team}
+        >
+          {team}
+        </option>
+      ))}
+    </select>
+
+    <button
+  onClick={addEmployeeManually}
+  className="rounded-xl bg-[#1B2A41] px-6 py-3 text-white"
+>
+      Add
+    </button>
+  </div>
+</div>
 
       {rows.length > 0 && (
         <>
