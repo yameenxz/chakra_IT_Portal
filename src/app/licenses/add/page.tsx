@@ -43,24 +43,25 @@ export default function AddLicensePage() {
     useState(false);
 
   if (
-    role &&
-    role !== "IT" &&
-    role !== "ADMIN"
-  ) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-[#F4F2EC]">
-        <div className="rounded-xl border border-[#DFDACB] bg-white p-8 shadow-md">
-          <h1 className="text-2xl font-bold text-red-600">
-            Access Denied
-          </h1>
+  role &&
+  role !== "IT" &&
+  role !== "IT_HEAD" &&
+  role !== "ADMIN"
+) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#F4F2EC]">
+      <div className="rounded-xl border border-[#DFDACB] bg-white p-8 shadow-md">
+        <h1 className="text-2xl font-bold text-red-600">
+          Access Denied
+        </h1>
 
-          <p className="mt-2 text-slate-600">
-            Only IT and Admin users can add licenses.
-          </p>
-        </div>
-      </main>
-    );
-  }
+        <p className="mt-2 text-slate-600">
+          Only IT, IT Head and Admin users can add licenses.
+        </p>
+      </div>
+    </main>
+  );
+}
 
   const handleSubmit = async (
     e: React.FormEvent

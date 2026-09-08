@@ -40,6 +40,7 @@ export default function OffboardingHistoryPage() {
     if (
       status !== "loading" &&
       role !== "IT" &&
+      role !== "IT_HEAD" &&
       role !== "ADMIN"
     ) {
       router.replace("/home");
@@ -131,6 +132,7 @@ export default function OffboardingHistoryPage() {
   if (
     status === "loading" ||
     (role !== "IT" &&
+      role !== "IT_HEAD" &&
       role !== "ADMIN")
   ) {
     return null;
@@ -139,7 +141,6 @@ export default function OffboardingHistoryPage() {
   return (
     <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-7xl">
-
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-[#1B2A41]">
             Offboarding Audit History
@@ -153,7 +154,6 @@ export default function OffboardingHistoryPage() {
         </div>
 
         <div className="mb-6 flex flex-col gap-4 md:flex-row">
-
           <input
             type="text"
             value={search}
@@ -186,11 +186,9 @@ export default function OffboardingHistoryPage() {
               )
             )}
           </select>
-
         </div>
 
         <div className="overflow-hidden rounded-2xl border border-[#DFDACB] bg-white shadow-md">
-
           {loading ? (
             <div className="p-8 text-center">
               Loading history...
@@ -201,9 +199,7 @@ export default function OffboardingHistoryPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-
               <table className="w-full">
-
                 <thead className="bg-[#F6F2E8]">
                   <tr>
                     <th className="px-4 py-3 text-left">
@@ -271,14 +267,10 @@ export default function OffboardingHistoryPage() {
                     )
                   )}
                 </tbody>
-
               </table>
-
             </div>
           )}
-
         </div>
-
       </div>
     </main>
   );

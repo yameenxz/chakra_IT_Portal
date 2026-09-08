@@ -19,14 +19,15 @@ export default function LicenseUploadPage() {
     })?.role;
 
   useEffect(() => {
-    if (
-      status !== "loading" &&
-      role !== "IT" &&
-      role !== "ADMIN"
-    ) {
-      router.push("/home");
-    }
-  }, [role, status, router]);
+  if (
+    status !== "loading" &&
+    role !== "IT" &&
+    role !== "IT_HEAD" &&
+    role !== "ADMIN"
+  ) {
+    router.push("/home");
+  }
+}, [role, status, router]);
 
   const [rows, setRows] = useState<
     Record<string, unknown>[]
@@ -240,7 +241,7 @@ export default function LicenseUploadPage() {
                   </tr>
                 </thead>
 
-                <tbody>
+                <tbody className="divide-y divide-[#DFDACB]">
                   {rows.map(
                     (
                       row,

@@ -323,6 +323,7 @@ for (const employeeName of names) {
   if (
     status !== "loading" &&
     role !== "IT" &&
+    role !== "IT_HEAD" &&
     role !== "ADMIN"
   ) {
     router.replace("/home");
@@ -332,6 +333,7 @@ for (const employeeName of names) {
 if (
   status === "loading" ||
   (role !== "IT" &&
+   role !== "IT_HEAD" &&
    role !== "ADMIN")
 ) {
   return null;

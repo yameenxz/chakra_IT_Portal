@@ -19,6 +19,7 @@ export default function OffboardingTrackingPage() {
     if (
       status !== "loading" &&
       role !== "IT" &&
+      role !== "IT_HEAD" &&
       role !== "ADMIN"
     ) {
       router.replace("/home");
@@ -28,6 +29,7 @@ export default function OffboardingTrackingPage() {
   if (
     status === "loading" ||
     (role !== "IT" &&
+      role !== "IT_HEAD" &&
       role !== "ADMIN")
   ) {
     return null;
@@ -53,7 +55,6 @@ export default function OffboardingTrackingPage() {
 
         <div className="max-w-3xl">
           <div className="grid gap-5 md:grid-cols-2">
-
             <button
               onClick={() =>
                 router.push(
@@ -112,7 +113,6 @@ export default function OffboardingTrackingPage() {
                 Audit trail and logs.
               </p>
             </button>
-
           </div>
         </div>
       </div>

@@ -51,6 +51,7 @@ export default function OffboardingEmployeesPage() {
     if (
       status !== "loading" &&
       role !== "IT" &&
+      role !== "IT_HEAD" &&
       role !== "ADMIN"
     ) {
       router.replace("/home");
@@ -138,7 +139,7 @@ export default function OffboardingEmployeesPage() {
           task.id === taskId
             ? {
                 ...task,
-                [field]: value,
+                value,
               }
             : task
       ),
@@ -184,6 +185,7 @@ export default function OffboardingEmployeesPage() {
   if (
     status === "loading" ||
     (role !== "IT" &&
+      role !== "IT_HEAD" &&
       role !== "ADMIN")
   ) {
     return null;
@@ -192,7 +194,6 @@ export default function OffboardingEmployeesPage() {
   return (
     <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">
       <div className="mx-auto max-w-7xl">
-
         <div className="mb-8 flex items-start justify-between gap-6">
           <div>
             <h1 className="text-4xl font-bold text-[#1B2A41]">

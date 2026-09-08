@@ -45,7 +45,9 @@ export default function HomePage() {
           </p>
         </div>
 
-        {(role === "IT" || role === "ADMIN") && (
+        {(role === "IT" ||
+          role === "IT_HEAD" ||
+          role === "ADMIN") && (
           <>
             <h2 className="mb-4 text-lg font-semibold text-[#1B2A41]">
               Quick Actions

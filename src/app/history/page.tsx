@@ -16,14 +16,15 @@ export default async function HistoryPage() {
   )?.role;
 
   if (
-    role !== "IT" &&
-    role !== "ADMIN" &&
-    role !== "GURU" &&
-    role !== "DIRECTOR" &&
-    role !== "PARTNER"
-  ) {
-    redirect("/home");
-  }
+  role !== "IT" &&
+  role !== "IT_HEAD" &&
+  role !== "ADMIN" &&
+  role !== "GURU" &&
+  role !== "DIRECTOR" &&
+  role !== "PARTNER"
+) {
+  redirect("/home");
+}
 
   const logs = await prisma.auditLog.findMany({
     orderBy: {

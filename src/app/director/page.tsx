@@ -1,16 +1,13 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/auth";
-
-import ApprovalsTable from "../approvals/ApprovalsTable";
-import FinalDirectorTable from "./FinalDirectorTable";
+import { getCurrentBatchName } from "@/lib/batch";
 
 export default async function DirectorPage() {
-  const session = await getServerSession(
-    authOptions
-  );
+  const session = await getServerSession(authOptions);
 
   const role = (
     session?.user as {
@@ -18,74 +15,81 @@ export default async function DirectorPage() {
     }
   )?.role;
 
-  if (
-    role !== "GURU" &&
-    role !== "ADMIN"
-  ) {
+  if (role !== "GURU" && role !== "ADMIN") {
     redirect("/home");
   }
 
-  const directorEmployees =
-    await prisma.employee.findMany({
-      where: {
-        workflowStage:
-          "PENDING_DIRECTOR",
-      },
-      orderBy: {
-        slNo: "asc",
-      },
-    });
+  const currentBatch = getCurrentBatchName();
 
-  const finalDirectorEmployees =
-    await prisma.employee.findMany({
-      where: {
+  const employeeCount = await prisma.employee.count({
+  where: {
+    batchName: currentBatch,
+    OR: [
+      {
+        workflowStage: "PENDING_DIRECTOR",
+      },
+      {
         workflowStage:
           "PENDING_FINAL_DIRECTOR",
       },
-      include: {
-        partnerApprovals: true,
-      },
-      orderBy: {
-        slNo: "asc",
-      },
-    });
+    ],
+  },
+});
 
   return (
     <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
           <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
-            Guru Approval Queue
+            Guru Dashboard
           </h1>
 
           <p className="mt-2 text-slate-600">
-            Employees waiting for Guru review.
+            Select the active monthly batch to continue workflow processing.
           </p>
         </div>
 
-        <div className="mb-8 rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
-          <h2 className="mb-4 text-2xl font-bold">
-            Initial Guru Review
-          </h2>
+        <Link
+          href={
+            "/director/batch/" +
+            encodeURIComponent(currentBatch)
+          }
+        >
+          <div className="max-w-xs cursor-pointer">
+  <div className="rounded-2xl border border-[#DFDACB] bg-white p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <div className="mb-4 flex items-center justify-between">
 
-          <ApprovalsTable
-            employees={
-              directorEmployees
-            }
-          />
-        </div>
+      <span className="rounded-full bg-[#DCEAE0] px-3 py-1 text-sm font-semibold text-[#2D6A4F]">
+        Active
+      </span>
+    </div>
 
-        <div className="rounded-3xl border border-[#DFDACB] bg-white p-8 shadow-md">
-          <h2 className="mb-4 text-2xl font-bold text-[#1B2A41]">
-            Final Guru Review
-          </h2>
+    <h2 className="text-xl font-bold text-[#1B2A41]">
+      {currentBatch}
+    </h2>
 
-          <FinalDirectorTable
-            employees={
-              finalDirectorEmployees
-            }
-          />
-        </div>
+    <p className="mt-2 text-slate-500">
+      Awaiting Guru Review
+    </p>
+
+    <div className="mt-5 flex items-center justify-between">
+      <div>
+        <p className="text-xl font-bold text-[#1B2A41]">
+          {employeeCount}
+        </p>
+
+        <p className="text-sm text-slate-500">
+          Employees
+        </p>
+      </div>
+
+      <div className="text-lg font-semibold text-[#2563EB]">
+        Review Batch →
+      </div>
+    </div>
+  </div>
+</div>
+        </Link>
       </div>
     </main>
   );

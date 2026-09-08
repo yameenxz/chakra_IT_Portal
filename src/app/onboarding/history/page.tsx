@@ -37,14 +37,15 @@ export default function OnboardingHistoryPage() {
     useState("All Actions");
 
   useEffect(() => {
-    if (
-      status !== "loading" &&
-      role !== "IT" &&
-      role !== "ADMIN"
-    ) {
-      router.replace("/home");
-    }
-  }, [role, status, router]);
+  if (
+    status !== "loading" &&
+    role !== "IT" &&
+    role !== "IT_HEAD" &&
+    role !== "ADMIN"
+  ) {
+    router.replace("/home");
+  }
+}, [role, status, router]);
 
   useEffect(() => {
     async function loadLogs() {
@@ -129,12 +130,13 @@ export default function OnboardingHistoryPage() {
     ]);
 
   if (
-    status === "loading" ||
-    (role !== "IT" &&
-      role !== "ADMIN")
-  ) {
-    return null;
-  }
+  status === "loading" ||
+  (role !== "IT" &&
+    role !== "IT_HEAD" &&
+    role !== "ADMIN")
+) {
+  return null;
+}
 
   return (
     <main className="min-h-screen bg-[#F4F2EC] px-8 py-8">

@@ -18,11 +18,12 @@ export default async function DashboardPage() {
   )?.role;
 
   if (
-    role !== "IT" &&
-    role !== "ADMIN"
-  ) {
-    redirect("/home");
-  }
+  role !== "IT" &&
+  role !== "IT_HEAD" &&
+  role !== "ADMIN"
+) {
+  redirect("/home");
+}
 
   const employees =
     await prisma.employee.findMany({

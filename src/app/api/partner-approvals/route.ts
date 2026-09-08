@@ -63,6 +63,9 @@ export async function GET() {
           partnerEmail:
             approval.partnerEmail,
 
+          batchName:
+            approval.employee?.batchName ?? "",
+
           reviewerRole:
             approval.reviewerRole,
 

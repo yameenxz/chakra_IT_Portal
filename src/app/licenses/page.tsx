@@ -23,7 +23,7 @@ export default function LicensesHomePage() {
     })?.role ?? "EMPLOYEE");
 
   const cardClass =
-  "group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#C9A227]";
+    "group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#C9A227]";
 
   return (
     <main className="min-h-screen bg-[#F4F2EC]">
@@ -79,6 +79,7 @@ export default function LicensesHomePage() {
           </button>
 
           {(role === "IT" ||
+            role === "IT_HEAD" ||
             role === "ADMIN") && (
             <button
               onClick={() =>
@@ -115,6 +116,7 @@ export default function LicensesHomePage() {
           )}
 
           {(role === "IT" ||
+            role === "IT_HEAD" ||
             role === "ADMIN") && (
             <button
               onClick={() =>

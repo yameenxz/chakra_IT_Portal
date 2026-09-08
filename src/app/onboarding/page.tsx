@@ -19,6 +19,7 @@ export default function OnboardingPage() {
     if (
       status !== "loading" &&
       role !== "IT" &&
+      role !== "IT_HEAD" &&
       role !== "ADMIN"
     ) {
       router.replace("/home");
@@ -28,6 +29,7 @@ export default function OnboardingPage() {
   if (
     status === "loading" ||
     (role !== "IT" &&
+      role !== "IT_HEAD" &&
       role !== "ADMIN")
   ) {
     return null;

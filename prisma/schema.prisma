@@ -11,6 +11,7 @@ enum Role {
   EMPLOYEE
   ADMIN
   IT
+  IT_HEAD
   GURU
   DIRECTOR
   PARTNER
@@ -42,6 +43,20 @@ enum ITStatus {
 enum PartnerReviewStatus {
   PENDING
   APPROVED
+}
+
+enum LaptopStatus {
+  AVAILABLE
+  RESERVED
+  ASSIGNED
+  RETIRED
+}
+
+enum LaptopChangeRequestStatus {
+  PENDING_IT_HEAD
+  APPROVED
+  REJECTED
+  COMPLETED
 }
 
 model User {
@@ -87,6 +102,8 @@ model Employee {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+
+  batchName String?
 
   auditLogs AuditLog[]
 
@@ -297,6 +314,73 @@ model OffboardingAuditLog {
   offboardingEmployee OffboardingEmployee? @relation(fields: [offboardingEmployeeId], references: [id], onDelete: SetNull)
 
   employeeName String
+
+  action String
+
+  details String?
+
+  performedBy String
+
+  timestamp DateTime @default(now())
+}
+
+model LaptopInventory {
+  id String @id @default(uuid())
+
+  assetTag String @unique
+
+  model String
+
+  condition String
+
+  location String
+
+  status LaptopStatus @default(AVAILABLE)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model LaptopChangeRequest {
+  id String @id @default(uuid())
+
+  currentAssetTag String
+  currentUser String
+  team String
+  location String
+
+  reasonForChange String
+
+  newAssetTag String
+
+  assignedToUser String
+
+  requestedBy String
+
+  status LaptopChangeRequestStatus @default(PENDING_IT_HEAD)
+
+  itHeadComment String?
+
+  approvedBy String?
+  approvedAt DateTime?
+
+  rejectedBy String?
+  rejectedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auditLogs LaptopChangeAuditLog[]
+}
+
+
+model LaptopChangeAuditLog {
+  id String @id @default(uuid())
+
+  requestId String
+
+  request LaptopChangeRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
   action String
 

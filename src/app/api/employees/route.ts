@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/auth";
+import { getCurrentBatchName } from "@/lib/batch";
 
 type EmployeeUpload = {
   slNo: number;
@@ -99,6 +100,9 @@ export async function POST(
     let nextSlNo =
       (latestEmployee?.slNo ?? 0) + 1;
 
+    const batchName =
+      getCurrentBatchName();
+
     await prisma.employee.createMany({
       data: employees.map(
         (employee) => ({
@@ -113,6 +117,7 @@ export async function POST(
             employee.team ?? "",
           workflowStage:
             "UPLOADED",
+          batchName,
         })
       ),
     });

@@ -10,6 +10,7 @@ import {
   KeyRound,
   UserPlus,
   UserMinus,
+  Laptop,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -59,8 +60,8 @@ export default function HomePage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-
           {(role === "IT" ||
+            role === "IT_HEAD" ||
             role === "ADMIN") && (
             <button
               onClick={() =>
@@ -145,6 +146,7 @@ export default function HomePage() {
           </button>
 
           {(role === "IT" ||
+            role === "IT_HEAD" ||
             role === "ADMIN") && (
             <button
               onClick={() =>
@@ -228,6 +230,49 @@ export default function HomePage() {
             </div>
           </button>
 
+          {(role === "IT" ||
+            role === "IT_HEAD" ||
+            role === "ADMIN") && (
+            <button
+              onClick={() =>
+                router.push(
+                  "/change-laptop"
+                )
+              }
+              className="group rounded-2xl border border-[#DFDACB] bg-white p-6 text-left shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227] hover:shadow-xl"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8F4FD]">
+                <Laptop
+                  size={24}
+                  className="text-blue-600"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-slate-900">
+                  Laptop Change
+                  Management
+                </h3>
+
+                <ArrowRight
+                  size={18}
+                  className="text-slate-400"
+                />
+              </div>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Manage laptop inventory,
+                replacement requests,
+                approval workflows and
+                laptop assignment
+                tracking.
+              </p>
+
+              <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
+                Active Service
+              </div>
+            </button>
+          )}
         </div>
       </div>
     </main>
