@@ -13,6 +13,7 @@ type Task = {
   status: string;
   assignedTo?: string | null;
   azureTeam?: string | null;
+  seqriteTeam?: string | null;
 };
 
 type Employee = {
@@ -264,7 +265,8 @@ for (const employeeName of names) {
   field:
     | "status"
     | "assignedTo"
-    | "azureTeam",
+    | "azureTeam"
+    | "seqriteTeam",
   value: string
 ) {
   const employee =
