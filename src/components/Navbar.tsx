@@ -1,22 +1,68 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+
+import NotificationToast from "@/components/NotificationToast";
 
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { data: session } =
-    useSession();
+  const {
+  data: session,
+  status,
+} = useSession();
 
-  if (
-    pathname === "/login" ||
-    pathname === "/signup" ||
-    pathname === "/forgot-password"
-  ) {
-    return null;
+const [
+  notification,
+  setNotification,
+] = useState<{
+  title: string;
+  message: string;
+} | null>(null);
+
+useEffect(() => {
+  if (status !== "authenticated") {
+    return;
   }
+
+  const loadNotification =
+    async () => {
+      try {
+        const res =
+          await fetch(
+            "/api/notifications"
+          );
+
+        const data =
+          await res.json();
+
+        if (data) {
+  setNotification(data);
+
+  const timer = setTimeout(() => {
+    setNotification(null);
+  }, 8000);
+
+  return () => clearTimeout(timer);
+}
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+  loadNotification();
+}, [status]);
+
+if (
+  pathname === "/login" ||
+  pathname === "/signup" ||
+  pathname === "/forgot-password"
+) {
+  return null;
+}
 
   const role =
     (session?.user as {
@@ -52,6 +98,14 @@ export default function Navbar() {
     );
 
   return (
+  <>
+    {notification && (
+      <NotificationToast
+        title={notification.title}
+        message={notification.message}
+      />
+    )}
+
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-3">
         <div>
@@ -427,5 +481,6 @@ export default function Navbar() {
         </div>
       </div>
     </header>
+  </>
   );
 }
