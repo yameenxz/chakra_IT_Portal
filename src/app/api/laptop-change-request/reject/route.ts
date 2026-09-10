@@ -23,7 +23,12 @@ export async function POST(
         },
       });
 
-    await prisma.laptopInventory.update({
+    console.log(
+      "Rejected Request:",
+      laptopRequest
+    );
+
+    await prisma.laptopInventory.updateMany({
       where: {
         assetTag:
           laptopRequest.newAssetTag,
@@ -35,9 +40,14 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
+      message:
+        "Request rejected successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Reject Route Error:",
+      error
+    );
 
     return NextResponse.json(
       {

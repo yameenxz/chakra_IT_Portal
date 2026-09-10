@@ -21,13 +21,17 @@ export default function ApprovalsPage() {
     useState<Record<string, string>>({});
 
   const loadRequests = async () => {
-    const res = await fetch(
-      "/api/laptop-change-request/pending"
-    );
+    try {
+      const res = await fetch(
+        "/api/laptop-change-request/pending"
+      );
 
-    const data = await res.json();
+      const data = await res.json();
 
-    setRequests(data);
+      setRequests(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -35,47 +39,117 @@ export default function ApprovalsPage() {
   }, []);
 
   const approveRequest = async (
-    requestId: string
-  ) => {
-    await fetch(
-      "/api/laptop-change-request/approve",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          requestId,
-          comment:
-            comments[requestId] || "",
-        }),
-      }
-    );
+  requestId: string
+) => {
+  setRequests((prev) =>
+    prev.filter(
+      (request) =>
+        request.id !== requestId
+    )
+  );
 
-    loadRequests();
-  };
+  try {
+    const res = await fetch(
+        "/api/laptop-change-request/approve",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            requestId,
+            comment:
+              comments[requestId] || "",
+          }),
+        }
+      );
+
+      const result =
+        await res.json();
+
+      if (!res.ok) {
+  await loadRequests();
+
+  alert(
+    result.error ||
+      "Failed to approve request"
+  );
+
+  return;
+}
+
+      setRequests((prev) =>
+        prev.filter(
+          (request) =>
+            request.id !== requestId
+        )
+      );
+
+      alert(
+        result.message ||
+          "Request approved successfully"
+      );
+    } catch (error) {
+  console.error(error);
+
+  await loadRequests();
+
+  alert(
+    "Something went wrong while approving the request."
+  );
+}
+};
 
   const rejectRequest = async (
     requestId: string
   ) => {
-    await fetch(
-      "/api/laptop-change-request/reject",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          requestId,
-          comment:
-            comments[requestId] || "",
-        }),
-      }
-    );
+    try {
+      const res = await fetch(
+        "/api/laptop-change-request/reject",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            requestId,
+            comment:
+              comments[requestId] || "",
+          }),
+        }
+      );
 
-    loadRequests();
+      const result =
+        await res.json();
+
+      if (!res.ok) {
+        alert(
+          result.error ||
+            "Failed to reject request"
+        );
+        return;
+      }
+
+      setRequests((prev) =>
+        prev.filter(
+          (request) =>
+            request.id !== requestId
+        )
+      );
+
+      alert(
+        result.message ||
+          "Request rejected successfully"
+      );
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        "Something went wrong while rejecting the request."
+      );
+    }
   };
 
   return (

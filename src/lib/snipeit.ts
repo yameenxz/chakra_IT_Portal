@@ -10,21 +10,49 @@ const headers = {
 };
 
 export async function getAssets() {
-  const response = await fetch(
-    `${BASE_URL}/hardware`,
-    {
-      method: "GET",
-      headers,
-    }
-  );
+  const limit = 500;
+  let offset = 0;
+  let allAssets: any[] = [];
+  let total = 0;
 
-  if (!response.ok) {
-    throw new Error(
-      `Snipe-IT API error: ${response.status}`
+  while (true) {
+    const response = await fetch(
+      `${BASE_URL}/hardware?limit=${limit}&offset=${offset}`,
+      {
+        method: "GET",
+        headers,
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(
+        `Snipe-IT API error: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+
+    total = data.total ?? 0;
+
+    allAssets = [
+      ...allAssets,
+      ...(data.rows ?? []),
+    ];
+
+    if (
+      allAssets.length >= total ||
+      (data.rows ?? []).length === 0
+    ) {
+      break;
+    }
+
+    offset += limit;
   }
 
-  return response.json();
+  return {
+    total,
+    rows: allAssets,
+  };
 }
 
 export async function getAsset(
@@ -96,20 +124,47 @@ export async function getUsers() {
 export async function findAssetByTag(
   assetTag: string
 ) {
-  const assets = await getAssets();
-
-  return assets.rows.find(
-    (asset: any) =>
-      asset.asset_tag === assetTag
+  const response = await fetch(
+    `${BASE_URL}/hardware/bytag/${assetTag}`,
+    {
+      method: "GET",
+      headers,
+    }
   );
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const asset =
+    await response.json();
+
+  return asset;
 }
 
 export async function findUserByName(
   userName: string
 ) {
-  const users = await getUsers();
+  const response = await fetch(
+    `${BASE_URL}/users?search=${encodeURIComponent(
+      userName
+    )}`,
+    {
+      method: "GET",
+      headers,
+    }
+  );
 
-  return users.rows.find(
+  if (!response.ok) {
+    throw new Error(
+      `Snipe-IT API error: ${response.status}`
+    );
+  }
+
+  const data =
+    await response.json();
+
+  return data.rows?.find(
     (user: any) =>
       user.name
         ?.trim()
@@ -138,8 +193,5 @@ export async function checkoutAsset(
     }
   );
 
-  const data =
-    await response.json();
-
-  return data;
+  return response.json();
 }

@@ -3,26 +3,16 @@
 import { useEffect, useState } from "react";
 
 export default function CreateLaptopRequestPage() {
-  const [currentAssetTag, setCurrentAssetTag] =
-    useState("");
+  const [currentAssetTag, setCurrentAssetTag] = useState("");
+  const [currentUser, setCurrentUser] = useState("");
+  const [currentTeam, setCurrentTeam] = useState("");
+  const [replacementTeam, setReplacementTeam] = useState("");
+  const [reasonForChange, setReasonForChange] = useState("");
 
-  const [currentUser, setCurrentUser] =
-    useState("");
-
-  const [team, setTeam] =
-    useState("");
-
-  const [reasonForChange, setReasonForChange] =
-    useState("");
-
-  const [assignedToUser, setAssignedToUser] =
-    useState("");
-
-  const [userSearch, setUserSearch] =
-  useState("");
-
-const [showUserDropdown, setShowUserDropdown] =
-  useState(false);
+  const [assignedToUser, setAssignedToUser] = useState("");
+  const [userSearch, setUserSearch] = useState("");
+  const [showUserDropdown, setShowUserDropdown] =
+    useState(false);
 
   const [availableLaptops, setAvailableLaptops] =
     useState<any[]>([]);
@@ -45,9 +35,7 @@ const [showUserDropdown, setShowUserDropdown] =
       const laptopsData =
         await laptopsRes.json();
 
-      setAvailableLaptops(
-        laptopsData
-      );
+      setAvailableLaptops(laptopsData);
 
       const usersRes = await fetch(
         "/api/snipe-users"
@@ -66,7 +54,7 @@ const [showUserDropdown, setShowUserDropdown] =
     if (
       !currentAssetTag.trim() ||
       !currentUser.trim() ||
-      !team.trim() ||
+      !currentTeam.trim() ||
       !reasonForChange.trim() ||
       !assignedToUser.trim() ||
       !selectedLaptop.trim()
@@ -89,7 +77,8 @@ const [showUserDropdown, setShowUserDropdown] =
         body: JSON.stringify({
           currentAssetTag,
           currentUser,
-          team,
+          team: currentTeam,
+          replacementTeam,
           reasonForChange,
           newAssetTag:
             selectedLaptop,
@@ -116,14 +105,15 @@ const [showUserDropdown, setShowUserDropdown] =
       );
     }
   };
+
   const filteredUsers =
-  snipeUsers.filter((user) =>
-    user.name
-      ?.toLowerCase()
-      .includes(
-        userSearch.toLowerCase()
-      )
-  );
+    snipeUsers.filter((user) =>
+      user.name
+        ?.toLowerCase()
+        .includes(
+          userSearch.toLowerCase()
+        )
+    );
 
   return (
     <main className="min-h-screen bg-[#F4F2EC] p-6">
@@ -134,8 +124,8 @@ const [showUserDropdown, setShowUserDropdown] =
           </h1>
 
           <p className="mt-2 text-slate-600">
-            Submit a laptop replacement
-            request for IT Head approval.
+            Submit a laptop replacement request
+            for IT Head approval.
           </p>
         </div>
 
@@ -153,9 +143,7 @@ const [showUserDropdown, setShowUserDropdown] =
 
                 <input
                   type="text"
-                  value={
-                    currentAssetTag
-                  }
+                  value={currentAssetTag}
                   onChange={(e) =>
                     setCurrentAssetTag(
                       e.target.value
@@ -189,9 +177,9 @@ const [showUserDropdown, setShowUserDropdown] =
 
                 <input
                   type="text"
-                  value={team}
+                  value={currentTeam}
                   onChange={(e) =>
-                    setTeam(
+                    setCurrentTeam(
                       e.target.value
                     )
                   }
@@ -206,9 +194,7 @@ const [showUserDropdown, setShowUserDropdown] =
 
                 <input
                   type="text"
-                  value={
-                    reasonForChange
-                  }
+                  value={reasonForChange}
                   onChange={(e) =>
                     setReasonForChange(
                       e.target.value
@@ -224,9 +210,7 @@ const [showUserDropdown, setShowUserDropdown] =
                 </label>
 
                 <select
-                  value={
-                    selectedLaptop
-                  }
+                  value={selectedLaptop}
                   onChange={(e) => {
                     const laptop =
                       availableLaptops.find(
@@ -240,7 +224,7 @@ const [showUserDropdown, setShowUserDropdown] =
                     );
 
                     setSelectedLaptopName(
-                      laptop?.name ?? ""
+                      laptop?.name || ""
                     );
                   }}
                   className="w-full rounded-xl border border-[#DFDACB] px-4 py-2.5"
@@ -252,9 +236,7 @@ const [showUserDropdown, setShowUserDropdown] =
                   {availableLaptops.map(
                     (laptop) => (
                       <option
-                        key={
-                          laptop.id
-                        }
+                        key={laptop.id}
                         value={
                           laptop.assetTag
                         }
@@ -281,77 +263,68 @@ const [showUserDropdown, setShowUserDropdown] =
 
                 <input
                   type="text"
-                  value={
-                    selectedLaptopName
-                  }
+                  value={selectedLaptopName}
                   readOnly
                   className="w-full rounded-xl border border-[#DFDACB] bg-slate-100 px-4 py-2.5"
                 />
               </div>
 
               <div>
-  <label className="mb-1 block font-medium">
-    Assigned To User
-  </label>
+                <label className="mb-1 block font-medium">
+                  Assigned To User
+                </label>
 
-  <div className="relative">
-    <input
-      type="text"
-      placeholder="Search User..."
-      value={userSearch}
-      onChange={(e) => {
-        setUserSearch(
-          e.target.value
-        );
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search User..."
+                    value={userSearch}
+                    onChange={(e) => {
+                      setUserSearch(
+                        e.target.value
+                      );
+                      setShowUserDropdown(
+                        true
+                      );
+                    }}
+                    onFocus={() =>
+                      setShowUserDropdown(
+                        true
+                      )
+                    }
+                    className="w-full rounded-xl border border-[#DFDACB] px-4 py-2.5"
+                  />
 
-        setShowUserDropdown(
-          true
-        );
-      }}
-      onFocus={() =>
-        setShowUserDropdown(
-          true
-        )
-      }
-      className="w-full rounded-xl border border-[#DFDACB] px-4 py-2.5"
-    />
+                  {showUserDropdown && (
+                    <div className="absolute z-50 mt-1 max-h-64 w-full overflow-y-auto rounded-xl border border-[#DFDACB] bg-white shadow-lg">
+                      {filteredUsers
+                        .slice(0, 30)
+                        .map((user) => (
+                          <button
+                            key={user.id}
+                            type="button"
+                            onClick={() => {
+                              setAssignedToUser(
+                                user.name
+                              );
 
-    {showUserDropdown && (
-      <div className="absolute z-50 mt-1 max-h-64 w-full overflow-y-auto rounded-xl border border-[#DFDACB] bg-white shadow-lg">
-        {filteredUsers
-          .slice(0, 30)
-          .map((user) => (
-            <button
-              key={user.id}
-              type="button"
-              onClick={() => {
-                setAssignedToUser(
-                  user.name
-                );
+                              setUserSearch(
+                                user.name
+                              );
 
-                setUserSearch(
-                  user.name
-                );
-
-                setShowUserDropdown(
-                  false
-                );
-              }}
-              className="block w-full px-4 py-2 text-left hover:bg-slate-100"
-            >
-              {user.name}
-            </button>
-          ))}
-
-        {filteredUsers.length === 0 && (
-          <div className="px-4 py-2 text-slate-500">
-            No users found
-          </div>
-        )}
-      </div>
-    )}
-  </div>
-</div>
+                              setShowUserDropdown(
+                                false
+                              );
+                            }}
+                            className="block w-full px-4 py-2 text-left hover:bg-slate-100"
+                          >
+                            {user.name}
+                          </button>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              </div>
 
               <div>
                 <label className="mb-1 block font-medium">
@@ -360,9 +333,9 @@ const [showUserDropdown, setShowUserDropdown] =
 
                 <input
                   type="text"
-                  value={team}
+                  value={replacementTeam}
                   onChange={(e) =>
-                    setTeam(
+                    setReplacementTeam(
                       e.target.value
                     )
                   }

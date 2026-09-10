@@ -22,6 +22,11 @@ export async function POST(
         },
       });
 
+    console.log(
+      "Laptop Request:",
+      laptopRequest
+    );
+
     if (!laptopRequest) {
       return NextResponse.json(
         {
@@ -37,6 +42,11 @@ export async function POST(
       await findAssetByTag(
         laptopRequest.newAssetTag
       );
+
+    console.log(
+      "Asset found:",
+      asset
+    );
 
     if (!asset) {
       return NextResponse.json(
@@ -55,6 +65,11 @@ export async function POST(
         laptopRequest.assignedToUser
       );
 
+    console.log(
+      "User found:",
+      user
+    );
+
     if (!user) {
       return NextResponse.json(
         {
@@ -72,6 +87,11 @@ export async function POST(
         user.id,
         `Laptop Change Request Approved (${laptopRequest.id})`
       );
+
+    console.log(
+      "Checkout Result:",
+      checkoutResult
+    );
 
     if (
       checkoutResult.status ===
@@ -101,6 +121,10 @@ export async function POST(
       },
     });
 
+    console.log(
+      "Request status updated"
+    );
+
     await prisma.laptopChangeAuditLog.create({
       data: {
         requestId,
@@ -112,13 +136,20 @@ export async function POST(
       },
     });
 
+    console.log(
+      "Audit log created"
+    );
+
     return NextResponse.json({
       success: true,
       message:
         "Request approved and laptop assigned successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Approval Error:",
+      error
+    );
 
     return NextResponse.json(
       {
