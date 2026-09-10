@@ -73,18 +73,19 @@ export async function POST(
   )?.role;
 
   if (
-    role !== "IT" &&
-    role !== "ADMIN"
-  ) {
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-      },
-      {
-        status: 403,
-      }
-    );
-  }
+  role !== "IT" &&
+  role !== "IT_HEAD" &&
+  role !== "ADMIN"
+) {
+  return NextResponse.json(
+    {
+      error: "Unauthorized",
+    },
+    {
+      status: 403,
+    }
+  );
+}
 
   try {
     const employees: EmployeeUpload[] =

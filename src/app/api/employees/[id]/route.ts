@@ -18,19 +18,20 @@ export async function PATCH(
   )?.role;
 
   if (
-    role !== "ADMIN" &&
-    role !== "IT" &&
-    role !== "GURU"
-  ) {
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-      },
-      {
-        status: 403,
-      }
-    );
-  }
+  role !== "ADMIN" &&
+  role !== "IT" &&
+  role !== "IT_HEAD" &&
+  role !== "GURU"
+) {
+  return NextResponse.json(
+    {
+      error: "Unauthorized",
+    },
+    {
+      status: 403,
+    }
+  );
+}
 
   try {
     const { id } = await params;

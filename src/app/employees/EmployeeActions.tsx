@@ -15,7 +15,11 @@ export default function EmployeeActions() {
     return null;
   }
 
-  if (role !== "IT" && role !== "ADMIN") {
+  if (
+    role !== "IT" &&
+    role !== "IT_HEAD" &&
+    role !== "ADMIN"
+  ) {
     return null;
   }
 

@@ -55,16 +55,6 @@ export async function POST(
         },
       });
 
-    await prisma.laptopInventory.update({
-      where: {
-        assetTag:
-          body.newAssetTag,
-      },
-      data: {
-        status: "RESERVED",
-      },
-    });
-
     return NextResponse.json({
       success: true,
       requestRecord,

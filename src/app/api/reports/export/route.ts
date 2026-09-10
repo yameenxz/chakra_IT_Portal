@@ -37,10 +37,11 @@ export async function GET() {
   )?.role;
 
   if (
-    role !== "ADMIN" &&
-    role !== "IT" &&
-    role !== "GURU"
-  ) {
+  role !== "ADMIN" &&
+  role !== "IT" &&
+  role !== "IT_HEAD" &&
+  role !== "GURU"
+)  {
     return NextResponse.json(
       {
         error: "Unauthorized",

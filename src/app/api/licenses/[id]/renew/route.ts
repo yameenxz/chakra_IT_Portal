@@ -46,19 +46,19 @@ export async function POST(
     })?.role;
 
   if (
-    role !== "IT" &&
-    role !== "ADMIN"
-  ) {
-    return NextResponse.json(
-      {
-        error:
-          "Unauthorized",
-      },
-      {
-        status: 403,
-      }
-    );
-  }
+  role !== "IT" &&
+  role !== "ADMIN" &&
+  role !== "IT_HEAD"
+) {
+  return NextResponse.json(
+    {
+      error: "Unauthorized",
+    },
+    {
+      status: 403,
+    }
+  );
+}
 
   try {
     const { id } =

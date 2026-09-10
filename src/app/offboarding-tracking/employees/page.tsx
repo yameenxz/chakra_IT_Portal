@@ -139,7 +139,7 @@ export default function OffboardingEmployeesPage() {
           task.id === taskId
             ? {
                 ...task,
-                value,
+                [field]:value,
               }
             : task
       ),

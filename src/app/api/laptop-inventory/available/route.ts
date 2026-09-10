@@ -1,19 +1,30 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getAssets } from "@/lib/snipeit";
 
 export async function GET() {
   try {
-    const laptops =
-      await prisma.laptopInventory.findMany({
-        where: {
-          status: "AVAILABLE",
-        },
-        orderBy: {
-          assetTag: "asc",
-        },
-      });
+    const assets = await getAssets();
 
-    return NextResponse.json(laptops);
+    const availableLaptops = assets.rows
+      .filter(
+  (asset: any) =>
+    asset.category?.name === "Laptop" &&
+    asset.status_label?.name === "Ready to Deploy" &&
+    asset.assigned_to === null
+)
+      .map((asset: any) => ({
+  id: String(asset.id),
+  name: asset.name ?? "",
+  rawName: asset.name,
+  assetTag: asset.asset_tag,
+  model: asset.model?.name ?? "",
+  status: asset.status_label?.name ?? "",
+  assignedTo: asset.assigned_to?.name ?? null,
+}))
+
+    return NextResponse.json(
+      availableLaptops
+    );
   } catch (error) {
     console.error(error);
 

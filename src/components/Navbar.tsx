@@ -39,14 +39,22 @@ useEffect(() => {
         const data =
           await res.json();
 
-        if (data) {
+        if (
+  data &&
+  !sessionStorage.getItem(
+    "notificationShown"
+  )
+) {
   setNotification(data);
 
-  const timer = setTimeout(() => {
+  sessionStorage.setItem(
+    "notificationShown",
+    "true"
+  );
+
+  setTimeout(() => {
     setNotification(null);
   }, 8000);
-
-  return () => clearTimeout(timer);
 }
       } catch (error) {
         console.error(error);
@@ -467,12 +475,15 @@ if (
               )}
 
             <button
-              onClick={() =>
-                signOut({
-                  callbackUrl:
-                    "/login",
-                })
-              }
+              onClick={() => {
+  sessionStorage.removeItem(
+    "notificationShown"
+  );
+
+  signOut({
+    callbackUrl: "/login",
+  });
+}}
               className="rounded-lg bg-red-500 px-4 py-2 text-white transition hover:bg-red-600"
             >
               Logout

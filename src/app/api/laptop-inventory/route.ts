@@ -1,15 +1,35 @@
 import { NextResponse } from "next/server";
-
 import { prisma } from "@/lib/prisma";
+import { getAssets } from "@/lib/snipeit";
 
 export async function GET() {
   try {
-    const laptops =
-      await prisma.laptopInventory.findMany({
-        orderBy: {
-          assetTag: "asc",
-        },
-      });
+    const assets = await getAssets();
+
+    const laptops = assets.rows.map(
+      (asset: any) => ({
+        id: String(asset.id),
+        name: asset.name ?? "",
+        assetTag: asset.asset_tag ?? "",
+        model: asset.model?.name ?? "",
+        category: asset.category?.name ?? "",
+        location:
+          asset.location?.name ??
+          asset.rtd_location?.name ??
+          "",
+
+        status: asset.assigned_to
+          ? "Deployed"
+          : asset.status_label?.name ===
+            "Ready to Deploy"
+          ? "Available"
+          : asset.status_label?.name ??
+            "Unknown",
+
+        assignedTo:
+          asset.assigned_to?.name ?? "-",
+      })
+    );
 
     return NextResponse.json(laptops);
   } catch (error) {

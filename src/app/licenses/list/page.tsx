@@ -28,8 +28,9 @@ export default function LicensesPage() {
     })?.role ?? "");
 
   const canRenew =
-    role === "IT" ||
-    role === "ADMIN";
+  role === "IT" ||
+  role === "ADMIN" ||
+  role === "IT_HEAD";
 
   const [licenses, setLicenses] =
     useState<License[]>([]);

@@ -18,24 +18,48 @@ export default function CreateLaptopRequestPage() {
   const [assignedToUser, setAssignedToUser] =
     useState("");
 
+  const [userSearch, setUserSearch] =
+  useState("");
+
+const [showUserDropdown, setShowUserDropdown] =
+  useState(false);
+
   const [availableLaptops, setAvailableLaptops] =
+    useState<any[]>([]);
+
+  const [snipeUsers, setSnipeUsers] =
     useState<any[]>([]);
 
   const [selectedLaptop, setSelectedLaptop] =
     useState("");
 
+  const [selectedLaptopName, setSelectedLaptopName] =
+    useState("");
+
   useEffect(() => {
-    const loadLaptops = async () => {
-      const res = await fetch(
+    const loadData = async () => {
+      const laptopsRes = await fetch(
         "/api/laptop-inventory/available"
       );
 
-      const data = await res.json();
+      const laptopsData =
+        await laptopsRes.json();
 
-      setAvailableLaptops(data);
+      setAvailableLaptops(
+        laptopsData
+      );
+
+      const usersRes = await fetch(
+        "/api/snipe-users"
+      );
+
+      const usersData =
+        await usersRes.json();
+
+      setSnipeUsers(usersData);
     };
 
-    loadLaptops();
+    loadData();
   }, []);
 
   const submitRequest = async () => {
@@ -92,6 +116,14 @@ export default function CreateLaptopRequestPage() {
       );
     }
   };
+  const filteredUsers =
+  snipeUsers.filter((user) =>
+    user.name
+      ?.toLowerCase()
+      .includes(
+        userSearch.toLowerCase()
+      )
+  );
 
   return (
     <main className="min-h-screen bg-[#F4F2EC] p-6">
@@ -102,8 +134,8 @@ export default function CreateLaptopRequestPage() {
           </h1>
 
           <p className="mt-2 text-slate-600">
-            Submit a laptop replacement request for
-            IT Head approval.
+            Submit a laptop replacement
+            request for IT Head approval.
           </p>
         </div>
 
@@ -195,11 +227,22 @@ export default function CreateLaptopRequestPage() {
                   value={
                     selectedLaptop
                   }
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const laptop =
+                      availableLaptops.find(
+                        (l) =>
+                          l.assetTag ===
+                          e.target.value
+                      );
+
                     setSelectedLaptop(
                       e.target.value
-                    )
-                  }
+                    );
+
+                    setSelectedLaptopName(
+                      laptop?.name ?? ""
+                    );
+                  }}
                   className="w-full rounded-xl border border-[#DFDACB] px-4 py-2.5"
                 >
                   <option value="">
@@ -216,9 +259,7 @@ export default function CreateLaptopRequestPage() {
                           laptop.assetTag
                         }
                       >
-                        {
-                          laptop.assetTag
-                        }
+                        {laptop.name}
                       </option>
                     )
                   )}
@@ -241,7 +282,7 @@ export default function CreateLaptopRequestPage() {
                 <input
                   type="text"
                   value={
-                    selectedLaptop
+                    selectedLaptopName
                   }
                   readOnly
                   className="w-full rounded-xl border border-[#DFDACB] bg-slate-100 px-4 py-2.5"
@@ -249,23 +290,68 @@ export default function CreateLaptopRequestPage() {
               </div>
 
               <div>
-                <label className="mb-1 block font-medium">
-                  Assigned To User
-                </label>
+  <label className="mb-1 block font-medium">
+    Assigned To User
+  </label>
 
-                <input
-                  type="text"
-                  value={
-                    assignedToUser
-                  }
-                  onChange={(e) =>
-                    setAssignedToUser(
-                      e.target.value
-                    )
-                  }
-                  className="w-full rounded-xl border border-[#DFDACB] px-4 py-2.5"
-                />
-              </div>
+  <div className="relative">
+    <input
+      type="text"
+      placeholder="Search User..."
+      value={userSearch}
+      onChange={(e) => {
+        setUserSearch(
+          e.target.value
+        );
+
+        setShowUserDropdown(
+          true
+        );
+      }}
+      onFocus={() =>
+        setShowUserDropdown(
+          true
+        )
+      }
+      className="w-full rounded-xl border border-[#DFDACB] px-4 py-2.5"
+    />
+
+    {showUserDropdown && (
+      <div className="absolute z-50 mt-1 max-h-64 w-full overflow-y-auto rounded-xl border border-[#DFDACB] bg-white shadow-lg">
+        {filteredUsers
+          .slice(0, 30)
+          .map((user) => (
+            <button
+              key={user.id}
+              type="button"
+              onClick={() => {
+                setAssignedToUser(
+                  user.name
+                );
+
+                setUserSearch(
+                  user.name
+                );
+
+                setShowUserDropdown(
+                  false
+                );
+              }}
+              className="block w-full px-4 py-2 text-left hover:bg-slate-100"
+            >
+              {user.name}
+            </button>
+          ))}
+
+        {filteredUsers.length === 0 && (
+          <div className="px-4 py-2 text-slate-500">
+            No users found
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+</div>
 
               <div>
                 <label className="mb-1 block font-medium">

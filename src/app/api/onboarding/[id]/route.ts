@@ -97,9 +97,10 @@ export async function PUT(
     })?.role;
 
   if (
-    role !== "IT" &&
-    role !== "ADMIN"
-  ) {
+  role !== "IT" &&
+  role !== "IT_HEAD" &&
+  role !== "ADMIN"
+) {
     return NextResponse.json(
       {
         error: "Unauthorized",
@@ -306,18 +307,19 @@ export async function DELETE(
     })?.role;
 
   if (
-    role !== "IT" &&
-    role !== "ADMIN"
-  ) {
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-      },
-      {
-        status: 403,
-      }
-    );
-  }
+  role !== "IT" &&
+  role !== "IT_HEAD" &&
+  role !== "ADMIN"
+) {
+  return NextResponse.json(
+    {
+      error: "Unauthorized",
+    },
+    {
+      status: 403,
+    }
+  );
+}
 
   try {
     const { id } =
