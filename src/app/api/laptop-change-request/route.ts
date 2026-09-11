@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth-guard";
 
 export async function POST(
   request: Request
 ) {
+  // SECURITY: unauthenticated POST that created laptop change requests.
+  const guard = await requireRole("ADMIN", "IT", "IT_HEAD");
+  if (!guard.ok) return guard.response;
+
   try {
     const body =
       await request.json();
@@ -50,8 +55,11 @@ export async function POST(
           assignedToUser:
             body.assignedToUser,
 
-          requestedBy:
-            body.requestedBy,
+          // AUDIT: was `body.requestedBy` — taken from the request body, so
+          // the requester was whatever the client claimed. Anyone could
+          // submit a request in someone else's name. Now the authenticated
+          // user, which the client cannot forge.
+          requestedBy: guard.email,
         },
       });
 

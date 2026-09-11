@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth-guard";
 
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // SECURITY: unauthenticated DELETE of inventory records.
+  const guard = await requireRole("ADMIN", "IT_HEAD");
+  if (!guard.ok) return guard.response;
+
   try {
     const { id } = await params;
 
@@ -34,6 +39,10 @@ export async function DELETE(
     await prisma.laptopInventory.delete({
       where: { id },
     });
+
+    console.warn(
+      `[audit] laptop inventory deleted: ${laptop.assetTag} (${id}) by ${guard.email}`
+    );
 
     return NextResponse.json({
       success: true,

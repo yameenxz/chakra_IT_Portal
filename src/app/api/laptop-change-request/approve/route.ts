@@ -5,15 +5,29 @@ import {
   findUserByName,
   checkoutAsset,
 } from "@/lib/snipeit";
+import { requireRole } from "@/lib/auth-guard";
 
 export async function POST(
   request: Request
 ) {
+  // SECURITY: this was an unauthenticated POST that performed a real Snipe-IT
+  // checkout and marked a request APPROVED. Approval is a decision point, so
+  // IT alone is not sufficient — IT_HEAD or ADMIN only.
+  const guard = await requireRole("IT_HEAD", "ADMIN");
+  if (!guard.ok) return guard.response;
+
   try {
     const {
       requestId,
       comment,
     } = await request.json();
+
+    if (typeof requestId !== "string" || !requestId) {
+      return NextResponse.json(
+        { error: "requestId is required" },
+        { status: 400 }
+      );
+    }
 
     const laptopRequest =
       await prisma.laptopChangeRequest.findUnique({
@@ -21,11 +35,6 @@ export async function POST(
           id: requestId,
         },
       });
-
-    console.log(
-      "Laptop Request:",
-      laptopRequest
-    );
 
     if (!laptopRequest) {
       return NextResponse.json(
@@ -38,15 +47,22 @@ export async function POST(
       );
     }
 
+    // Only a request still awaiting a decision may be approved. Without this,
+    // an already-approved request can be re-approved, firing a second Snipe-IT
+    // checkout and a second audit entry.
+    if (laptopRequest.status !== "PENDING_IT_HEAD") {
+      return NextResponse.json(
+        {
+          error: `Request is already ${laptopRequest.status}`,
+        },
+        { status: 409 }
+      );
+    }
+
     const asset =
       await findAssetByTag(
         laptopRequest.newAssetTag
       );
-
-    console.log(
-      "Asset found:",
-      asset
-    );
 
     if (!asset) {
       return NextResponse.json(
@@ -65,11 +81,6 @@ export async function POST(
         laptopRequest.assignedToUser
       );
 
-    console.log(
-      "User found:",
-      user
-    );
-
     if (!user) {
       return NextResponse.json(
         {
@@ -87,11 +98,6 @@ export async function POST(
         user.id,
         `Laptop Change Request Approved (${laptopRequest.id})`
       );
-
-    console.log(
-      "Checkout Result:",
-      checkoutResult
-    );
 
     if (
       checkoutResult.status ===
@@ -115,15 +121,13 @@ export async function POST(
       },
       data: {
         status: "APPROVED",
-        approvedBy: "IT Head",
+        // AUDIT: was the hardcoded string "IT Head", so the record never
+        // showed who actually approved. Now the authenticated user.
+        approvedBy: guard.email,
         approvedAt: new Date(),
         itHeadComment: comment,
       },
     });
-
-    console.log(
-      "Request status updated"
-    );
 
     await prisma.laptopChangeAuditLog.create({
       data: {
@@ -131,14 +135,9 @@ export async function POST(
         action:
           "REQUEST_APPROVED",
         details: `Assigned laptop ${laptopRequest.newAssetTag} to ${laptopRequest.assignedToUser} in Snipe-IT`,
-        performedBy:
-          "IT Head",
+        performedBy: guard.email,
       },
     });
-
-    console.log(
-      "Audit log created"
-    );
 
     return NextResponse.json({
       success: true,
@@ -146,6 +145,9 @@ export async function POST(
         "Request approved and laptop assigned successfully",
     });
   } catch (error) {
+    // The original console.log'd the full request, asset and user objects on
+    // every call. That puts employee names and asset detail into PM2 logs
+    // indefinitely — removed.
     console.error(
       "Approval Error:",
       error

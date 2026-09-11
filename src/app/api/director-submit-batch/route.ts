@@ -1,33 +1,12 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
+import type { Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/auth";
+import { requireRole } from "@/lib/auth-guard";
 
 export async function POST() {
-  const session =
-    await getServerSession(authOptions);
-
-  const role = (
-    session?.user as {
-      role?: string;
-    }
-  )?.role;
-
-  if (
-    role !== "GURU" &&
-    role !== "ADMIN"
-  ) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Unauthorized",
-      },
-      {
-        status: 403,
-      }
-    );
-  }
+  const guard = await requireRole("GURU", "ADMIN");
+  if (!guard.ok) return guard.response;
 
   try {
     const pendingDirectorEmployees =
@@ -60,102 +39,163 @@ export async function POST() {
       });
     }
 
-    for (const employee of pendingDirectorEmployees) {
-      if (!employee.team) {
-        return NextResponse.json({
-          success: false,
-          error: `${employee.name} does not have a team assigned.`,
-        });
-      }
+    // ---------------------------------------------------------------------
+    // VALIDATE EVERYTHING FIRST.
+    //
+    // The original checked `employee.team` and reviewer availability INSIDE
+    // the mutation loop and returned early on failure. By then, earlier
+    // employees in the batch had already been moved to PENDING_PARTNERS and
+    // had PartnerApproval rows created. The caller saw `success: false` and a
+    // message implying nothing happened, while the database held a partially
+    // submitted batch — with no way to tell from the response how far it got.
+    //
+    // Validation now completes for the whole batch before anything is written.
+    // ---------------------------------------------------------------------
 
-      const reviewers =
-        await prisma.user.findMany({
-          where: {
-            team: employee.team,
-            isActive: true,
-            role: {
-              in: [
-                "DIRECTOR",
-                "PARTNER",
-              ],
-            },
-          },
-        });
+    const teams = [
+      ...new Set(
+        pendingDirectorEmployees
+          .map((employee) => employee.team)
+          .filter((team): team is string => Boolean(team))
+      ),
+    ];
 
-      if (reviewers.length === 0) {
-        return NextResponse.json({
-          success: false,
-          error: `No reviewers found for team ${employee.team}.`,
-        });
-      }
+    const missingTeam = pendingDirectorEmployees.filter(
+      (employee) => !employee.team
+    );
 
-      await prisma.employee.update({
+    if (missingTeam.length > 0) {
+      return NextResponse.json({
+        success: false,
+        error: `No team assigned: ${missingTeam
+          .map((e) => e.name)
+          .join(", ")}`,
+      });
+    }
+
+    // One query for all teams instead of one per employee. The original ran
+    // a findMany per employee plus a findFirst per reviewer — roughly 800
+    // round trips for a 200-employee batch, which is also how a timeout
+    // mid-loop became likely in the first place.
+    const reviewers = await prisma.user.findMany({
+      where: {
+        team: { in: teams },
+        isActive: true,
+        role: { in: ["DIRECTOR", "PARTNER"] },
+      },
+      select: { email: true, role: true, team: true },
+    });
+
+    const reviewersByTeam = new Map<
+      string,
+      typeof reviewers
+    >();
+
+    for (const reviewer of reviewers) {
+      if (!reviewer.team) continue;
+      const list = reviewersByTeam.get(reviewer.team) ?? [];
+      list.push(reviewer);
+      reviewersByTeam.set(reviewer.team, list);
+    }
+
+    const teamsWithoutReviewers = teams.filter(
+      (team) => (reviewersByTeam.get(team) ?? []).length === 0
+    );
+
+    if (teamsWithoutReviewers.length > 0) {
+      return NextResponse.json({
+        success: false,
+        error: `No reviewers found for team(s): ${teamsWithoutReviewers.join(
+          ", "
+        )}`,
+      });
+    }
+
+    // Existing approvals, fetched once rather than per reviewer.
+    const existingApprovals =
+      await prisma.partnerApproval.findMany({
         where: {
-          id: employee.id,
+          employeeId: {
+            in: pendingDirectorEmployees.map((e) => e.id),
+          },
         },
-        data: {
-          workflowStage:
-            "PENDING_PARTNERS",
-          partnerAssignedAt:
-            new Date(),
-          partnerReminderSent: false,
-        },
+        select: { employeeId: true, partnerEmail: true },
       });
 
-      for (const reviewer of reviewers) {
-        const existingApproval =
-          await prisma.partnerApproval.findFirst({
-            where: {
-              employeeId:
-                employee.id,
-              partnerEmail:
-                reviewer.email,
-            },
-          });
+    const alreadyAssigned = new Set(
+      existingApprovals.map(
+        (a) => `${a.employeeId}::${a.partnerEmail}`
+      )
+    );
 
-        if (!existingApproval) {
-          await prisma.partnerApproval.create({
-            data: {
-              employeeId:
-                employee.id,
+    // ---------------------------------------------------------------------
+    // MUTATE ATOMICALLY.
+    //
+    // Either the whole batch is submitted or none of it is. Without this, a
+    // failure partway leaves some employees in PENDING_PARTNERS and others in
+    // PENDING_DIRECTOR, which is not a state the UI represents.
+    // ---------------------------------------------------------------------
 
-              partnerEmail:
-                reviewer.email,
+    const now = new Date();
 
-              reviewerRole:
-                reviewer.role,
+    const approvalsToCreate: Prisma.PartnerApprovalCreateManyInput[] = [];
 
-              status: "PENDING",
+    const auditToCreate: Prisma.AuditLogCreateManyInput[] = [];
 
-              assignedAt:
-                new Date(),
-            },
-          });
+    for (const employee of pendingDirectorEmployees) {
+      const teamReviewers =
+        reviewersByTeam.get(employee.team as string) ?? [];
 
-          await prisma.auditLog.create({
-            data: {
-              employeeId:
-                employee.id,
+      for (const reviewer of teamReviewers) {
+        const key = `${employee.id}::${reviewer.email}`;
+        if (alreadyAssigned.has(key)) continue;
 
-              action:
-                "Assigned To Reviewer",
+        approvalsToCreate.push({
+          employeeId: employee.id,
+          partnerEmail: reviewer.email,
+          reviewerRole: reviewer.role,
+          status: "PENDING",
+          assignedAt: now,
+        });
 
-              details:
-                `${employee.name} assigned to ${reviewer.email} (${reviewer.role}) (${employee.team})`,
-
-              performedBy:
-                session?.user?.email ??
-                "Guru",
-            },
-          });
-        }
+        auditToCreate.push({
+          employeeId: employee.id,
+          action: "Assigned To Reviewer",
+          details: `${employee.name} assigned to ${reviewer.email} (${reviewer.role}) (${employee.team})`,
+          performedBy: guard.email,
+        });
       }
     }
+
+    await prisma.$transaction([
+      prisma.employee.updateMany({
+        where: {
+          id: {
+            in: pendingDirectorEmployees.map((e) => e.id),
+          },
+          // Re-assert the stage inside the transaction so a concurrent
+          // submission can't advance the same employees twice.
+          workflowStage: "PENDING_DIRECTOR",
+        },
+        data: {
+          workflowStage: "PENDING_PARTNERS",
+          partnerAssignedAt: now,
+          partnerReminderSent: false,
+        },
+      }),
+      prisma.partnerApproval.createMany({
+        data: approvalsToCreate,
+      }),
+      prisma.auditLog.createMany({
+        data: auditToCreate,
+      }),
+    ]);
 
     return NextResponse.json({
       success: true,
       count:
         pendingDirectorEmployees.length,
+      assignments: approvalsToCreate.length,
       message:
         "Employees successfully assigned to Directors and Partners.",
     });

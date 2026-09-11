@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth-guard";
 
 export async function GET() {
+  // SECURITY: this endpoint returned a full .xlsx export to unauthenticated
+  // callers. Verified against the running instance on 11 Sep 2026.
+  const guard = await requireRole("ADMIN", "IT", "IT_HEAD");
+  if (!guard.ok) return guard.response;
+
   try {
     const licenses =
       await prisma.license.findMany({

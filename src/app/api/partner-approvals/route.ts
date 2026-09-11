@@ -1,39 +1,34 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/auth";
+import { requireRole } from "@/lib/auth-guard";
+
+/** Partner SLA in days. Was hardcoded inline as `>= 2`. */
+const OVERDUE_AFTER_DAYS = Number(
+  process.env.PARTNER_SLA_DAYS ?? 2
+);
 
 export async function GET() {
-  const session =
-    await getServerSession(authOptions);
-
-  const role = (
-    session?.user as {
-      role?: string;
-    }
-  )?.role;
-
-  if (
-    role !== "PARTNER" &&
-    role !== "DIRECTOR" &&
-    role !== "ADMIN"
-  ) {
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-      },
-      {
-        status: 403,
-      }
-    );
-  }
+  const guard = await requireRole(
+    "PARTNER",
+    "DIRECTOR",
+    "ADMIN"
+  );
+  if (!guard.ok) return guard.response;
 
   try {
+    // C6: this returned every pending approval in the system to any reviewer,
+    // with employee names, emails and teams. The partner page filtered to
+    // "mine" in the browser — presentation, not access control. Filter here.
+    const scopeToSelf = guard.role === "PARTNER";
+
     const approvals =
       await prisma.partnerApproval.findMany({
         where: {
           status: "PENDING",
+          ...(scopeToSelf
+            ? { partnerEmail: guard.email }
+            : {}),
         },
         include: {
           employee: true,
@@ -103,7 +98,7 @@ export async function GET() {
           waitingDays,
 
           overdue:
-            waitingDays >= 2,
+            waitingDays >= OVERDUE_AFTER_DAYS,
         };
       }
     );
@@ -127,74 +122,124 @@ export async function GET() {
 export async function POST(
   request: Request
 ) {
-  const session =
-    await getServerSession(authOptions);
-
-  const role = (
-    session?.user as {
-      role?: string;
-    }
-  )?.role;
-
-  if (
-    role !== "PARTNER" &&
-    role !== "DIRECTOR" &&
-    role !== "ADMIN"
-  ) {
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-      },
-      {
-        status: 403,
-      }
-    );
-  }
+  const guard = await requireRole(
+    "PARTNER",
+    "DIRECTOR",
+    "ADMIN"
+  );
+  if (!guard.ok) return guard.response;
 
   try {
     const body =
       await request.json();
 
-    await prisma.partnerApproval.updateMany({
-      where: {
-        employeeId:
-          body.employeeId,
-        partnerEmail:
-          body.partnerEmail,
-      },
-      data: {
-        status: "APPROVED",
-        emailDecision:
-          body.emailDecision,
-        oneDriveDecision:
-          body.oneDriveDecision,
-        comment:
-          body.comment,
-        approvedAt:
-          new Date(),
-      },
-    });
+    if (typeof body.employeeId !== "string" || !body.employeeId) {
+      return NextResponse.json(
+        { error: "employeeId is required" },
+        { status: 400 }
+      );
+    }
 
-    const pendingApprovals =
-      await prisma.partnerApproval.count({
+    // ---------------------------------------------------------------------
+    // C1 — THE APPROVER IS THE CALLER, NOT WHOEVER THE BODY SAYS.
+    //
+    // This previously used `body.partnerEmail`, so any authenticated reviewer
+    // could record an APPROVED decision in another partner's name, with a
+    // comment that partner never wrote, and nothing anywhere recorded who
+    // actually submitted it.
+    //
+    // An ADMIN acting on someone else's behalf is a legitimate need, but it
+    // must be deliberate and visible in the audit trail — see `actingFor`.
+    // ---------------------------------------------------------------------
+    const targetPartnerEmail =
+      guard.role === "ADMIN" &&
+      typeof body.partnerEmail === "string" &&
+      body.partnerEmail
+        ? body.partnerEmail.trim().toLowerCase()
+        : guard.email;
+
+    const actingForSomeoneElse =
+      targetPartnerEmail !== guard.email;
+
+    const result =
+      await prisma.partnerApproval.updateMany({
         where: {
+          employeeId:
+            body.employeeId,
+          partnerEmail:
+            targetPartnerEmail,
+          // Only a pending assignment can be approved. Without this, an
+          // approval can be silently rewritten after the fact.
           status: "PENDING",
+        },
+        data: {
+          status: "APPROVED",
+          emailDecision:
+            body.emailDecision,
+          oneDriveDecision:
+            body.oneDriveDecision,
+          comment:
+            body.comment,
+          approvedAt:
+            new Date(),
         },
       });
 
-    if (pendingApprovals === 0) {
-      const employees =
-        await prisma.employee.findMany({
-          where: {
-            workflowStage:
-              "PENDING_PARTNERS",
-          },
-        });
+    // C5: updateMany returns a count and the original ignored it. A mismatched
+    // employeeId or partnerEmail updated nothing and still returned success,
+    // so the partner saw confirmation for an approval that was never recorded.
+    if (result.count === 0) {
+      return NextResponse.json(
+        {
+          error:
+            "No pending approval found for you on this employee",
+        },
+        { status: 404 }
+      );
+    }
 
-      for (const employee of employees) {
-        await prisma.employee.update({
+    // C7: the partner's own decision — the sign-off this module exists to
+    // capture — wrote nothing to AuditLog. Assignment and completion were
+    // logged; the decision itself was not.
+    await prisma.auditLog.create({
+      data: {
+        employeeId: body.employeeId,
+        action: "Partner Approval Recorded",
+        details: actingForSomeoneElse
+          ? `Approval recorded for ${targetPartnerEmail} BY ADMIN ${guard.email}. Email: ${body.emailDecision ?? "-"}, OneDrive: ${body.oneDriveDecision ?? "-"}`
+          : `Email: ${body.emailDecision ?? "-"}, OneDrive: ${body.oneDriveDecision ?? "-"}`,
+        performedBy: guard.email,
+      },
+    });
+
+    // ---------------------------------------------------------------------
+    // C4 — COMPLETENESS IS PER EMPLOYEE, NOT GLOBAL.
+    //
+    // This previously counted PENDING approvals across the whole database and
+    // advanced every employee in PENDING_PARTNERS when that hit zero. So a
+    // single stale PENDING row anywhere — a departed partner, an abandoned
+    // review — stalled the entire workflow permanently, and when the count did
+    // reach zero it advanced employees that had no approval rows at all.
+    // ---------------------------------------------------------------------
+    const employeeApprovals =
+      await prisma.partnerApproval.findMany({
+        where: { employeeId: body.employeeId },
+        select: { status: true },
+      });
+
+    const allApproved =
+      employeeApprovals.length > 0 &&
+      employeeApprovals.every(
+        (approval) => approval.status === "APPROVED"
+      );
+
+    if (allApproved) {
+      const advanced =
+        await prisma.employee.updateMany({
           where: {
-            id: employee.id,
+            id: body.employeeId,
+            // Re-assert the stage so a concurrent request can't advance twice.
+            workflowStage: "PENDING_PARTNERS",
           },
           data: {
             workflowStage:
@@ -202,20 +247,15 @@ export async function POST(
           },
         });
 
+      if (advanced.count > 0) {
         await prisma.auditLog.create({
           data: {
-            employeeId:
-              employee.id,
-
+            employeeId: body.employeeId,
             action:
               "Partner Approvals Completed",
-
             details:
-              `${employee.name} moved to PENDING_FINAL_DIRECTOR`,
-
-            performedBy:
-              session?.user?.email ??
-              "System",
+              "All assigned partner approvals received; moved to PENDING_FINAL_DIRECTOR",
+            performedBy: guard.email,
           },
         });
       }
@@ -223,6 +263,7 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
+      allApproved,
     });
   } catch (error) {
     console.error(error);
