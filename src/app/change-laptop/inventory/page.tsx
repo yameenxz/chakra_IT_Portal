@@ -17,6 +17,9 @@ export default function InventoryPage() {
   const [laptops, setLaptops] =
     useState<Laptop[]>([]);
 
+  const [search, setSearch] =
+    useState("");
+
   const loadLaptops =
     async () => {
       const res = await fetch(
@@ -33,6 +36,41 @@ export default function InventoryPage() {
     loadLaptops();
   }, []);
 
+  const filteredLaptops =
+    laptops.filter(
+      (laptop) =>
+        laptop.name
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+        laptop.assetTag
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+        laptop.model
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+        laptop.category
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+        laptop.location
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+        laptop.assignedTo
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+    );
+
   return (
     <main className="min-h-screen bg-[#F4F2EC] p-8">
       <div className="mx-auto max-w-7xl">
@@ -45,6 +83,20 @@ export default function InventoryPage() {
             View assets synchronized from
             Snipe-IT.
           </p>
+        </div>
+
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search by asset name, asset tag, model, category, location or assigned user..."
+            value={search}
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+            className="w-full rounded-xl border border-[#DFDACB] bg-white px-4 py-3 shadow-sm focus:border-[#1B2A41] focus:outline-none"
+          />
         </div>
 
         <div className="overflow-hidden rounded-3xl border border-[#DFDACB] bg-white shadow-md">
@@ -82,7 +134,7 @@ export default function InventoryPage() {
             </thead>
 
             <tbody>
-              {laptops.map(
+              {filteredLaptops.map(
                 (laptop) => (
                   <tr
                     key={laptop.id}
@@ -134,7 +186,7 @@ export default function InventoryPage() {
                 )
               )}
 
-              {laptops.length ===
+              {filteredLaptops.length ===
                 0 && (
                 <tr>
                   <td
