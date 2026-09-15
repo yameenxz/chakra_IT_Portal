@@ -48,7 +48,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-[#F4F2EC]">
-      <div className="mx-auto max-w-7xl px-8 py-8">
+      <div className="mx-auto w-full px-8 py-8">
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-[#1B2A41]">
             Available Services
@@ -59,7 +59,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-3">
           {(role === "IT" ||
             role === "IT_HEAD" ||
             role === "ADMIN") && (

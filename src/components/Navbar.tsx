@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 import NotificationToast from "@/components/NotificationToast";
+import Image from "next/image";
 
 export default function Navbar() {
   const router = useRouter();
@@ -117,10 +118,14 @@ if (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
-            IT Service Portal
-          </h1>
-        </div>
+  <h1 className="text-2xl font-bold tracking-tight text-white">
+    CHAKRA
+  </h1>
+
+  <p className="text-xs font-medium tracking-wide text-slate-400">
+    Internal Workplace Operations Platform
+  </p>
+</div>
 
         <div className="flex items-center gap-8">
           <div className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-right">
