@@ -127,30 +127,21 @@ for (const employeeName of names) {
   }
 
   async function deleteEmployee(
-    id: string
-  ) {
-    const confirmed =
-      window.confirm(
-        "Delete employee?"
-      );
+  id: string
+) {
+  try {
+    await fetch(
+      `/api/onboarding/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      await fetch(
-        `/api/onboarding/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      await loadEmployees();
-    } catch (error) {
-      console.error(error);
-    }
+    await loadEmployees();
+  } catch (error) {
+    console.error(error);
   }
+}
 
   function getCompletedTasks(
     tasks: Task[]
