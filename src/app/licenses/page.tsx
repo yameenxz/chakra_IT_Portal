@@ -28,12 +28,12 @@ export default function LicensesHomePage() {
   return (
     <main className="min-h-screen bg-[#F4F2EC]">
       <div className="mx-auto max-w-7xl px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-[#1B2A41]">
+        <div className="mb-4">
+          <h1 className="text-2xl font-bold tracking-tight text-[#1B2A41]">
             License Renewal Tracking
           </h1>
 
-          <p className="mt-2 text-slate-600">
+          <p className="mt-1 text-slate-600">
             Manage software licenses,
             renewals, utilization and
             subscription tracking.

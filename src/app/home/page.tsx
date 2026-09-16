@@ -54,9 +54,7 @@ export default function HomePage() {
             Available Services
           </h2>
 
-          <p className="mt-2 text-slate-600">
-            Select a service to continue.
-          </p>
+          
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
@@ -91,12 +89,7 @@ export default function HomePage() {
               </div>
 
               <p className="mt-2 text-sm text-slate-500">
-                Track offboarding
-                activities, account
-                deprovisioning, asset
-                recovery, ownership
-                assignments and audit
-                history.
+                Manage employee offboarding, asset recovery and audit tracking.
               </p>
 
               <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
@@ -132,12 +125,7 @@ export default function HomePage() {
             </div>
 
             <p className="mt-2 text-sm text-slate-500">
-              Manage employee exits,
-              Guru approvals,
-              partner reviews,
-              IT execution,
-              audit history and
-              reporting.
+              Employee email decommissioning approval workflow.
             </p>
 
             <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
@@ -176,12 +164,7 @@ export default function HomePage() {
               </div>
 
               <p className="mt-2 text-sm text-slate-500">
-                Track onboarding
-                activities, task
-                completion, Azure policy
-                assignment, antivirus
-                installation and user
-                provisioning progress.
+                Manage onboarding tasks, access provisioning and setup.
               </p>
 
               <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
@@ -218,11 +201,7 @@ export default function HomePage() {
             </div>
 
             <p className="mt-2 text-sm text-slate-500">
-              Track Microsoft
-              licenses, renewal dates,
-              subscription status,
-              utilization and future
-              renewals.
+              Track software licenses, subscriptions and renewals.
             </p>
 
             <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-[#1B2A41]">
@@ -261,11 +240,7 @@ export default function HomePage() {
               </div>
 
               <p className="mt-2 text-sm text-slate-500">
-                Manage laptop inventory,
-                replacement requests,
-                approval workflows and
-                laptop assignment
-                tracking.
+                Manage laptop inventory, replacements and approvals.
               </p>
 
               <div className="mt-4 inline-flex rounded-full bg-[#DCEAE0] px-3 py-1 text-xs font-medium text-green-700">
