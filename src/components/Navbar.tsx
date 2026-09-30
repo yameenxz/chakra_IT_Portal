@@ -274,7 +274,16 @@ if (
             )}
 
             {isLaptopModule && (
-              <>
+              <><button
+  onClick={() =>
+    router.push(
+      "/change-laptop"
+    )
+  }
+  className="transition hover:text-white"
+>
+  Laptop Change
+</button>
                 <button
                   onClick={() =>
                     router.push(
